@@ -1,31 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_app/forgot.dart';
-import 'package:flutter_app/signup.dart';
+import 'package:flutter_app/wrapper.dart';
+import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_navigation/get_navigation.dart';
 
-class Login extends StatefulWidget {
-  const Login({super.key});
+class Signup extends StatefulWidget {
+  const Signup({super.key});
 
   @override
-  State<Login> createState() => _LoginState();
+  State<Signup> createState() => _SignupState();
 }
 
-class _LoginState extends State<Login> {
+class _SignupState extends State<Signup> {
 
   TextEditingController email = TextEditingController();
   TextEditingController password = TextEditingController();
 
-  signIn()async{
-    await FirebaseAuth.instance.signInWithEmailAndPassword(email: email.text, password: password.text);
+  signup()async{
+    await FirebaseAuth.instance.createUserWithEmailAndPassword(email: email.text, password: password.text);
+    Get.offAll(Wrapper());
   }
-
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Login"),),
+      appBar: AppBar(title: Text("Sign Up"),),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
@@ -40,19 +39,9 @@ class _LoginState extends State<Login> {
             ),
 
             ElevatedButton(
-              onPressed: (()=> signIn()),
-              child: Text("Login")
-            ),
-            SizedBox(height: 30,),
-            ElevatedButton(
-              onPressed: (()=> Get.to(Signup())),
+              onPressed: (()=> signup()),
               child: Text("Sign Up")
             ),
-            SizedBox(height: 30,),
-            ElevatedButton(
-              onPressed: (()=> Get.to(Forgot())),
-              child: Text("Forgot Password"),
-            ),     
           ]
         ),
       )
