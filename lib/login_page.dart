@@ -32,11 +32,11 @@ class _LoginState extends State<Login> {
           children: [
             TextField(
               controller: email,
-              decoration: InputDecoration(hintText: 'Enter email'),
+              decoration: const InputDecoration(hintText: 'Enter email'),
             ),
             TextField(
               controller: password,
-              decoration: InputDecoration(hintText: 'Enter password'),
+              decoration: const InputDecoration(hintText: 'Enter password'),
             ),
 
             ElevatedButton(
