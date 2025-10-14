@@ -25,35 +25,55 @@ class _LoginState extends State<Login> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Login"),),
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          children: [
-            TextField(
-              controller: email,
-              decoration: const InputDecoration(hintText: 'Enter email'),
-            ),
-            TextField(
-              controller: password,
-              decoration: const InputDecoration(hintText: 'Enter password'),
-            ),
-
-            ElevatedButton(
-              onPressed: (()=> signIn()),
-              child: Text("Login")
-            ),
-            SizedBox(height: 30,),
-            ElevatedButton(
-              onPressed: (()=> Get.to(Signup())),
-              child: Text("Sign Up")
-            ),
-            SizedBox(height: 30,),
-            ElevatedButton(
-              onPressed: (()=> Get.to(Forgot())),
-              child: Text("Forgot Password"),
-            ),     
-          ]
+      body: Container(
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage("assets/images/Hive Background.png"),
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            children: [
+              const SizedBox(height: 30,),
+              DecoratedBox(
+                decoration: BoxDecoration(
+                  color: const Color.fromARGB(0, 255, 255, 255),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Image.asset("assets/images/Oval Logo.png", height: 200,),
+                ),
+              ),
+              const SizedBox(height: 30,),
+              TextField(
+                controller: email,
+                decoration: const InputDecoration(hintText: 'Enter email'),
+              ),
+              const SizedBox(height: 30,),
+              TextField(
+                controller: password,
+                decoration: const InputDecoration(hintText: 'Enter password'),
+              ),
+              const SizedBox(height: 30,),
+              ElevatedButton(
+                onPressed: (()=> signIn()),
+                child: Text("Login")
+              ),
+              const SizedBox(height: 30,),
+              ElevatedButton(
+                onPressed: (()=> Get.to(Signup())),
+                child: Text("Sign Up")
+              ),
+              const SizedBox(height: 30,),
+              ElevatedButton(
+                onPressed: (()=> Get.to(Forgot())),
+                child: Text("Forgot Password"),
+              ),     
+            ]
+          ),
         ),
       )
     );
