@@ -10,7 +10,7 @@ final ThemeData appTheme = ThemeData(
         backgroundColor: const Color.fromARGB(255, 0, 0, 0),
         foregroundColor: Colors.white,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(30),
+          borderRadius: BorderRadius.circular(8),
         ),
         padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 30),
         textStyle: const TextStyle(
