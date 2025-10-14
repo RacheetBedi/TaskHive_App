@@ -93,3 +93,40 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
+
+  fonts:
+    - family: JosefinSlab
+      fonts:
+        - asset: assets/fonts/JosefinSlab-Regular.ttf
+        - asset: assets/fonts/JosefinSlab-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/JosefinSlab-Light.ttf
+          weight: 300
+        - asset: assets/fonts/JosefinSlab-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/JosefinSlab-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/JosefinSlab-Thin.ttf
+          weight: 100
+        - asset: assets/fonts/JosefinSlab-ExtraLight.ttf
+          weight: 200
+        - asset: assets/fonts/JosefinSlab-Italic.ttf
+          style: italic
+        - asset: assets/fonts/JosefinSlab-BoldItalic.ttf
+          weight: 700
+          style: italic
+        - asset: assets/fonts/JosefinSlab-LightItalic.ttf
+          weight: 300
+          style: italic
+        - asset: assets/fonts/JosefinSlab-MediumItalic.ttf
+          weight: 500
+          style: italic
+        - asset: assets/fonts/JosefinSlab-SemiBoldItalic.ttf
+          weight: 600
+          style: italic
+        - asset: assets/fonts/JosefinSlab-ThinItalic.ttf
+          weight: 100
+          style: italic
+        - asset: assets/fonts/JosefinSlab-ExtraLightItalic.ttf
+          weight: 200
+          style: italic
