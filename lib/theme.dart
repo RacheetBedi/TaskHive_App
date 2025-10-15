@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 final ThemeData appTheme = ThemeData(
-    fontFamily: 'JosefinSlab-Bold',
+    fontFamily: 'Jomhuria-Regular',
     primaryColor: const Color(0xFFFFDD97),
     scaffoldBackgroundColor: const Color(0xFFFFDD97),
 
@@ -15,17 +15,17 @@ final ThemeData appTheme = ThemeData(
         padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 30),
         textStyle: const TextStyle(
           fontSize: 18,
-          fontFamily: 'JosefinSlab-light',
+          fontFamily: 'Inter_18pt-Regular',
         ),
       ),
     ),
-
+  
     inputDecorationTheme: InputDecorationTheme(
       filled: true,
       fillColor: Colors.white,
       hintStyle: const TextStyle(
         color: Color(0xFF828282),
-        fontFamily: 'JosefinSlab-light',
+        fontFamily: 'Inter_18pt-Regular',
       ),
       contentPadding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
       border: OutlineInputBorder(
