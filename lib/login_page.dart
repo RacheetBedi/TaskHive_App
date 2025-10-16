@@ -16,6 +16,10 @@ class Login extends StatefulWidget {
 
 class _LoginState extends State<Login> {
 
+  loginApple() async{
+    
+  }
+
   login() async {
     try {
       developer.log('Starting Google Sign In process', name: 'login');
@@ -175,7 +179,15 @@ class _LoginState extends State<Login> {
                   padding: EdgeInsets.all(8.0),
                   child: Text("Sign In with Google"),
                   ),
-              ),    
+              ),  
+              const SizedBox(height: 30,),
+              ElevatedButton(
+                onPressed: (()=> loginApple()),
+                child: const Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Text("Sign In with Apple"),
+                  ),
+              ), 
             ]
           ),
         ),
