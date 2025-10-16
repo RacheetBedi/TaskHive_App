@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "180420637512",
+    "project_id": "taskhive-app-72917",
+    "storage_bucket": "taskhive-app-72917.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:180420637512:android:a43f163378adfb92bb797d",
+        "android_client_info": {
+          "package_name": "com.hive.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "180420637512-1ckotvjj07skf3qj3hoegb1aei63po0j.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.hive.app",
+            "certificate_hash": "34796a881a65487bf4b6da1118fcc37be5b452df"
+          }
+        },
+        {
+          "client_id": "180420637512-6edngactqt1ghqgrs6ivp3b3hthq4cqk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDSI0liBnF7TcJJHY-zl7fUanjn-73kREg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "180420637512-6edngactqt1ghqgrs6ivp3b3hthq4cqk.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

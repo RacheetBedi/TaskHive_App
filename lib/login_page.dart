@@ -4,6 +4,7 @@ import 'package:flutter_app/forgot.dart';
 import 'package:flutter_app/signup.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/get_navigation.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -13,6 +14,22 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
+
+  login() async{
+
+    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+
+    final dynamic googleAuth = await googleUser?.authentication;
+
+    final credential = GoogleAuthProvider.credential(
+      accessToken: googleAuth?.accessToken,
+      idToken: googleAuth?.idToken,
+    );
+
+    await FirebaseAuth.instance.signInWithCredential(credential);
+
+
+  }
 
   TextEditingController email = TextEditingController();
   TextEditingController password = TextEditingController();
@@ -85,7 +102,11 @@ class _LoginState extends State<Login> {
               ElevatedButton(
                 onPressed: (()=> Get.to(Forgot())),
                 child: Text("Forgot Password"),
-              ),     
+              ),
+              const SizedBox(height: 30,),
+              ElevatedButton(
+                onPressed: (()=> login),
+              )    
             ]
           ),
         ),
