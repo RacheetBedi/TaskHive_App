@@ -81,41 +81,8 @@ class _LoginState extends State<Login> {
     setState((){
       isLoading = true;
     });
-    try{
       await FirebaseAuth.instance.signInWithEmailAndPassword(email: email.text, password: password.text);
-    } on FirebaseAuthException catch(e){
-        Get.snackbar("Error Message", e.code);
-    } 
-    catch (e, stackTrace) {
-      // Show a more detailed error dialog
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text('Google Sign In Error'),
-            content: SingleChildScrollView(
-              child: ListBody(
-                children: <Widget>[
-                  Text('Error Details:'),
-                  Text(e.toString()),
-                  SizedBox(height: 20),
-                  Text('Stack Trace:'),
-                  Text(stackTrace.toString()),
-                ],
-              ),
-            ),
-            actions: <Widget>[
-              TextButton(
-                child: Text('Close'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          );
-        },
-      );
-      }
+  
     setState((){
       isLoading = false;
     });
