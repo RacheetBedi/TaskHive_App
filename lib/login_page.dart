@@ -5,6 +5,7 @@ import 'package:flutter_app/signup.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/get_navigation.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'dart:developer' as developer;
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -17,14 +18,27 @@ class _LoginState extends State<Login> {
 
   login() async {
     try {
-      // Start the sign-in process
-      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+      developer.log('Starting Google Sign In process', name: 'login');
+      
+      // Start the sign-in process with specific configuration
+      final GoogleSignIn googleSignIn = GoogleSignIn(
+        clientId: '180420637512-6edngactqt1ghqgrs6ivp3b3hthq4cqk.apps.googleusercontent.com',
+        scopes: ['email', 'profile'],
+      );
+      
+      developer.log('GoogleSignIn initialized', name: 'login');
+      
+      developer.log('Attempting to sign in...', name: 'login');
+      final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
       
       // Check if user canceled the sign-in flow
       if (googleUser == null) {
+        developer.log('User cancelled sign in', name: 'login');
         Get.snackbar("Sign In Cancelled", "User cancelled Google Sign In");
         return;
       }
+      
+      developer.log('Successfully got GoogleSignInAccount', name: 'login');
 
       // Get auth details
       final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
@@ -67,8 +81,36 @@ class _LoginState extends State<Login> {
       await FirebaseAuth.instance.signInWithEmailAndPassword(email: email.text, password: password.text);
     } on FirebaseAuthException catch(e){
         Get.snackbar("Error Message", e.code);
-    } catch(e){
-        Get.snackbar("Error Message", e.toString());
+    } 
+    catch (e, stackTrace) {
+      // Show a more detailed error dialog
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Google Sign In Error'),
+            content: SingleChildScrollView(
+              child: ListBody(
+                children: <Widget>[
+                  Text('Error Details:'),
+                  Text(e.toString()),
+                  SizedBox(height: 20),
+                  Text('Stack Trace:'),
+                  Text(stackTrace.toString()),
+                ],
+              ),
+            ),
+            actions: <Widget>[
+              TextButton(
+                child: Text('Close'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
       }
     setState((){
       isLoading = false;
