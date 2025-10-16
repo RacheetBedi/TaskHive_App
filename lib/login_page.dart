@@ -15,20 +15,43 @@ class Login extends StatefulWidget {
 
 class _LoginState extends State<Login> {
 
-  login() async{
+  login() async {
+    try {
+      // Start the sign-in process
+      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+      
+      // Check if user canceled the sign-in flow
+      if (googleUser == null) {
+        Get.snackbar("Sign In Cancelled", "User cancelled Google Sign In");
+        return;
+      }
 
-    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+      // Get auth details
+      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+      
+      // Ensure we have the required tokens
+      if (googleAuth.accessToken == null || googleAuth.idToken == null) {
+        Get.snackbar("Error", "Could not get authentication tokens");
+        return;
+      }
 
-    final dynamic googleAuth = await googleUser?.authentication;
+      // Create credential
+      final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken!,
+        idToken: googleAuth.idToken!,
+      );
 
-    final credential = GoogleAuthProvider.credential(
-      accessToken: googleAuth?.accessToken,
-      idToken: googleAuth?.idToken,
-    );
-
-    await FirebaseAuth.instance.signInWithCredential(credential);
-
-
+      // Sign in to Firebase
+      await FirebaseAuth.instance.signInWithCredential(credential);
+      
+    } catch (e) {
+      print("Google Sign In Error: $e"); // For debugging
+      Get.snackbar(
+        "Error", 
+        "Could not sign in with Google: ${e.toString()}",
+        duration: Duration(seconds: 5),
+      );
+    }
   }
 
   TextEditingController email = TextEditingController();
@@ -105,8 +128,12 @@ class _LoginState extends State<Login> {
               ),
               const SizedBox(height: 30,),
               ElevatedButton(
-                onPressed: (()=> login),
-              )    
+                onPressed: (()=> login()),
+                child: const Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Text("Sign In with Google"),
+                  ),
+              ),    
             ]
           ),
         ),
