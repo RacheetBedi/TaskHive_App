@@ -127,25 +127,41 @@ class _LoginState extends State<Login> {
               const SizedBox(height: 30,),
               ElevatedButton(
                 onPressed: (()=> signIn()),
-                child: Text("Login")
+                child: const Text("Login"),
               ),
               const SizedBox(height: 30,),
               ElevatedButton(
                 onPressed: (()=> Get.to(Signup())),
-                child: Text("Sign Up")
+                child: const Text("Sign Up"),
               ),
               const SizedBox(height: 30,),
               ElevatedButton(
                 onPressed: (()=> Get.to(Forgot())),
-                child: Text("Forgot Password"),
+                child: const Text("Forgot Password"),
               ),
               const SizedBox(height: 30,),
               ElevatedButton(
-                onPressed: (()=> login()),
-                child: const Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: Text("Sign In with Google"),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFFE69900),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                    side: const BorderSide(color: Color(0xFFFFE100), width: 4),
                   ),
+                ),
+                onPressed: (()=> login()),
+                child: const Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Image(image: AssetImage("assets/images/Google Logo.png"), height: 30,),
+                    Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Text(
+                        "Sign In with Google",
+                        style: TextStyle(color: Color.fromARGB(255, 0, 0, 0)),
+                      ),
+                    ),
+                  ],
+                ),
               ),  
               const SizedBox(height: 30,),
               ElevatedButton(
