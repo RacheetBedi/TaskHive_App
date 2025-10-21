@@ -1,3 +1,6 @@
+import 'dart:async';
+import 'dart:core';
+
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_app/forgot.dart';
@@ -14,63 +17,118 @@ class Login extends StatefulWidget {
   State<Login> createState() => _LoginState();
 }
 
-class _LoginState extends State<Login> {
+class googleAuthService{
+  final _googleSignIn = GoogleSignIn.instance;
+  bool _isGoogleSignInInitialized = false;
 
-  loginApple() async{
-    
+  googleAuthService(){
+    _initializeGoogleSignIn();
   }
 
-  login() async {
-    try {
-      developer.log('Starting Google Sign In process', name: 'login');
-      
-      // Start the sign-in process with specific configuration
-      final GoogleSignIn googleSignIn = GoogleSignIn(
-        clientId: '180420637512-6edngactqt1ghqgrs6ivp3b3hthq4cqk.apps.googleusercontent.com',
-        scopes: ['email', 'profile'],
-      );
-      
-      developer.log('GoogleSignIn initialized', name: 'login');
-      
-      developer.log('Attempting to sign in...', name: 'login');
-      final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
-      
-      // Check if user canceled the sign-in flow
-      if (googleUser == null) {
-        developer.log('User cancelled sign in', name: 'login');
-        Get.snackbar("Sign In Cancelled", "User cancelled Google Sign In");
-        return;
-      }
-      
-      developer.log('Successfully got GoogleSignInAccount', name: 'login');
-
-      // Get auth details
-      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
-      
-      // Ensure we have the required tokens
-      if (googleAuth.accessToken == null || googleAuth.idToken == null) {
-        Get.snackbar("Error", "Could not get authentication tokens");
-        return;
-      }
-
-      // Create credential
-      final credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth.accessToken!,
-        idToken: googleAuth.idToken!,
-      );
-
-      // Sign in to Firebase
-      await FirebaseAuth.instance.signInWithCredential(credential);
-      
-    } catch (e) {
-      print("Google Sign In Error: $e"); // For debugging
-      Get.snackbar(
-        "Error", 
-        "Could not sign in with Google: ${e.toString()}",
-        duration: Duration(seconds: 5),
+  Future<void> _initializeGoogleSignIn() async {
+  try {
+    await _googleSignIn.initialize();
+    _isGoogleSignInInitialized = true;
+    
+  } catch (e) {
+    print("Google Sign In Error: $e"); // For debugging
+    Get.snackbar(
+      "Error", 
+      "Could not initialize Google Sign In: ${e.toString()}",
+      duration: Duration(seconds: 10),
       );
     }
   }
+
+  Future<void> _ensureGoogleSignInInitialized() async{
+    if(!_isGoogleSignInInitialized){
+      await _initializeGoogleSignIn();
+    }
+  }
+
+  Future<GoogleSignInAccount> signInWithGoogle() async{
+    await _ensureGoogleSignInInitialized();
+
+    try{
+      final GoogleSignInAccount account = await _googleSignIn.authenticate(
+        scopeHint: ['email'],
+      );
+      return account;
+    } on GoogleSignInException catch(e){
+      print("Google Sign In Error: $e"); // For debugging
+      Get.snackbar(
+      "Error", 
+      "Google Sign In Error: ${e.toString()}",
+      duration: Duration(seconds: 10),
+      );
+      rethrow;
+    } catch (error){
+      print("Google Sign In Error: $error"); // For debugging
+      Get.snackbar(
+      "Error", 
+      "Unexpected Google Sign-In Error: ${error.toString()}",
+      duration: Duration(seconds: 10),
+      );
+      rethrow;
+    }
+  }
+
+  Future<GoogleSignInAccount?> attemptsSilentSignIn() async{
+    await _ensureGoogleSignInInitialized();
+
+    try{
+      final result = _googleSignIn.attemptLightweightAuthentication();
+
+      if(result is Future<GoogleSignInAccount?>){
+        return await result;
+      } else{
+        return result as GoogleSignInAccount?;
+      }
+    } catch(error){
+      print("Google Sign In Error: $error"); // For debugging
+      Get.snackbar(
+      "Error", 
+      "Silent sign-in failed: ${error.toString()}",
+      duration: Duration(seconds: 10),
+      );
+      return null;
+    }
+  }
+
+  GoogleSignInAuthentication getAuthTokens(GoogleSignInAccount account){
+    return account.authentication;
+  }
+
+  Future<String?> getAccessTokenforScopes(List<String> scopes) async{
+    await _ensureGoogleSignInInitialized();
+
+    try{
+      final authClient = _googleSignIn.authorizationClient;
+
+      var authorization = await authClient.authorizationForScopes(scopes);
+
+      if(authorization == null){
+        authorization = await authClient.authorizeScopes(scopes);
+      }
+
+      return authorization?.accessToken;
+
+    } catch(error){
+      print("Failed to get access token for scopes: $error"); // For debugging
+      Get.snackbar(
+      "Error", 
+      "Failed to get access token for scopes: ${error.toString()}",
+      duration: Duration(seconds: 10),
+      );
+      return null;
+    }
+  }
+
+}
+
+
+class _LoginState extends State<Login> {
+
 
   TextEditingController email = TextEditingController();
   TextEditingController password = TextEditingController();
@@ -178,3 +236,43 @@ class _LoginState extends State<Login> {
     );
   }
 }
+
+      // developer.log('Starting Google Sign In process', name: 'login');
+
+      // // Start the sign-in process with specific configuration
+      // final GoogleSignIn googleSignIn = GoogleSignIn(
+      //   clientId: '180420637512-6edngactqt1ghqgrs6ivp3b3hthq4cqk.apps.googleusercontent.com',
+      //   scopes: ['email', 'profile'],
+      // );
+      
+      // developer.log('GoogleSignIn initialized', name: 'login');
+      
+      // developer.log('Attempting to sign in...', name: 'login');
+      // final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
+      
+      // // Check if user canceled the sign-in flow
+      // if (googleUser == null) {
+      //   developer.log('User cancelled sign in', name: 'login');
+      //   Get.snackbar("Sign In Cancelled", "User cancelled Google Sign In");
+      //   return;
+      // }
+      
+      // developer.log('Successfully got GoogleSignInAccount', name: 'login');
+
+      // // Get auth details
+      // final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+      
+      // // Ensure we have the required tokens
+      // if (googleAuth.accessToken == null || googleAuth.idToken == null) {
+      //   Get.snackbar("Error", "Could not get authentication tokens");
+      //   return;
+      // }
+
+      // // Create credential
+      // final credential = GoogleAuthProvider.credential(
+      //   accessToken: googleAuth.accessToken!,
+      //   idToken: googleAuth.idToken!,
+      // );
+
+      // // Sign in to Firebase
+      // await FirebaseAuth.instance.signInWithCredential(credential);
