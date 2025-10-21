@@ -119,22 +119,22 @@ class _LoginState extends State<Login> {
                 controller: email,
                 decoration: const InputDecoration(hintText: 'Enter email'),
               ),
-              const SizedBox(height: 30,),
+              const SizedBox(height: 10,),
               TextField(
                 controller: password,
                 decoration: const InputDecoration(hintText: 'Enter password'),
               ),
-              const SizedBox(height: 30,),
+              const SizedBox(height: 10,),
               ElevatedButton(
                 onPressed: (()=> signIn()),
                 child: const Text("Login"),
               ),
-              const SizedBox(height: 30,),
+              const SizedBox(height: 15,),
               ElevatedButton(
                 onPressed: (()=> Get.to(Signup())),
                 child: const Text("Sign Up"),
               ),
-              const SizedBox(height: 30,),
+              const SizedBox(height: 15,),
               ElevatedButton(
                 onPressed: (()=> Get.to(Forgot())),
                 child: const Text("Forgot Password"),
@@ -163,7 +163,7 @@ class _LoginState extends State<Login> {
                   ],
                 ),
               ),  
-              const SizedBox(height: 30,),
+              const SizedBox(height: 15,),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFFE69900),
