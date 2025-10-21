@@ -12,10 +12,11 @@ final ThemeData appTheme = ThemeData(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8),
         ),
-        minimumSize: const Size(300, 50),
-        padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 30),
+        minimumSize: const Size(350, 50),
+        maximumSize: const Size(350, 50),
+        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 30),
         textStyle: const TextStyle(
-          fontSize: 22,
+          fontSize: 18,
           fontFamily: 'Inter_18pt-Regular',
         ),
       ),
@@ -27,15 +28,35 @@ final ThemeData appTheme = ThemeData(
       contentTextStyle: const TextStyle(color: Color.fromARGB(179, 66, 66, 66)),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
     ),
+
+    // snackBarTheme: SnackBarThemeData(
+    //   backgroundColor: Colors.transparent,
+    //   contentTextStyle: TextStyle(
+    //     foreground: Paint()
+    //       ..strokeWidth = 1
+    //       ..color = const Color.fromARGB(255, 255, 0, 0),
+    //     fontFamily: 'Inter_18pt-Regular',
+    //   ),
+    //   behavior: SnackBarBehavior.floating,
+    //   shape: RoundedRectangleBorder(
+    //     borderRadius: BorderRadius.circular(12),
+    //   ),
+    // ),
     
     inputDecorationTheme: InputDecorationTheme(
+      constraints: const BoxConstraints(
+        maxWidth: 400,
+        minWidth: 300,
+        minHeight: 50,
+        maxHeight: 50,
+      ),
       filled: true,
       fillColor: Colors.white,
       hintStyle: const TextStyle(
         color: Color(0xFF828282),
         fontFamily: 'Inter_18pt-Regular',
       ),
-      contentPadding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+      contentPadding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(8),
         borderSide: BorderSide.none,
