@@ -165,11 +165,27 @@ class _LoginState extends State<Login> {
               ),  
               const SizedBox(height: 30,),
               ElevatedButton(
-                onPressed: (()=> loginApple()),
-                child: const Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: Text("Sign In with Apple"),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFFE69900),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                    side: const BorderSide(color: Color(0xFFFFE100), width: 4),
                   ),
+                ),
+                onPressed: (()=> loginApple()),
+                child: const Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.apple, color: Colors.black, size: 32,),
+                    Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Text(
+                        "Sign In with Apple",
+                        style: TextStyle(color: Colors.black),
+                      ),
+                    ),
+                  ],
+                ),
               ), 
             ]
           ),
