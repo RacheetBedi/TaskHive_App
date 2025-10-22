@@ -5,6 +5,123 @@ final ThemeData appTheme = ThemeData(
     primaryColor: const Color(0xFFFFDD97),
     scaffoldBackgroundColor: const Color(0xFFFFDD97),
 
+
+    //AppBar Themes
+    appBarTheme: const AppBarThemeData(
+      backgroundColor: Color(0xFFFFDD97),
+      foregroundColor: Color(0xFF000000),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(bottom: Radius.circular(16)),
+      ),
+      iconTheme: IconThemeData(
+        color: Color(0xFF000000),
+      ),
+      actionsIconTheme: IconThemeData(
+        color: Color(0xFF000000),
+      ),
+      elevation: 4,
+      scrolledUnderElevation: 0,
+      shadowColor: Color(0xFF000000),
+      toolbarTextStyle: TextStyle(
+        color: Color(0xFF000000),
+        fontSize: 16,
+        fontFamily: 'Jomhuria-Bold',
+      ),
+      titleTextStyle: TextStyle(
+        color: Color(0xFF000000),
+        fontSize: 20,
+        fontFamily: 'Jomhuria-Bold',
+      ),
+    ),
+
+    bottomAppBarTheme: const BottomAppBarThemeData(
+      color: Color(0xFFFFC95C),
+      elevation: 4,
+      shape: AutomaticNotchedShape(
+        RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+        ),
+      ),
+      shadowColor: Color(0xFFFFDD97),
+    ),
+
+    bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+      backgroundColor: Color.fromARGB(186, 255, 201, 92),
+      selectedItemColor: Color(0xFFFF6A00),
+      unselectedItemColor: Color(0xFF000000),
+      elevation: 4,
+      selectedIconTheme: IconThemeData(
+        color: Color(0xFF000000),
+        size: 30,
+      ),
+      unselectedIconTheme: IconThemeData(
+        color: Color(0xFFFF6A00),
+        size: 30,
+      ),
+      selectedLabelStyle: TextStyle(
+        color: Color(0xFFFF6A00),
+        fontFamily: 'Inter_18pt-Regular',
+        fontSize: 14,
+      ),
+      unselectedLabelStyle: TextStyle(
+        color: Color(0xFF000000),
+        fontFamily: 'Inter_18pt-Regular',
+        fontSize: 14,
+      ),
+      showSelectedLabels: true,
+      showUnselectedLabels: true,
+      type: BottomNavigationBarType.fixed,
+      landscapeLayout: BottomNavigationBarLandscapeLayout.spread,
+    ),
+
+
+    //Popups Themes
+    snackBarTheme: SnackBarThemeData(
+      backgroundColor: Colors.transparent,
+      contentTextStyle: TextStyle(
+        foreground: Paint()
+          ..strokeWidth = 1
+          ..color = const Color.fromARGB(255, 255, 0, 0),
+        fontFamily: 'Inter_18pt-Regular',
+      ),
+      behavior: SnackBarBehavior.floating,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+      ),
+    ),
+
+    dialogTheme: DialogThemeData(
+      backgroundColor: const Color.fromARGB(174, 255, 241, 176),
+      titleTextStyle: const TextStyle(color: Color.fromARGB(255, 0, 0, 0), fontSize: 20),
+      contentTextStyle: const TextStyle(color: Color.fromARGB(179, 66, 66, 66)),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+    ),
+
+    popupMenuTheme: PopupMenuThemeData(
+      color: const Color(0xFFFFB743),
+      textStyle: const TextStyle(color: Colors.white),
+      elevation: 8,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(40)),
+    ),
+
+    badgeTheme: const BadgeThemeData(
+      backgroundColor: Color(0xFFFF6A00),
+      textColor: Color.fromARGB(255, 0, 0, 0),
+      padding: EdgeInsets.all(6),
+    ),
+    
+    //Buttons/Inputs Themes
+    toggleButtonsTheme: ToggleButtonsThemeData(
+      borderRadius: BorderRadius.circular(20),
+      borderColor: const Color(0xFFFF0000),
+      selectedColor: const Color(0xFFFF6A00),
+      fillColor: const Color.fromARGB(158, 255, 247, 0),
+      textStyle: const TextStyle(
+        fontFamily: 'Inter_18pt-Regular',
+        fontSize: 16,
+      ),
+    ),
+
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
         backgroundColor: const Color.fromARGB(255, 0, 0, 0),
@@ -22,27 +139,6 @@ final ThemeData appTheme = ThemeData(
       ),
     ),
 
-    dialogTheme: DialogThemeData(
-      backgroundColor: const Color.fromARGB(174, 255, 241, 176),
-      titleTextStyle: const TextStyle(color: Color.fromARGB(255, 0, 0, 0), fontSize: 20),
-      contentTextStyle: const TextStyle(color: Color.fromARGB(179, 66, 66, 66)),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-    ),
-
-    // snackBarTheme: SnackBarThemeData(
-    //   backgroundColor: Colors.transparent,
-    //   contentTextStyle: TextStyle(
-    //     foreground: Paint()
-    //       ..strokeWidth = 1
-    //       ..color = const Color.fromARGB(255, 255, 0, 0),
-    //     fontFamily: 'Inter_18pt-Regular',
-    //   ),
-    //   behavior: SnackBarBehavior.floating,
-    //   shape: RoundedRectangleBorder(
-    //     borderRadius: BorderRadius.circular(12),
-    //   ),
-    // ),
-    
     inputDecorationTheme: InputDecorationTheme(
       constraints: const BoxConstraints(
         maxWidth: 400,
@@ -51,9 +147,9 @@ final ThemeData appTheme = ThemeData(
         maxHeight: 50,
       ),
       filled: true,
-      fillColor: Colors.white,
+      fillColor: const Color.fromARGB(255, 223, 221, 141),
       hintStyle: const TextStyle(
-        color: Color(0xFF828282),
+        color: Color.fromARGB(255, 255, 161, 98),
         fontFamily: 'Inter_18pt-Regular',
       ),
       contentPadding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
@@ -66,4 +162,12 @@ final ThemeData appTheme = ThemeData(
         borderSide: const BorderSide(color: Colors.black, width: 2),
       ),
     ),
+
+    datePickerTheme: DatePickerThemeData(
+      backgroundColor: const Color(0xFFFFB743),
+      headerBackgroundColor: const Color(0xFFEA9610),
+      headerForegroundColor: const Color(0xFF000000),
+      dayForegroundColor: WidgetStateProperty.all(const Color(0xFF000000)),
+      todayForegroundColor: WidgetStateProperty.all(const Color(0xFFFF6A00)),
+    )
 );
