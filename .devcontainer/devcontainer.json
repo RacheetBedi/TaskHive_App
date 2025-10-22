@@ -2,6 +2,7 @@
   "build": {
     "dockerfile": "Dockerfile"
   },
+  "forwardPorts": [3000],
   "otherPortsAttributes": {
     "onAutoForward": "ignore"
   },
