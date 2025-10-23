@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:get/get_connect/http/src/utils/utils.dart';
 
 final ThemeData appTheme = ThemeData(
+    //Main Colorings
     fontFamily: 'Jomhuria-Bold',
     primaryColor: const Color(0xFFFFDD97),
+    canvasColor: const Color(0xFFFFDD97),
     scaffoldBackgroundColor: const Color(0xFFFFDD97),
+    dividerColor: const Color(0xFF000000),
 
 
     //AppBar Themes
@@ -167,7 +171,53 @@ final ThemeData appTheme = ThemeData(
       backgroundColor: const Color(0xFFFFB743),
       headerBackgroundColor: const Color(0xFFEA9610),
       headerForegroundColor: const Color(0xFF000000),
+      dividerColor: const Color(0xFF000000),
       dayForegroundColor: WidgetStateProperty.all(const Color(0xFF000000)),
       todayForegroundColor: WidgetStateProperty.all(const Color(0xFFFF6A00)),
-    )
+      cancelButtonStyle: TextButton.styleFrom(
+        backgroundColor: const Color(0xFF000000),
+        foregroundColor: const Color.fromARGB(255, 255, 0, 0),
+      ),
+      confirmButtonStyle: TextButton.styleFrom(
+        backgroundColor: const Color(0xFF000000),
+        foregroundColor: const Color.fromARGB(255, 0, 255, 13),
+      ),
+      todayBackgroundColor: WidgetStateProperty.all(const Color(0xFFFF8800)),
+      elevation: 15,
+    ),
+
+    timePickerTheme: TimePickerThemeData(
+      backgroundColor: const Color(0xFFFFB743),
+      hourMinuteTextColor: const Color(0xFF000000),
+      dayPeriodTextColor: const Color(0xFF000000),
+      dialBackgroundColor: const Color(0xFFEA9610),
+      dialHandColor: const Color(0xFFFF6A00),
+      entryModeIconColor: const Color(0xFF000000),
+      hourMinuteShape: const CircleBorder(
+        side: BorderSide(color: Color(0xFF000000), width: 2),
+      ),
+      dayPeriodShape: RoundedRectangleBorder(
+        side: const BorderSide(color: Color(0xFF000000), width: 2),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      elevation: 15,
+    ),
+
+    checkboxTheme: CheckboxThemeData(
+      fillColor: WidgetStateProperty.all(const Color.fromARGB(255, 255, 147, 24)),
+      checkColor: WidgetStateProperty.all(const Color.fromARGB(255, 255, 230, 0)),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(4),
+      ),
+    ),
+
+    dropdownMenuTheme: DropdownMenuThemeData(
+      menuStyle: MenuStyle(
+        backgroundColor: WidgetStateProperty.all(const Color(0xFFFFB743)),
+        elevation: WidgetStateProperty.all(8),
+        shape: WidgetStateProperty.all(
+          RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        ),
+      ),
+    ),
 );
