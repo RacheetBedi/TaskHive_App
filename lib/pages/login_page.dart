@@ -145,6 +145,36 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                   ],
                 ),
               ),
+              const SizedBox(height: 30),
+                ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFFE69900),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                    side: const BorderSide(color: Color(0xFFFFE100), width: 4),
+                  ),
+                ),
+                onPressed: ((){
+                  Get.snackbar(
+                    "Error",
+                    "Sign in with Apple unexpectedly failed.",
+                    duration: const Duration(seconds: 10),
+                  );
+                }),
+                child: const Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.apple, color: Colors.black, size: 32,),
+                    Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Text(
+                        "Sign In with Apple",
+                        style: TextStyle(color: Colors.black),
+                      ),
+                    ),
+                  ],
+                ),
+                ),
             ],
           ),
         ),
