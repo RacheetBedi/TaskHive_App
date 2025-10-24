@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_app/forgot.dart';
-import 'package:flutter_app/signup.dart';
-import 'package:flutter_app/wrapper.dart';
+import 'package:flutter_app/pages/forgot.dart';
+import 'package:flutter_app/pages/signup.dart';
+import 'package:flutter_app/routing/wrapper.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/get_navigation.dart';
 

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_app/homepage.dart';
-import 'package:flutter_app/login_page.dart';
-import 'package:flutter_app/verifyemail.dart';
+import 'package:flutter_app/pages/homepage.dart';
+import 'package:flutter_app/pages/login_page.dart';
+import 'package:flutter_app/pages/verifyemail.dart';
 
 class Wrapper extends StatefulWidget {
   const Wrapper({super.key});
@@ -27,7 +27,7 @@ class _WrapperState extends State<Wrapper> {
             }
           }
           else{
-            return Login();
+            return LoginPage();
           }
         },
       ),

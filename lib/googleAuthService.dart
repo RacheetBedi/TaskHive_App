@@ -1,17 +1,18 @@
 import 'dart:async';
 import 'dart:core';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_app/forgot.dart';
-import 'package:flutter_app/signup.dart';
+import 'package:flutter_app/pages/forgot.dart';
+import 'package:flutter_app/pages/signup.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/get_navigation.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'dart:developer' as developer;
 
-class googleAuthService{
+class GoogleAuthService{
   var _googleSignIn = GoogleSignIn.instance;
   var _firebaseAuth = FirebaseAuth.instance;
   bool _isGoogleSignInInitialized = false;
@@ -133,7 +134,6 @@ class googleAuthService{
   Future<void> signIn() async{
     try{
       _currentUser = await signInWithGoogle();
-      _notifyUserChanged();
     } catch (error){
       _currentUser = null;
       rethrow;
@@ -143,31 +143,75 @@ class googleAuthService{
   Future<void> signOut() async{
     await _googleSignIn.signOut();
     _currentUser = null;
-    _notifyUserChanged();
   }
 
-  Future<UserCredential> signInWithGoogleFirebase() async{
-    await _ensureGoogleSignInInitialized();
+  Future<UserCredential> signInWithGoogleFirebase() async {
+  await _ensureGoogleSignInInitialized();
 
-    final GoogleSignInAccount googleUser = await _googleSignIn.authenticate(
-      scopeHint: ['email'],
+  try {
+    if (kIsWeb) {
+      // Web-specific Google Sign-In
+      final googleProvider = GoogleAuthProvider();
+      final userCredential = await FirebaseAuth.instance.signInWithPopup(googleProvider);
+      return userCredential;
+    } else {
+      // Mobile Google Sign-In
+      final googleUser = await _googleSignIn.authenticate();
+      if (googleUser == null) throw Exception("Google sign-in aborted");
+
+      final googleAuth = await googleUser.authentication;
+
+      final credential = GoogleAuthProvider.credential(
+        idToken: googleAuth.idToken, // only for mobile
+      );
+
+      final userCredential =
+          await FirebaseAuth.instance.signInWithCredential(credential);
+
+      _currentUser = googleUser;
+      return userCredential;
+    }
+  } catch (error) {
+    Get.snackbar(
+      "Error",
+      "Unexpected Google Sign-In Error: ${error.toString()}",
+      duration: const Duration(seconds: 10),
     );
-
-    final authClient = _googleSignIn.authorizationClient;
-    final authorization = await authClient.authorizationForScopes(['email']);
-
-    final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
-
-    final credential = GoogleAuthProvider.credential(
-      accessToken: authorization?.accessToken,
-      idToken: googleAuth.idToken,
-    );
-
-    final userCredential = await FirebaseAuth.instance.signInWithCredential(credential);
-
-    _currentUser = googleUser;
-
-    return userCredential;
+    rethrow;
   }
+}
+
+  // Future<UserCredential> signInWithGoogleFirebase() async{
+  //   await _ensureGoogleSignInInitialized();
+
+  //   try{
+  //     final GoogleSignInAccount? googleUser = await _googleSignIn.authenticate(
+  //       scopeHint: ['email'],
+  //     );
+
+  //     final authClient = _googleSignIn.authorizationClient;
+  //     final authorization = await authClient.authorizationForScopes(['email']);
+
+  //     final GoogleSignInAuthentication? googleAuth = await googleUser?.authentication;
+
+  //     final credential = GoogleAuthProvider.credential(
+  //       accessToken: authorization?.accessToken,
+  //       idToken: googleAuth?.idToken,
+  //     );
+
+  //     final userCredential = await FirebaseAuth.instance.signInWithCredential(credential);
+
+  //     _currentUser = googleUser;
+
+  //     return userCredential;
+  //   } catch (error){
+  //       Get.snackbar(
+  //       "Error", 
+  //       "Unexpected Google Sign-In Error: ${error.toString()}",
+  //       duration: Duration(seconds: 10),
+  //       );
+  //       rethrow;
+  //   }
+  // }
 
 }

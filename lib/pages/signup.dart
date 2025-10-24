@@ -1,29 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_app/wrapper.dart';
+import 'package:flutter_app/routing/wrapper.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 
-class Forgot extends StatefulWidget {
-  const Forgot({super.key});
+class Signup extends StatefulWidget {
+  const Signup({super.key});
 
   @override
-  State<Forgot> createState() => _ForgotState();
+  State<Signup> createState() => _SignupState();
 }
 
-class _ForgotState extends State<Forgot> {
+class _SignupState extends State<Signup> {
 
   TextEditingController email = TextEditingController();
+  TextEditingController password = TextEditingController();
 
-  reset()async{
-    await FirebaseAuth.instance.sendPasswordResetEmail(email: email.text,);
+  signup()async{
+    await FirebaseAuth.instance.createUserWithEmailAndPassword(email: email.text, password: password.text);
     Get.offAll(Wrapper());
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Forgot Password"),),
+      appBar: AppBar(title: Text("Sign Up"),),
       body: Container(
         decoration: const BoxDecoration(
           image: DecorationImage(
@@ -41,9 +42,14 @@ class _ForgotState extends State<Forgot> {
                 decoration: InputDecoration(hintText: 'Enter email'),
               ),
               const SizedBox(height: 30,),
+              TextField(
+                controller: password,
+                decoration: InputDecoration(hintText: 'Enter password'),
+              ),
+              const SizedBox(height: 30,),
               ElevatedButton(
-                onPressed: (()=> reset()),
-                child: Text("Send link")
+                onPressed: (()=> signup()),
+                child: Text("Sign Up")
               ),
             ]
           ),
