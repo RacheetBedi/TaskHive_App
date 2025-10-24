@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -17,9 +19,25 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 class AuthNotifier extends StateNotifier<AsyncValue<AppUser?>> {
   final Ref ref;
+  StreamSubscription<User?>? _authSubscription;
 
   AuthNotifier(this.ref) : super(const AsyncValue.loading()) {
-    _loadCurrentUser();
+    _listenToAuthChanges();
+  }
+
+   void _listenToAuthChanges() {
+    _authSubscription = FirebaseAuth.instance.authStateChanges().listen(
+      (User? firebaseUser) {
+        if (firebaseUser != null) {
+          state = AsyncValue.data(AppUser.fromFirebaseUser(firebaseUser));
+        } else {
+          state = const AsyncValue.data(null);
+        }
+      },
+      onError: (error, stackTrace) {
+        state = AsyncValue.error(error, stackTrace);
+      },
+    );
   }
 
   Future<void> _loadCurrentUser() async {
@@ -37,7 +55,7 @@ class AuthNotifier extends StateNotifier<AsyncValue<AppUser?>> {
 
     try {
 
-      final authService = ref.read(googleAuthServiceProvider);
+      final authService = ref.read(GoogleAuthServiceProvider);
       final userCredential = await authService.signInWithGoogleFirebase();
 
 
@@ -59,7 +77,7 @@ class AuthNotifier extends StateNotifier<AsyncValue<AppUser?>> {
   }
 
   Future<void> signOut() async {
-    final authService = ref.read(googleAuthServiceProvider);
+    final authService = ref.read(GoogleAuthServiceProvider);
     await authService.signOut();
     state = const AsyncValue.data(null);
   }

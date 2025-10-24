@@ -10,6 +10,6 @@ import 'package:get/get_navigation/get_navigation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
-final googleAuthServiceProvider = Provider<GoogleAuthService>((ref) {
+final GoogleAuthServiceProvider = Provider<GoogleAuthService>((ref) {
   return GoogleAuthService();
 });

@@ -24,45 +24,60 @@ class Homepage extends ConsumerStatefulWidget {
 }
 
 class _HomepageState extends ConsumerState<Homepage> {
-final user = FirebaseAuth.instance.currentUser;
 
   @override
   Widget build(BuildContext context) {
-    final authState = ref.watch(authProvider);
+    final appUser = ref.watch(authProvider).asData?.value;
 
-    return authState.when(
-      data: (appUser){
-        if(appUser == null){
-          return const LoginPage();
-        }
-        else{
-          return Scaffold(
-            appBar: AppBar(title: Text("Homepage"),),
-            body: Center(
-              child: Text("${user!.email}"),
-            ),
-            floatingActionButton: FloatingActionButton(
-              onPressed: (() async{
-                final authNotifier = ref.read(authProvider.notifier);
-                await authNotifier.signOut();
+    if (appUser == null) {
+      return Center(child: CircularProgressIndicator());
+    }
 
-                Get.offAll(() => LoginPage());
-              }),
-              child: Icon(Icons.login_rounded),
-            ),
-          );
-        }
-      },
-      loading: ()=>Center(child: CircularProgressIndicator()),
-      error: (error, stackTrace){
-        Get.snackbar(
-          "Error",
-          "Unexpected Google Sign-In Error: ${error.toString()}",
-          duration: const Duration(seconds: 10),
-        );
-
-        return LoginPage();
-      }
+    return Scaffold(
+      appBar: AppBar(title: const Text("Homepage")),
+      body: Center(
+        child: Text("${appUser.email}"),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          await ref.read(authProvider.notifier).signOut();
+        },
+        child: const Icon(Icons.logout),
+      ),
     );
   }
 }
+
+    // return authState.when(
+    //   data: (appUser){
+    //     if(appUser == null){
+    //       return const LoginPage();
+    //     }
+    //     else{
+    //       return Scaffold(
+    //         appBar: AppBar(title: Text("Homepage"),),
+    //         body: Center(
+    //           child: Text("${appUser!.email}"),
+    //         ),
+    //         floatingActionButton: FloatingActionButton(
+    //           onPressed: (() async{
+    //             final authNotifier = ref.read(authProvider.notifier);
+    //             await authNotifier.signOut();
+    //           }),
+    //           child: Icon(Icons.login_rounded),
+    //         ),
+    //       );
+    //     }
+    //   },
+    //   loading: ()=>Center(child: CircularProgressIndicator()),
+    //   error: (error, stackTrace){
+    //     Get.snackbar(
+    //       "Error",
+    //       "Unexpected Google Sign-In Error: ${error.toString()}",
+    //       duration: const Duration(seconds: 10),
+    //     );
+
+    //     return LoginPage();
+    //   }
+    // );
+
