@@ -151,9 +151,9 @@ final ThemeData appTheme = ThemeData(
         maxHeight: 50,
       ),
       filled: true,
-      fillColor: const Color.fromARGB(255, 223, 221, 141),
+      fillColor: const Color.fromARGB(255, 255, 253, 126),
       hintStyle: const TextStyle(
-        color: Color.fromARGB(255, 255, 161, 98),
+        color: Color.fromARGB(255, 0, 0, 0),
         fontFamily: 'Inter_18pt-Regular',
       ),
       contentPadding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
