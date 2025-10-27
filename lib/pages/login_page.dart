@@ -23,6 +23,7 @@ class LoginPage extends ConsumerStatefulWidget {
 class _LoginPageState extends ConsumerState<LoginPage> {
   final TextEditingController email = TextEditingController();
   final TextEditingController password = TextEditingController();
+  final TextEditingController googlePassword = TextEditingController();
 
   Future<void> _signInWithEmail() async {
     await ref.read(authProvider.notifier).signInWithEmail(
@@ -32,7 +33,47 @@ class _LoginPageState extends ConsumerState<LoginPage> {
   }
 
   Future<void> _signInWithGoogle() async {
+    try{
     await ref.read(authProvider.notifier).signInWithGoogle();
+
+    final appUser = ref.read(authProvider).asData?.value;
+    final bool isNew = appUser?.isNewUser ?? false;
+
+    if(isNew){
+      showDialog<String>(
+          context: context,
+          builder: (BuildContext context) => Dialog(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  const Text('Enter your desired account password here:'),
+                  const SizedBox(height: 15),
+                  TextField(
+                    controller: googlePassword,
+                    decoration: const InputDecoration(
+                      hintText: 'Enter your google account password here.',
+                      hintStyle: TextStyle(
+                        fontStyle: FontStyle.italic,
+                      ))
+                  ),
+
+                ],
+              ),
+            ),
+          ),
+        );
+    }
+    } catch(e){
+        Get.snackbar(
+          "Error",
+          "Unexpected Google Sign-In Error: ${e.toString()}",
+          duration: const Duration(seconds: 10),
+        );
+        rethrow;
+    }
   }
 
   @override

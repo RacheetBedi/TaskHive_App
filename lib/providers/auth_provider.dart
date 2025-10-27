@@ -61,7 +61,9 @@ class AuthNotifier extends StateNotifier<AsyncValue<AppUser?>> {
 
 
       if (userCredential?.user != null) {
-        final appUser = AppUser.fromFirebaseUser(userCredential!.user!);
+        final appUser = AppUser.fromFirebaseUser(
+          userCredential!.user!,
+          isNewUser: userCredential.additionalUserInfo?.isNewUser ?? false);
         state = AsyncValue.data(appUser);
       } else {
         state = const AsyncValue.data(null);
