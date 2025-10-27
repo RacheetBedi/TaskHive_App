@@ -3,7 +3,7 @@ import 'package:get/get_connect/http/src/utils/utils.dart';
 
 final ThemeData appTheme = ThemeData(
     //Main Colorings
-    fontFamily: 'Jomhuria-Bold',
+    fontFamily: 'Jomhuria',
     primaryColor: const Color(0xFFFFDD97),
     canvasColor: const Color(0xFFFFDD97),
     scaffoldBackgroundColor: const Color(0xFFFFDD97),
@@ -14,8 +14,9 @@ final ThemeData appTheme = ThemeData(
     appBarTheme: const AppBarThemeData(
       backgroundColor: Color(0xFFFFC95C),
       foregroundColor: Color(0xFF000000),
+      shadowColor: Color(0xFFFFDD97),
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(bottom: Radius.circular(16)),
+        borderRadius: BorderRadius.vertical(bottom: Radius.circular(0)),
       ),
       iconTheme: IconThemeData(
         color: Color(0xFF000000),
@@ -23,24 +24,23 @@ final ThemeData appTheme = ThemeData(
       actionsIconTheme: IconThemeData(
         color: Color(0xFF000000),
       ),
-      elevation: 4,
+      elevation: 8,
       scrolledUnderElevation: 0,
-      shadowColor: Color(0xFF000000),
       toolbarTextStyle: TextStyle(
         color: Color(0xFF000000),
         fontSize: 16,
-        fontFamily: 'Jomhuria-Bold',
+        fontFamily: 'Jomhuria',
       ),
       titleTextStyle: TextStyle(
         color: Color(0xFF000000),
         fontSize: 20,
-        fontFamily: 'Jomhuria-Bold',
+        fontFamily: 'Jomhuria',
       ),
     ),
 
     bottomAppBarTheme: const BottomAppBarThemeData(
       color: Color(0xFFFFC95C),
-      elevation: 4,
+      elevation: 8,
       shape: AutomaticNotchedShape(
         RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
@@ -53,7 +53,7 @@ final ThemeData appTheme = ThemeData(
       backgroundColor: Color.fromARGB(186, 255, 201, 92),
       selectedItemColor: Color(0xFFFF6A00),
       unselectedItemColor: Color(0xFF000000),
-      elevation: 4,
+      elevation: 8,
       selectedIconTheme: IconThemeData(
         color: Color(0xFF000000),
         size: 30,
@@ -64,12 +64,12 @@ final ThemeData appTheme = ThemeData(
       ),
       selectedLabelStyle: TextStyle(
         color: Color(0xFFFF6A00),
-        fontFamily: 'Inter_18pt-Regular',
+        fontFamily: 'Inter_18pt',
         fontSize: 14,
       ),
       unselectedLabelStyle: TextStyle(
         color: Color(0xFF000000),
-        fontFamily: 'Inter_18pt-Regular',
+        fontFamily: 'Inter_18pt',
         fontSize: 14,
       ),
       showSelectedLabels: true,
@@ -86,7 +86,7 @@ final ThemeData appTheme = ThemeData(
         foreground: Paint()
           ..strokeWidth = 1
           ..color = const Color.fromARGB(255, 255, 0, 0),
-        fontFamily: 'Inter_18pt-Regular',
+        fontFamily: 'Inter_18pt',
       ),
       behavior: SnackBarBehavior.floating,
       shape: RoundedRectangleBorder(
@@ -104,7 +104,7 @@ final ThemeData appTheme = ThemeData(
     popupMenuTheme: PopupMenuThemeData(
       color: const Color(0xFFFFB743),
       textStyle: const TextStyle(color: Colors.white),
-      elevation: 8,
+      elevation: 12,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(40)),
     ),
 
@@ -121,7 +121,7 @@ final ThemeData appTheme = ThemeData(
       selectedColor: const Color(0xFFFF6A00),
       fillColor: const Color.fromARGB(158, 255, 247, 0),
       textStyle: const TextStyle(
-        fontFamily: 'Inter_18pt-Regular',
+        fontFamily: 'Inter_18pt',
         fontSize: 16,
       ),
     ),
@@ -154,7 +154,7 @@ final ThemeData appTheme = ThemeData(
       fillColor: const Color.fromARGB(255, 255, 253, 126),
       hintStyle: const TextStyle(
         color: Color.fromARGB(255, 0, 0, 0),
-        fontFamily: 'Inter_18pt-Regular',
+        fontFamily: 'Inter_18pt',
       ),
       contentPadding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
       border: OutlineInputBorder(

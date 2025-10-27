@@ -75,7 +75,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
           ),
         ),
         child: Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.all(5),
           child: Column(
             children: [
               const SizedBox(height: 30),
@@ -92,23 +92,28 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                   ),
                 ),
               ),
-              const SizedBox(height: 30),
+              const SizedBox(height: 15),
               const Text(
                 "Login to your Account",
                 textAlign: TextAlign.center,
+                textHeightBehavior: TextHeightBehavior(
+                  applyHeightToFirstAscent: true,
+                  applyHeightToLastDescent: true,
+                ),
                 style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
+                  fontSize: 50,
                   color: Color.fromARGB(255, 0, 0, 0),
                 ),
               ),
-              const SizedBox(height: 5),
               const Text(
                 "Enter your Email and Password",
+                textHeightBehavior: TextHeightBehavior(
+                  applyHeightToFirstAscent: true,
+                  applyHeightToLastDescent: true,
+                ),
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
+                  fontSize: 30,
                   color: Color.fromARGB(255, 0, 0, 0),
                 ),
               ),
@@ -130,11 +135,14 @@ class _LoginPageState extends ConsumerState<LoginPage> {
               ),
               const SizedBox(height: 10),
               const Text(
-                "OR",
+                "or",
+                textHeightBehavior: TextHeightBehavior(
+                  applyHeightToFirstAscent: true,
+                  applyHeightToLastDescent: true,
+                ),
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
+                  fontSize: 30,
                   color: Color.fromARGB(255, 0, 0, 0),
                 ),
               ),
@@ -173,9 +181,13 @@ class _LoginPageState extends ConsumerState<LoginPage> {
               const SizedBox(height: 15),
               const Text(
                 "Don't have an Account?",
+                textHeightBehavior: TextHeightBehavior(
+                  applyHeightToFirstAscent: true,
+                  applyHeightToLastDescent: true,
+                ),
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  fontSize: 24,
+                  fontSize: 30,
                   color: Color.fromARGB(255, 0, 0, 0),
                 ),
               ),
