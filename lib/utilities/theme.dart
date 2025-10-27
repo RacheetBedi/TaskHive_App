@@ -12,7 +12,7 @@ final ThemeData appTheme = ThemeData(
 
     //AppBar Themes
     appBarTheme: const AppBarThemeData(
-      backgroundColor: Color(0xFFFFDD97),
+      backgroundColor: Color(0xFFFFC95C),
       foregroundColor: Color(0xFF000000),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(bottom: Radius.circular(16)),

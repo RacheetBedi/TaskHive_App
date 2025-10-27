@@ -93,32 +93,52 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                 ),
               ),
               const SizedBox(height: 30),
+              const Text(
+                "Login to your Account",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  color: Color.fromARGB(255, 0, 0, 0),
+                ),
+              ),
+              const SizedBox(height: 5),
+              const Text(
+                "Enter your Email and Password",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Color.fromARGB(255, 0, 0, 0),
+                ),
+              ),
+              const SizedBox(height: 10),
               TextField(
                 controller: email,
-                decoration: const InputDecoration(hintText: 'Enter email'),
+                decoration: const InputDecoration(hintText: 'email@domain.com'),
               ),
               const SizedBox(height: 10),
               TextField(
                 controller: password,
                 obscureText: true,
-                decoration: const InputDecoration(hintText: 'Enter password'),
+                decoration: const InputDecoration(hintText: 'password'),
               ),
               const SizedBox(height: 10),
               ElevatedButton(
                 onPressed: _signInWithEmail,
                 child: const Text("Login"),
               ),
-              const SizedBox(height: 15),
-              ElevatedButton(
-                onPressed: () => Get.to(() => const Signup()),
-                child: const Text("Sign Up"),
+              const SizedBox(height: 10),
+              const Text(
+                "OR",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Color.fromARGB(255, 0, 0, 0),
+                ),
               ),
-              const SizedBox(height: 15),
-              ElevatedButton(
-                onPressed: () => Get.to(() => const Forgot()),
-                child: const Text("Forgot Password"),
-              ),
-              const SizedBox(height: 30),
+              const SizedBox(height: 10),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFFE69900),
@@ -145,36 +165,25 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                   ],
                 ),
               ),
-              const SizedBox(height: 30),
-                ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFFE69900),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
-                    side: const BorderSide(color: Color(0xFFFFE100), width: 4),
-                  ),
+              const SizedBox(height: 10),
+              ElevatedButton(
+                onPressed: () => Get.to(() => const Forgot()),
+                child: const Text("Forgot Password?"),
+              ),
+              const SizedBox(height: 15),
+              const Text(
+                "Don't have an Account?",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 24,
+                  color: Color.fromARGB(255, 0, 0, 0),
                 ),
-                onPressed: ((){
-                  Get.snackbar(
-                    "Error",
-                    "Sign in with Apple unexpectedly failed.",
-                    duration: const Duration(seconds: 10),
-                  );
-                }),
-                child: const Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(Icons.apple, color: Colors.black, size: 32,),
-                    Padding(
-                      padding: EdgeInsets.all(8.0),
-                      child: Text(
-                        "Sign In with Apple",
-                        style: TextStyle(color: Colors.black),
-                      ),
-                    ),
-                  ],
-                ),
-                ),
+              ),
+              const SizedBox(height: 10),
+              ElevatedButton(
+                onPressed: () => Get.to(() => const Signup()),
+                child: const Text("Sign Up"),
+              ),
             ],
           ),
         ),
