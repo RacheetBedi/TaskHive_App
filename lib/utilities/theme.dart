@@ -28,12 +28,12 @@ final ThemeData appTheme = ThemeData(
       scrolledUnderElevation: 0,
       toolbarTextStyle: TextStyle(
         color: Color(0xFF000000),
-        fontSize: 16,
+        fontSize: 30,
         fontFamily: 'Jomhuria',
       ),
       titleTextStyle: TextStyle(
         color: Color(0xFF000000),
-        fontSize: 20,
+        fontSize: 40,
         fontFamily: 'Jomhuria',
       ),
     ),
