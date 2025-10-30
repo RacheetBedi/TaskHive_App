@@ -7,7 +7,7 @@ import 'package:flutter_app/models/app_user.dart';
 import 'package:flutter_app/pages/forgot.dart';
 import 'package:flutter_app/pages/homepage.dart';
 import 'package:flutter_app/pages/login_page.dart';
-import 'package:flutter_app/pages/signup.dart';
+import 'package:flutter_app/pages/signupStudent.dart';
 import 'package:flutter_app/providers/auth_provider.dart';
 import 'package:flutter_riverpod/legacy.dart';
 import 'package:get/get_core/src/get_main.dart';

@@ -6,7 +6,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_app/models/app_user.dart';
 import 'package:flutter_app/pages/forgot.dart';
 import 'package:flutter_app/pages/homepage.dart';
-import 'package:flutter_app/pages/signup.dart';
+import 'package:flutter_app/pages/role.dart';
+import 'package:flutter_app/pages/signupStudent.dart';
 import 'package:flutter_app/providers/auth_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get_core/src/get_main.dart';
@@ -235,7 +236,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
               ),
               const SizedBox(height: 10),
               ElevatedButton(
-                onPressed: () => Get.to(() => const Signup()),
+                onPressed: () => Get.to(() => const Role()),
                 child: const Text("Sign Up"),
               ),
             ],

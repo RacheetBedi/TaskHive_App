@@ -4,14 +4,14 @@ import 'package:flutter_app/routing/wrapper.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 
-class Signup extends StatefulWidget {
-  const Signup({super.key});
+class SignupStudent extends StatefulWidget {
+  const SignupStudent({super.key});
 
   @override
-  State<Signup> createState() => _SignupState();
+  State<SignupStudent> createState() => _SignupStudentState();
 }
 
-class _SignupState extends State<Signup> {
+class _SignupStudentState extends State<SignupStudent> {
 
   TextEditingController email = TextEditingController();
   TextEditingController password = TextEditingController();
@@ -24,7 +24,7 @@ class _SignupState extends State<Signup> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Sign Up"),),
+      appBar: AppBar(title: Text("Sign Up as Student"),),
       body: Container(
         decoration: const BoxDecoration(
           image: DecorationImage(
