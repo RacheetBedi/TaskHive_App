@@ -65,37 +65,6 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     return authState.when(
       data: (user) {
         if (user != null) {
-          //Only happens once, on entry.
-          debugPrint("Here 1");
-          if(authNotifier.isShowingNewUserDialog){
-            debugPrint('Here 2');
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              showDialog<String>(
-                context: context,
-                builder: (BuildContext context) => Dialog(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        const Text('Enter your desired account password here:'),
-                        const SizedBox(height: 15),
-                        TextField(
-                          controller: googlePassword,
-                          decoration: const InputDecoration(
-                            hintText: 'Enter your google account password here.',
-                            hintStyle: TextStyle(
-                              fontStyle: FontStyle.italic,
-                            ))
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ).then((_) => authNotifier.clearNewUserDialogFlag());
-            });
-          }
           return const Homepage();
         }
 
@@ -250,3 +219,35 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     );
   }
 }
+
+          // //Only happens once, on entry.
+          // debugPrint("Here 1");
+          // if(authNotifier.isShowingNewUserDialog){
+          //   debugPrint('Here 2');
+          //   WidgetsBinding.instance.addPostFrameCallback((_) {
+          //     showDialog<String>(
+          //       context: context,
+          //       builder: (BuildContext context) => Dialog(
+          //         child: Padding(
+          //           padding: const EdgeInsets.all(8.0),
+          //           child: Column(
+          //             mainAxisSize: MainAxisSize.min,
+          //             mainAxisAlignment: MainAxisAlignment.center,
+          //             children: <Widget>[
+          //               const Text('Enter your desired account password here:'),
+          //               const SizedBox(height: 15),
+          //               TextField(
+          //                 controller: googlePassword,
+          //                 decoration: const InputDecoration(
+          //                   hintText: 'Enter your google account password here.',
+          //                   hintStyle: TextStyle(
+          //                     fontStyle: FontStyle.italic,
+          //                   ))
+          //               ),
+          //             ],
+          //           ),
+          //         ),
+          //       ),
+          //     ).then((_) => authNotifier.clearNewUserDialogFlag());
+          //   });
+          // }

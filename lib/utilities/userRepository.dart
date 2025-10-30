@@ -1,8 +1,14 @@
+import 'dart:nativewrappers/_internal/vm/lib/ffi_patch.dart';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_app/models/app_user.dart';
 import 'package:flutter_app/providers/auth_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:get/get_navigation/get_navigation.dart';
+import 'package:get/utils.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 class UserRepository {
 
@@ -14,8 +20,21 @@ class UserRepository {
     final authState = ref.read(authProvider);
     return authState.when(
       data: (user) => user,
-      loading: () => null,
-      error: (_, __) => null,
+      loading: (){
+        const Scaffold(
+        body: Center(
+          child: CircularProgressIndicator(),
+        )
+      );
+      return null;
+      },
+      error: (error, st){
+        Get.snackbar(
+          "Error",
+          "User repository connection error: ${error.toString()}",
+          duration: const Duration(seconds: 10),
+        );
+      },
     );
   }
 
@@ -27,10 +46,10 @@ class UserRepository {
     final user = currentAppUser;
     if(user == null) return null;
 
-
     final doc = await _firestore.collection('users').doc(user.uid).get();
 
     return AppUser(
+      //FIX THESE WITH FIREBASE REFERENCES!
       uid: user.uid,
       displayName: user.displayName,
       email: user.email,
@@ -45,8 +64,64 @@ class UserRepository {
       logoPref: doc.data()?['password'] ?? false,
       country_code: doc.data()?['country_code'] ?? false,
       userName: doc.data()?['userName'] ?? false,
+      password: doc.data()?['password'],
     );
+
+    //USE COPYWITH INSTEAD OF RETURN HERE!
   }
+
+  
+
+  Future<void> updateAppUser({
+    String? uid,
+    String? displayName, 
+    String? email, 
+    String? photoURL,
+    bool? isEmailVerified,
+    String? phoneNumber,
+    bool? hasCompletedSetup,
+    String? description,
+    bool? dark_mode,
+    bool? is_teacher,
+    String? lang,
+    int? logoPref,
+    int? country_code,
+    String? userName,
+    String? password,
+    }) async{
+
+    final user = currentAppUser;
+    if(user == null) return null;
+
+    final docRef = _firestore.collection('users').doc(user.uid);
+    final doc = await docRef.get();
+
+    if(doc.exists){
+      await docRef.set({
+        "dark_mode": dark_mode,
+        "isEmailVerified": isEmailVerified,
+        "hasCompletedSetup": hasCompletedSetup,
+        "is_teacher": is_teacher,
+        "lang": lang,
+        "logo_preference": logoPref,
+        "password": password,
+        "public profile": {
+          "contact_info": {
+            "country_code": country_code,
+            "email_address": email,
+            "phone_number": phoneNumber,
+          },
+          "description": description,
+          "name": displayName,
+          "photo_URL": user.photoURL,
+        },
+        'uid': user.uid,
+        'username': userName,
+      });
+    }
+  }
+
+
 
   Future<void> createUserDocIfNeeded({bool isNewUser = false}) async {
     final user = currentAppUser;
@@ -90,14 +165,14 @@ class UserRepository {
     return doc.exists && (doc.data()?['hasCompletedSetup'] == true);
   }
 
-  Future<void> completeSetup(String username) async {
-    final user = currentAppUser;
-    if(user == null) return;
+  // Future<void> completeSetup(String username) async {
+  //   final user = currentAppUser;
+  //   if(user == null) return;
 
-    await _firestore.collection('users').doc(user.uid).set({
-      'username': username,
-      'hasCompletedSetup': true,
-      'updatedAt': FieldValue.serverTimestamp(),
-    }, SetOptions(merge: true));
-  }
+  //   await _firestore.collection('users').doc(user.uid).set({
+  //     'username': username,
+  //     'hasCompletedSetup': true,
+  //     'updatedAt': FieldValue.serverTimestamp(),
+  //   }, SetOptions(merge: true));
+  // }
 }
