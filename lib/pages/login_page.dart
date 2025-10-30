@@ -35,8 +35,10 @@ class _LoginPageState extends ConsumerState<LoginPage> {
 
   Future<void> _signInWithGoogle() async {
     try{
-
     final authNotifier = ref.read(authProvider.notifier);
+    await authNotifier.signInWithGoogle();
+
+
 
     } catch(e){
         Get.snackbar(
@@ -64,7 +66,9 @@ class _LoginPageState extends ConsumerState<LoginPage> {
       data: (user) {
         if (user != null) {
           //Only happens once, on entry.
+          debugPrint("Here 1");
           if(authNotifier.isShowingNewUserDialog){
+            debugPrint('Here 2');
             WidgetsBinding.instance.addPostFrameCallback((_) {
               showDialog<String>(
                 context: context,
