@@ -79,11 +79,11 @@ class AuthNotifier extends StateNotifier<AsyncValue<AppUser?>> {
       }
     } catch (error, st) {
       state = AsyncValue.error(error, st);
-      Get.snackbar(
-        "Error",
-        "Unexpected Google Sign-In Error: ${error.toString()}",
-        duration: const Duration(seconds: 10),
-      );
+      // Get.snackbar(
+      //   "Error",
+      //   "Unexpected Google Sign-In Error: ${error.toString()}",
+      //   duration: const Duration(seconds: 10),
+      // );
     }
   }
 

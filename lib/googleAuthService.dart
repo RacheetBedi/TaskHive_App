@@ -102,11 +102,11 @@ class GoogleAuthService {
         return userCredential;
       }
     } catch (error) {
-      Get.snackbar(
-        "Error",
-        "Unexpected Google Sign-In Error: ${error.toString()}",
-        duration: const Duration(seconds: 10),
-      );
+      // Get.snackbar(
+      //   "Error",
+      //   "Unexpected Google Sign-In Error: ${error.toString()}",
+      //   duration: const Duration(seconds: 10),
+      // );
       rethrow;
     }
   }
