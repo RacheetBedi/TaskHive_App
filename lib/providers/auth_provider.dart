@@ -49,6 +49,9 @@ class AuthNotifier extends StateNotifier<AsyncValue<AppUser?>> {
     }
   }
 
+  bool _isShowingNewUserDialog = false;
+  bool get isShowingNewUserDialog => _isShowingNewUserDialog;
+
 
   Future<void> signInWithGoogle() async {
     state = const AsyncValue.loading(); 
@@ -61,9 +64,15 @@ class AuthNotifier extends StateNotifier<AsyncValue<AppUser?>> {
 
 
       if (userCredential?.user != null) {
+        final isNewUser = userCredential.additionalUserInfo?.isNewUser ?? false;
+        if(isNewUser){
+          _isShowingNewUserDialog = true;
+        }
+
+
         final appUser = AppUser.fromFirebaseUser(
           userCredential!.user!,
-          isNewUser: userCredential.additionalUserInfo?.isNewUser ?? false);
+          isNewUser: isNewUser);
         state = AsyncValue.data(appUser);
       } else {
         state = const AsyncValue.data(null);
@@ -76,6 +85,10 @@ class AuthNotifier extends StateNotifier<AsyncValue<AppUser?>> {
         duration: const Duration(seconds: 10),
       );
     }
+  }
+
+  void clearNewUserDialogFlag(){
+    _isShowingNewUserDialog = false;
   }
 
   Future<void> signOut() async {
