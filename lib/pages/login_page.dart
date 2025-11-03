@@ -38,8 +38,6 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     final authNotifier = ref.read(authProvider.notifier);
     await authNotifier.signInWithGoogle();
 
-
-
     } catch(e){
         Get.snackbar(
           "Error",
@@ -65,6 +63,11 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     return authState.when(
       data: (user) {
         if (user != null) {
+          print("Hello, this also reached here.");
+          if(user.hasCompletedSetup == false){
+            print("Hello, this reached here.");
+            return const Role();
+          }
           return const Homepage();
         }
 

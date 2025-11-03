@@ -14,7 +14,7 @@ class AppUser{
   final String? photoURL;
   final bool isEmailVerified;
   final String? phoneNumber;
-  final bool? hasCompletedSetup;
+  final bool hasCompletedSetup;
   final String? description;
 
   const AppUser({
@@ -24,7 +24,7 @@ class AppUser{
     this.photoURL,
     this.isEmailVerified = false,
     this.phoneNumber,
-    this.hasCompletedSetup,
+    required this.hasCompletedSetup,
     this.description,
     this.dark_mode,
     this.is_teacher,
@@ -36,7 +36,7 @@ class AppUser{
   });
 
   factory AppUser.fromFirebaseUser(User user, {
-    bool hasCompletedSetup = false,
+    required bool hasCompletedSetup,
     bool dark_mode = false,
     bool is_teacher = false,
     String lang = "EN",

@@ -19,6 +19,9 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 class AuthNotifier extends StateNotifier<AsyncValue<AppUser?>> {
   final Ref ref;
+  final credentialUser = null;
+  bool? _isNewUser;
+  bool _hasInitialized = false;
   StreamSubscription<User?>? _authSubscription;
 
   AuthNotifier(this.ref) : super(const AsyncValue.loading()) {
@@ -29,9 +32,13 @@ class AuthNotifier extends StateNotifier<AsyncValue<AppUser?>> {
     _authSubscription = FirebaseAuth.instance.authStateChanges().listen(
       (User? firebaseUser) {
         if (firebaseUser != null) {
-          state = AsyncValue.data(AppUser.fromFirebaseUser(firebaseUser));
+          if(!_hasInitialized){
+          state = AsyncValue.data(AppUser.fromFirebaseUser(firebaseUser, hasCompletedSetup: !(_isNewUser ?? false)));
+          }
         } else {
           state = const AsyncValue.data(null);
+          _isNewUser = null;
+          _hasInitialized = false;
         }
       },
       onError: (error, stackTrace) {
@@ -43,14 +50,11 @@ class AuthNotifier extends StateNotifier<AsyncValue<AppUser?>> {
   Future<void> _loadCurrentUser() async {
     final firebaseUser = FirebaseAuth.instance.currentUser;
     if (firebaseUser != null) {
-      state = AsyncValue.data(AppUser.fromFirebaseUser(firebaseUser));
+      state = AsyncValue.data(AppUser.fromFirebaseUser(firebaseUser, hasCompletedSetup: !(_isNewUser ?? false)));
     } else {
       state = const AsyncValue.data(null);
     }
   }
-
-  bool _isShowingNewUserDialog = false;
-  bool get isShowingNewUserDialog => _isShowingNewUserDialog;
 
 
   Future<void> signInWithGoogle() async {
@@ -59,20 +63,17 @@ class AuthNotifier extends StateNotifier<AsyncValue<AppUser?>> {
     try {
 
       final authService = ref.read(GoogleAuthServiceProvider);
-      final userCredential = await authService.signInWithGoogleFirebase();
+      final credentialUser = await authService.signInWithGoogleFirebase();
 
 
 
-      if (userCredential?.user != null) {
-        final hasCompletedSetup = userCredential.additionalUserInfo?.isNewUser ?? false;
-        if(hasCompletedSetup){
-          _isShowingNewUserDialog = true;
-        }
-
+      if (credentialUser?.user != null) {
+        _isNewUser = credentialUser.additionalUserInfo?.isNewUser ?? false;
+        _hasInitialized = true;
 
         final appUser = AppUser.fromFirebaseUser(
-          userCredential!.user!,
-          hasCompletedSetup: hasCompletedSetup);
+          credentialUser!.user!,
+          hasCompletedSetup: !_isNewUser!);
         state = AsyncValue.data(appUser);
       } else {
         state = const AsyncValue.data(null);
@@ -85,10 +86,6 @@ class AuthNotifier extends StateNotifier<AsyncValue<AppUser?>> {
       //   duration: const Duration(seconds: 10),
       // );
     }
-  }
-
-  void clearNewUserDialogFlag(){
-    _isShowingNewUserDialog = false;
   }
 
   Future<void> signOut() async {
@@ -105,7 +102,7 @@ class AuthNotifier extends StateNotifier<AsyncValue<AppUser?>> {
           .signInWithEmailAndPassword(email: email, password: password);
 
       if (credential.user != null) {
-        state = AsyncValue.data(AppUser.fromFirebaseUser(credential.user!));
+        state = AsyncValue.data(AppUser.fromFirebaseUser(credential.user!, hasCompletedSetup: true));
       } else {
         state = const AsyncValue.data(null);
       }
