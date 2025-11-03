@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_app/pages/login_page.dart';
+import 'package:flutter_app/pages/role.dart';
 import 'package:flutter_app/routing/wrapper.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
@@ -55,7 +56,7 @@ class _SignupStudentState extends State<SignupStudent> {
                     ),
                     iconSize: 40,
                     onPressed: () {
-                      Get.to(() => const LoginPage());
+                      Get.to(() => const Role());
                     },
                   ),
                   ),
@@ -89,7 +90,7 @@ class _SignupStudentState extends State<SignupStudent> {
                     const SizedBox(height: 15,),
                     TextField(
                       controller: email,
-                      decoration: const InputDecoration(hintText: 'Enter email'),
+                      decoration: const InputDecoration(hintText: 'email@domain.com'),
                     ),
                     const SizedBox(height: 10,),
                     TextField(
