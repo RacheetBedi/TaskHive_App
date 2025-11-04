@@ -14,13 +14,13 @@ final ThemeData appTheme = ThemeData(
       centerTitle: true,
       backgroundColor: Color(0xFFFFC95C),
       foregroundColor: Colors.black,
-      elevation: 0,
+      elevation: 10,
       shadowColor: Color(0xFFFFDD97),
       iconTheme: IconThemeData(color: Colors.red),
       actionsIconTheme: IconThemeData(color: Colors.red),
       titleTextStyle: TextStyle(
         color: Colors.black,
-        fontSize: 34,
+        fontSize: 80,
         fontWeight: FontWeight.bold,
         fontFamily: 'Jomhuria',
       ),
@@ -28,7 +28,7 @@ final ThemeData appTheme = ThemeData(
 
     bottomAppBarTheme: const BottomAppBarThemeData(
       color: Color(0xFFFFC95C),
-      elevation: 8,
+      elevation: 10,
       shape: AutomaticNotchedShape(
         RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
@@ -41,7 +41,7 @@ final ThemeData appTheme = ThemeData(
       backgroundColor: Color.fromARGB(186, 255, 201, 92),
       selectedItemColor: Color(0xFFFF6A00),
       unselectedItemColor: Color(0xFF000000),
-      elevation: 8,
+      elevation: 10,
       selectedIconTheme: IconThemeData(
         color: Color(0xFF000000),
         size: 30,
