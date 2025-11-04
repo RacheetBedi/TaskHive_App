@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -20,8 +21,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 class AuthNotifier extends StateNotifier<AsyncValue<AppUser?>> {
   final Ref ref;
   final credentialUser = null;
-  bool? _isNewUser;
-  bool _hasInitialized = false;
+  bool docExists = false;
   StreamSubscription<User?>? _authSubscription;
 
   AuthNotifier(this.ref) : super(const AsyncValue.loading()) {
@@ -32,13 +32,10 @@ class AuthNotifier extends StateNotifier<AsyncValue<AppUser?>> {
     _authSubscription = FirebaseAuth.instance.authStateChanges().listen(
       (User? firebaseUser) {
         if (firebaseUser != null) {
-          if(!_hasInitialized){
-          state = AsyncValue.data(AppUser.fromFirebaseUser(firebaseUser, hasCompletedSetup: !(_isNewUser ?? false)));
-          }
+          state = AsyncValue.data(AppUser.fromFirebaseUser(firebaseUser, hasCompletedSetup: docExists));
         } else {
           state = const AsyncValue.data(null);
-          _isNewUser = null;
-          _hasInitialized = false;
+          docExists = false;
         }
       },
       onError: (error, stackTrace) {
@@ -47,13 +44,19 @@ class AuthNotifier extends StateNotifier<AsyncValue<AppUser?>> {
     );
   }
 
-  Future<void> _loadCurrentUser() async {
-    final firebaseUser = FirebaseAuth.instance.currentUser;
-    if (firebaseUser != null) {
-      state = AsyncValue.data(AppUser.fromFirebaseUser(firebaseUser, hasCompletedSetup: !(_isNewUser ?? false)));
-    } else {
-      state = const AsyncValue.data(null);
-    }
+  // Future<void> _loadCurrentUser() async {
+  //   final firebaseUser = FirebaseAuth.instance.currentUser;
+  //   if (firebaseUser != null) {
+  //     state = AsyncValue.data(AppUser.fromFirebaseUser(firebaseUser, hasCompletedSetup: docExists));
+  //   } else {
+  //     state = const AsyncValue.data(null);
+  //   }
+  // }
+
+  Future<bool> checkDocExists(String uid) async{
+    final docSnapshot = await FirebaseFirestore.instance.collection('users').doc(uid).get();
+
+    return docSnapshot.exists;
   }
 
 
@@ -67,13 +70,13 @@ class AuthNotifier extends StateNotifier<AsyncValue<AppUser?>> {
 
 
 
+
       if (credentialUser?.user != null) {
-        _isNewUser = credentialUser.additionalUserInfo?.isNewUser ?? false;
-        _hasInitialized = true;
+        docExists = (checkDocExists(credentialUser.user!.uid)) as bool;
 
         final appUser = AppUser.fromFirebaseUser(
           credentialUser!.user!,
-          hasCompletedSetup: !_isNewUser!);
+          hasCompletedSetup: docExists);
         state = AsyncValue.data(appUser);
       } else {
         state = const AsyncValue.data(null);
