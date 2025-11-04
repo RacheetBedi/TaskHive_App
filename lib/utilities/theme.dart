@@ -9,31 +9,19 @@ final ThemeData appTheme = ThemeData(
     scaffoldBackgroundColor: const Color(0xFFFFDD97),
     dividerColor: const Color(0xFF000000),
 
-
-    //AppBar Themes
-    appBarTheme: const AppBarThemeData(
+    //App Bar Themes
+    appBarTheme: const AppBarTheme(
+      centerTitle: true,
       backgroundColor: Color(0xFFFFC95C),
-      foregroundColor: Color(0xFF000000),
+      foregroundColor: Colors.black,
+      elevation: 0,
       shadowColor: Color(0xFFFFDD97),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(bottom: Radius.circular(0)),
-      ),
-      iconTheme: IconThemeData(
-        color: Color(0xFF000000),
-      ),
-      actionsIconTheme: IconThemeData(
-        color: Color(0xFF000000),
-      ),
-      elevation: 8,
-      scrolledUnderElevation: 0,
-      toolbarTextStyle: TextStyle(
-        color: Color(0xFF000000),
-        fontSize: 30,
-        fontFamily: 'Jomhuria',
-      ),
+      iconTheme: IconThemeData(color: Colors.red),
+      actionsIconTheme: IconThemeData(color: Colors.red),
       titleTextStyle: TextStyle(
-        color: Color(0xFF000000),
-        fontSize: 40,
+        color: Colors.black,
+        fontSize: 34,
+        fontWeight: FontWeight.bold,
         fontFamily: 'Jomhuria',
       ),
     ),
