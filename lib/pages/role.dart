@@ -44,11 +44,11 @@ class _RoleState extends State<Role> {
                           content: const Text("Do you wish to continue?"),
                           actions: [
                             ElevatedButton(
-                              onPressed: Get.to(() => const LoginPage()),
+                              onPressed: () {},//Get.to(() => const LoginPage()),
                               child: const Text("YES"),
                             ),
                             ElevatedButton(
-                              onPressed: onPressed, 
+                              onPressed: () {},//onPressed, 
                               child: const Text("NO"),
                             ),
                           ]
