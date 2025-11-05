@@ -72,7 +72,7 @@ class AuthNotifier extends StateNotifier<AsyncValue<AppUser?>> {
 
 
       if (credentialUser?.user != null) {
-        docExists = (checkDocExists(credentialUser.user!.uid)) as bool;
+        docExists = await (checkDocExists(credentialUser.user!.uid));
 
         final appUser = AppUser.fromFirebaseUser(
           credentialUser!.user!,
