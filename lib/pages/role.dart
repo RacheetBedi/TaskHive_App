@@ -38,7 +38,25 @@ class _RoleState extends State<Role> {
                     ),
                     iconSize: 40,
                     onPressed: () {
+                      Center(
+                        child: AlertDialog(
+                          title: const Text("NOTE: You are about to sign out."),
+                          content: const Text("Do you wish to continue?"),
+                          actions: [
+                            ElevatedButton(
+                              onPressed: Get.to(() => const LoginPage()),
+                              child: const Text("YES"),
+                            ),
+                            ElevatedButton(
+                              onPressed: onPressed, 
+                              child: const Text("NO"),
+                            ),
+                          ]
+                        ),
+                      );
+
                       Get.to(() => const LoginPage());
+
                     },
                   ),
                   ),
