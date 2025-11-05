@@ -16,64 +16,81 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(120),
+        preferredSize: const Size.fromHeight(130),
         child: AppBar(
           automaticallyImplyLeading: false,
-          elevation: 0,
-          backgroundColor: const Color(0xFFFFC95C),
           flexibleSpace: SafeArea(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+            child: Stack(
+              clipBehavior: Clip.none,
               children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Image.asset(
-                        'assets/images/Circle Logo.png',
-                        height: 52,
-                      ),
-                      Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 3),
-                        decoration: BoxDecoration(
-                          color: const Color.fromARGB(104, 255, 255, 255),
-                          borderRadius: BorderRadius.circular(25),
+                Positioned(
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Image.asset(
+                          'assets/images/Circle Logo.png',
+                          height: 100,
+                          fit: BoxFit.cover,
                         ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            IconButton(
-                              icon: const Icon(Icons.history_outlined, color: Colors.red),
-                              iconSize: 26,
-                              onPressed: () {},
-                            ),
-                            IconButton(
-                              icon: const Icon(Icons.analytics_outlined, color: Colors.red),
-                              iconSize: 26,
-                              onPressed: () {},
-                            ),
-                            IconButton(
-                              icon: const Icon(Icons.settings_outlined, color: Colors.red),
-                              iconSize: 26,
-
-                              onPressed: () {},
-                            ),
-                          ],
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 3),
+                          decoration: BoxDecoration(
+                            color: const Color.fromARGB(104, 255, 255, 255),
+                            borderRadius: BorderRadius.circular(25),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              IconButton(
+                                icon: const Icon(Icons.history_outlined, color: Colors.red),
+                                iconSize: 26,
+                                padding: const EdgeInsets.symmetric(horizontal: 6),
+                                onPressed: () {},
+                              ),
+                              IconButton(
+                                icon: const Icon(Icons.analytics_outlined, color: Colors.red),
+                                iconSize: 26,
+                                padding: const EdgeInsets.symmetric(horizontal: 6),
+                                onPressed: () {},
+                              ),
+                              IconButton(
+                                icon: const Icon(Icons.settings_outlined, color: Colors.red),
+                                iconSize: 26,
+                                padding: const EdgeInsets.symmetric(horizontal: 6),
+                                onPressed: () {},
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
 
-                // Title Below
-                const Text(
-                  "Home",
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 42,
-                    fontWeight: FontWeight.bold,
-                    fontFamily: 'Jomhuria',
+                const Positioned(
+                  top: 64,
+                  left: 0,
+                  right: 0,
+                  child: Center(
+                    child: Text(
+                      "Home",
+                      textHeightBehavior: TextHeightBehavior(
+                        applyHeightToFirstAscent: false,
+                        applyHeightToLastDescent: false,
+                        leadingDistribution: TextLeadingDistribution.proportional,
+                      ),
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 80,
+                        height: 0.65,
+                        fontFamily: 'Jomhuria',
+                      ),
+                    ),
                   ),
                 ),
               ],
