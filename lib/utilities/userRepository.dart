@@ -48,8 +48,9 @@ class UserRepository {
 
     return AppUser(
       //FIX THESE WITH FIREBASE REFERENCES!
-      uid: user.uid,
-      displayName: user.displayName,
+      uid: user.uid, 
+      displayFirstName: user.displayFirstName,
+      displayLastName: user.displayLastName,
       email: user.email,
       photoURL: user.photoURL,
       isEmailVerified: user.isEmailVerified,
@@ -72,7 +73,8 @@ class UserRepository {
 
   Future<void> updateAppUser({
     String? uid,
-    String? displayName, 
+    String? displayFirstName,
+    String? displayLastName,
     String? email, 
     String? photoURL,
     bool? isEmailVerified,
@@ -110,7 +112,8 @@ class UserRepository {
             "phone_number": phoneNumber,
           },
           "description": description,
-          "name": displayName,
+          "firstName": displayFirstName,
+          "lastName": displayLastName,
           "photo_URL": user.photoURL,
         },
         'uid': user.uid,
@@ -144,7 +147,8 @@ class UserRepository {
             "phone_number": user.phoneNumber,
           },
           "description": null,
-          "name": user.displayName,
+          "firstName": user.displayFirstName,
+          "lastName": user.displayLastName,
           "photo_URL": user.photoURL,
         },
         'uid': user.uid,

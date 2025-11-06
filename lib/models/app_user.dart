@@ -8,7 +8,8 @@ class AppUser{
   final int? logoPref;
   final String? password;
   final int? country_code;
-  final String? displayName;
+  final String? displayFirstName;
+  final String? displayLastName;
   final String? userName;
   final String? email;
   final String? photoURL;
@@ -19,7 +20,8 @@ class AppUser{
 
   const AppUser({
     required this.uid,
-    this.displayName,
+    this.displayFirstName,
+    this.displayLastName,
     this.email,
     this.photoURL,
     this.isEmailVerified = false,
@@ -45,10 +47,13 @@ class AppUser{
     int country_code = 1,
     String userName = "placeholder2",
     String description = "",
+    String firstName = "",
+    String lastName = "",
     }){
     return AppUser(
       uid: user.uid,
-      displayName: user.displayName,
+      displayFirstName: firstName,
+      displayLastName: lastName,
       email: user.email,
       photoURL: user.photoURL,
       isEmailVerified: user.emailVerified,
@@ -75,7 +80,8 @@ class AppUser{
   }) {
     return AppUser(
       uid: this.uid,
-      displayName: displayName ?? this.displayName,
+      displayFirstName: displayFirstName ?? this.displayFirstName,
+      displayLastName: displayLastName ?? this.displayLastName,
       email: email ?? this.email,
       photoURL: photoURL ?? this.photoURL,
       isEmailVerified: isEmailVerified ?? this.isEmailVerified,

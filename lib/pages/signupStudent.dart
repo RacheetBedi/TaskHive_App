@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_app/pages/login_page.dart';
 import 'package:flutter_app/pages/role.dart';
+import 'package:flutter_app/providers/auth_provider.dart';
 import 'package:flutter_app/routing/wrapper.dart';
 import 'package:flutter_app/utilities/userRepository.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -24,7 +25,44 @@ class _SignupStudentState extends ConsumerState<SignupStudent> {
   TextEditingController last_name = TextEditingController();
   TextEditingController password2 = TextEditingController();
 
-  signup()async{
+  signupGoogle() async{
+    final authNotifier = ref.read(authProvider.notifier);
+    final authState = ref.watch(authProvider);
+
+
+    email.text = authState.asData?.value?.email ?? '';
+
+    first_name.text = authState.asData?.value?.displayFirstName ?? '';
+
+    last_name.text = authState.asData?.value?.displayLastName ?? '';
+
+    username.text = authState.asData?.value?.userName ?? '';
+
+    if(password.text != password2.text){
+      Get.snackbar("Error", "Passwords do not match");
+      return;
+    }
+
+    try{
+    final currentUser = UserRepository(ref);
+    await currentUser.createUserDocIfNeededWithGoogle(); //Add a non-goole version later.
+    Get.offAll(() => const Wrapper());
+    } on FirebaseAuthException catch(e){
+        Get.snackbar(
+          "Error",
+          "Unexpected Firebase Sign-In Error: ${e.toString()}",
+          duration: const Duration(seconds: 10),
+        );
+    } catch (e){
+        Get.snackbar(
+          "Error",
+          "Unexpected User Sign-In Error: ${e.toString()}",
+          duration: const Duration(seconds: 10),
+        );
+    }
+  }
+
+  signupNative()async{
     if(password.text != password2.text){
       Get.snackbar("Error", "Passwords do not match");
       return;
@@ -52,6 +90,7 @@ class _SignupStudentState extends ConsumerState<SignupStudent> {
 
   @override
   Widget build(BuildContext context) {
+    final authNotifier = ref.read(authProvider.notifier);
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(
@@ -138,7 +177,15 @@ class _SignupStudentState extends ConsumerState<SignupStudent> {
                     ),
                     const SizedBox(height: 10,),
                     ElevatedButton(
-                      onPressed: (()=> signup()),
+                      onPressed: (() async{
+                        final isGoogleSignIn = await authNotifier.checkGoogleSignIn();
+                        if(isGoogleSignIn == true){
+                          signupGoogle();
+                        }
+                        else{
+                          signupNative();
+                        }
+                      }),
                       child: const Text("Sign Up")
                     ),
                     const SizedBox(height: 20,),
