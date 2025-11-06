@@ -27,8 +27,23 @@ class _SignupStudentState extends State<SignupStudent> {
       Get.snackbar("Error", "Passwords do not match");
       return;
     }
+
+    try{
     await FirebaseAuth.instance.createUserWithEmailAndPassword(email: email.text, password: password.text);
-    Get.offAll(Wrapper());
+    Get.offAll(() => const Wrapper());
+    } on FirebaseAuthException catch(e){
+        Get.snackbar(
+          "Error",
+          "Unexpected Firebase Sign-In Error: ${e.toString()}",
+          duration: const Duration(seconds: 10),
+        );
+    } catch (e){
+        Get.snackbar(
+          "Error",
+          "Unexpected User Sign-In Error: ${e.toString()}",
+          duration: const Duration(seconds: 10),
+        );
+    }
   }
 
   @override

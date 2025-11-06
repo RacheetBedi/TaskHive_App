@@ -24,7 +24,8 @@ class _WrapperState extends ConsumerState<Wrapper> {
   Widget build(BuildContext context) {
   final authState = ref.watch(authProvider);
 
-    return authState.when(
+    return Scaffold(
+    body: authState.when(
       data: (appUser){
         if(appUser == null){
           return const LoginPage();
@@ -47,8 +48,9 @@ class _WrapperState extends ConsumerState<Wrapper> {
           duration: const Duration(seconds: 10),
         );
 
-        return LoginPage();
+        return const LoginPage();
       }
+    ),
     );
 
     // return Scaffold(

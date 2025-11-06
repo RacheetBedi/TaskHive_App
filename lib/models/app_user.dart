@@ -36,7 +36,7 @@ class AppUser{
   });
 
   factory AppUser.fromFirebaseUser(User user, {
-    required bool hasCompletedSetup,
+    bool hasCompletedSetup = false,
     bool dark_mode = false,
     bool is_teacher = false,
     String lang = "EN",

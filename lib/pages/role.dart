@@ -3,18 +3,22 @@ import 'package:flutter_app/pages/home.dart';
 import 'package:flutter_app/pages/login_page.dart';
 import 'package:flutter_app/pages/signupStudent.dart';
 import 'package:flutter_app/pages/signupTeacher.dart';
+import 'package:flutter_app/providers/auth_provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/get_navigation.dart';
 
-class Role extends StatefulWidget {
+class Role extends ConsumerStatefulWidget {
   const Role({super.key});
   @override
-  State<Role> createState() => _RoleState();
+  ConsumerState<Role> createState() => _RoleState();
 }
 
-class _RoleState extends State<Role> {
+class _RoleState extends ConsumerState<Role> {
+
   @override
   Widget build(BuildContext context) {
+    final authNotifier = ref.read(authProvider.notifier);
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(
@@ -37,26 +41,33 @@ class _RoleState extends State<Role> {
                       color: Colors.black,
                     ),
                     iconSize: 40,
-                    onPressed: () {
-                      Center(
-                        child: AlertDialog(
+                    onPressed: () async {
+                      final result = await showDialog<bool>(
+                        context: context, 
+                        builder: (context) => AlertDialog(
                           title: const Text("NOTE: You are about to sign out."),
                           content: const Text("Do you wish to continue?"),
                           actions: [
                             ElevatedButton(
-                              onPressed: Get.to(() => const LoginPage()),
+                              onPressed: (){
+                                Navigator.pop(context, true);
+                              },
                               child: const Text("YES"),
                             ),
                             ElevatedButton(
-                              onPressed: onPressed, 
+                              onPressed: (){
+                                Navigator.pop(context, false);
+                              }, 
                               child: const Text("NO"),
                             ),
                           ]
                         ),
                       );
 
-                      Get.to(() => const LoginPage());
-
+                      if (result == true){
+                        authNotifier.signOut();
+                        Get.to(() => const LoginPage());
+                      }
                     },
                   ),
                   ),
