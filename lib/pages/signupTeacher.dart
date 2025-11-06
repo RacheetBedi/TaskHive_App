@@ -3,17 +3,18 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_app/pages/login_page.dart';
 import 'package:flutter_app/pages/role.dart';
 import 'package:flutter_app/routing/wrapper.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 
-class SignupTeacher extends StatefulWidget {
+class SignupTeacher extends ConsumerStatefulWidget {
   const SignupTeacher({super.key});
 
   @override
-  State<SignupTeacher> createState() => _SignupTeacherState();
+  ConsumerState<SignupTeacher> createState() => _SignupTeacherState();
 }
 
-class _SignupTeacherState extends State<SignupTeacher> {
+class _SignupTeacherState extends ConsumerState<SignupTeacher> {
 
   TextEditingController email = TextEditingController();
   TextEditingController password = TextEditingController();
