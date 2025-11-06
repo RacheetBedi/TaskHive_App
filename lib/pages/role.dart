@@ -16,6 +16,36 @@ class Role extends ConsumerStatefulWidget {
 
 class _RoleState extends ConsumerState<Role> {
 
+  backButtonPopup() async {
+    final authNotifier = ref.read(authProvider.notifier);
+    final result = await showDialog<bool>(
+      context: context, 
+      builder: (context) => AlertDialog(
+        title: const Text("NOTE: You are about to sign out."),
+        content: const Text("Do you wish to continue?"),
+        actions: [
+          ElevatedButton(
+            onPressed: (){
+              Navigator.pop(context, true);
+            },
+            child: const Text("YES"),
+          ),
+          ElevatedButton(
+            onPressed: (){
+              Navigator.pop(context, false);
+            }, 
+            child: const Text("NO"),
+          ),
+        ]
+      ),
+    );
+
+    if (result == true){
+      authNotifier.signOut();
+      Get.to(() => const LoginPage());
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final authNotifier = ref.read(authProvider.notifier);
@@ -41,34 +71,7 @@ class _RoleState extends ConsumerState<Role> {
                       color: Colors.black,
                     ),
                     iconSize: 40,
-                    onPressed: () async {
-                      final result = await showDialog<bool>(
-                        context: context, 
-                        builder: (context) => AlertDialog(
-                          title: const Text("NOTE: You are about to sign out."),
-                          content: const Text("Do you wish to continue?"),
-                          actions: [
-                            ElevatedButton(
-                              onPressed: (){
-                                Navigator.pop(context, true);
-                              },
-                              child: const Text("YES"),
-                            ),
-                            ElevatedButton(
-                              onPressed: (){
-                                Navigator.pop(context, false);
-                              }, 
-                              child: const Text("NO"),
-                            ),
-                          ]
-                        ),
-                      );
-
-                      if (result == true){
-                        authNotifier.signOut();
-                        Get.to(() => const LoginPage());
-                      }
-                    },
+                    onPressed: backButtonPopup,
                   ),
                   ),
               ),

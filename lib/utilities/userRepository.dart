@@ -12,7 +12,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 class UserRepository {
 
-  final Ref ref;
+  final WidgetRef ref;
 
   UserRepository(this.ref);
 
@@ -123,7 +123,7 @@ class UserRepository {
 
 
 
-  Future<void> createUserDocIfNeeded({bool isNewUser = false}) async {
+  Future<void> createUserDocIfNeededWithGoogle({bool isNewUser = false}) async {
     final user = currentAppUser;
     if(user == null) return null;
 

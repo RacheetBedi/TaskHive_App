@@ -3,17 +3,19 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_app/pages/login_page.dart';
 import 'package:flutter_app/pages/role.dart';
 import 'package:flutter_app/routing/wrapper.dart';
+import 'package:flutter_app/utilities/userRepository.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 
-class SignupStudent extends StatefulWidget {
+class SignupStudent extends ConsumerStatefulWidget {
   const SignupStudent({super.key});
 
   @override
-  State<SignupStudent> createState() => _SignupStudentState();
+  ConsumerState<SignupStudent> createState() => _SignupStudentState();
 }
 
-class _SignupStudentState extends State<SignupStudent> {
+class _SignupStudentState extends ConsumerState<SignupStudent> {
 
   TextEditingController email = TextEditingController();
   TextEditingController password = TextEditingController();
@@ -30,6 +32,8 @@ class _SignupStudentState extends State<SignupStudent> {
 
     try{
     await FirebaseAuth.instance.createUserWithEmailAndPassword(email: email.text, password: password.text);
+    final currentUser = UserRepository(ref);
+    await currentUser.createUserDocIfNeededWithGoogle(); //Add a non-goole version later.
     Get.offAll(() => const Wrapper());
     } on FirebaseAuthException catch(e){
         Get.snackbar(
