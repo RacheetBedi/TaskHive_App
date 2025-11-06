@@ -99,18 +99,38 @@ class _HomeState extends State<Home> {
         ),
       ),
 
-      // bottomNavigationBar: BottomNavigationBar(
-      //   items: 
-      // ),
+      bottomNavigationBar: BottomNavigationBar(
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home_filled),
+            label: 'Home',
+            
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.screen_search_desktop_outlined),
+            label: 'Tracking',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.groups_outlined),
+            label: 'Hives',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.co_present_outlined),
+            label: 'Classroom',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.calendar_month_outlined),
+            label: 'Calendar',
+          ),
+        ],
+      ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Container(
           padding: const EdgeInsets.only(top: 10.0),
-          child: Column(
-            children: [
-              const Text("In Progress"),
-            ]
-          ),
+          //child: Column(
+          //
+          //),
         ),
       )
     );

@@ -39,7 +39,7 @@ final ThemeData appTheme = ThemeData(
 
     bottomNavigationBarTheme: const BottomNavigationBarThemeData(
       backgroundColor: Color.fromARGB(186, 255, 201, 92),
-      selectedItemColor: Color(0xFFFF6A00),
+      selectedItemColor: Color.fromARGB(255, 0, 0, 0),
       unselectedItemColor: Color(0xFF000000),
       elevation: 10,
       selectedIconTheme: IconThemeData(
@@ -47,11 +47,11 @@ final ThemeData appTheme = ThemeData(
         size: 30,
       ),
       unselectedIconTheme: IconThemeData(
-        color: Color(0xFFFF6A00),
+        color: Color.fromARGB(255, 0, 0, 0),
         size: 30,
       ),
       selectedLabelStyle: TextStyle(
-        color: Color(0xFFFF6A00),
+        color: Color.fromARGB(255, 0, 0, 0),
         fontFamily: 'Inter_18pt',
         fontSize: 14,
       ),
