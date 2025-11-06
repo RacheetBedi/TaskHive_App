@@ -22,6 +22,8 @@ class AuthNotifier extends StateNotifier<AsyncValue<AppUser?>> {
   final Ref ref;
   final credentialUser = null;
   bool docExists = false;
+  bool isGoogleSignIn = false;
+  bool isNativeSignIn = false;
   StreamSubscription<User?>? _authSubscription;
 
   AuthNotifier(this.ref) : super(const AsyncValue.loading()) {
@@ -59,6 +61,10 @@ class AuthNotifier extends StateNotifier<AsyncValue<AppUser?>> {
     return docSnapshot.exists;
   }
 
+  Future<bool> checkGoogleSignIn() async{
+    return isGoogleSignIn;
+  }
+
 
   Future<void> signInWithGoogle() async {
     state = const AsyncValue.loading(); 
@@ -77,6 +83,7 @@ class AuthNotifier extends StateNotifier<AsyncValue<AppUser?>> {
         final appUser = AppUser.fromFirebaseUser(
           credentialUser!.user!,
           hasCompletedSetup: docExists);
+        isGoogleSignIn = true;
         state = AsyncValue.data(appUser);
       } else {
         state = const AsyncValue.data(null);
@@ -105,6 +112,7 @@ class AuthNotifier extends StateNotifier<AsyncValue<AppUser?>> {
           .signInWithEmailAndPassword(email: email, password: password);
 
       if (credential.user != null) {
+        isNativeSignIn = true;
         state = AsyncValue.data(AppUser.fromFirebaseUser(credential.user!, hasCompletedSetup: true));
       } else {
         state = const AsyncValue.data(null);
