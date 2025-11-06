@@ -1,18 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/pages/login_page.dart';
-import 'package:flutter_app/pages/settings.dart';
 import 'package:flutter_app/pages/signupStudent.dart';
 import 'package:flutter_app/pages/signupTeacher.dart';
+import 'package:flutter_app/pages/home.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/get_navigation.dart';
 
-class Home extends StatefulWidget {
-  const Home({super.key});
+class Settings extends ConsumerStatefulWidget {
+  const Settings({super.key});
   @override
-  State<Home> createState() => _HomeState();
+  ConsumerState<Settings> createState() => _SettingsState();
 }
 
-class _HomeState extends State<Home> {
+class _SettingsState extends ConsumerState<Settings> {
+  bool _darkMode = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -60,12 +62,10 @@ class _HomeState extends State<Home> {
                                 onPressed: () {},
                               ),
                               IconButton(
-                                icon: const Icon(Icons.settings_outlined, color: Colors.red),
+                                icon: const Icon(Icons.settings_outlined, color: Color.fromARGB(255, 0, 0, 0)),
                                 iconSize: 26,
                                 padding: const EdgeInsets.symmetric(horizontal: 6),
-                                onPressed: () {
-                                  Get.offAll(() => const Settings());
-                                },
+                                onPressed: () {},
                               ),
                             ],
                           ),
@@ -81,7 +81,7 @@ class _HomeState extends State<Home> {
                   right: 0,
                   child: Center(
                     child: Text(
-                      "Home",
+                      "Settings",
                       textHeightBehavior: TextHeightBehavior(
                         applyHeightToFirstAscent: false,
                         applyHeightToLastDescent: false,
@@ -103,9 +103,15 @@ class _HomeState extends State<Home> {
       ),
 
       bottomNavigationBar: BottomNavigationBar(
+        onTap: (index) {
+          if (index == 0) {
+            Get.offAll(() => const Home());
+          }
+          
+        },
         items: const [
           BottomNavigationBarItem(
-            icon: Icon(Icons.home_filled),
+            icon: Icon(Icons.home_outlined),
             label: 'Home',
           ),
           BottomNavigationBarItem(
@@ -126,15 +132,45 @@ class _HomeState extends State<Home> {
           ),
         ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Container(
-          padding: const EdgeInsets.only(top: 10.0),
-          //child: Column(
-          //
-          //),
+      body: Container(
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage("assets/images/Hive Background.png"),
+            fit: BoxFit.cover,
+          ),
         ),
-      )
+        clipBehavior: Clip.hardEdge,
+        child: Column(
+          children: [
+            Container(
+              width: double.infinity,
+              decoration: const BoxDecoration(
+                color:Color.fromARGB(115, 0, 0, 0),
+                border: Border(
+                  top: BorderSide(color: Colors.black),
+                  bottom: BorderSide(color: Colors.black),
+                ),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(5),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text(
+                      'Dark Mode:',
+                      style: TextStyle(color: Colors.white, fontSize: 25),
+                    ),
+                    Switch(
+                      value: _darkMode,
+                      onChanged: (val) => setState(() => _darkMode = val),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

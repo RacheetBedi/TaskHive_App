@@ -105,13 +105,29 @@ final ThemeData appTheme = ThemeData(
     //Buttons/Inputs Themes
     toggleButtonsTheme: ToggleButtonsThemeData(
       borderRadius: BorderRadius.circular(20),
-      borderColor: const Color(0xFFFF0000),
+      borderColor: const Color.fromARGB(255, 0, 0, 0),
       selectedColor: const Color(0xFFFF6A00),
-      fillColor: const Color.fromARGB(158, 255, 247, 0),
+      fillColor: const Color(0xFFFFF600),
       textStyle: const TextStyle(
-        fontFamily: 'Inter_18pt',
-        fontSize: 16,
+      fontFamily: 'Inter_18pt',
+      fontSize: 16,
       ),
+    ),
+
+    switchTheme: SwitchThemeData(
+      thumbColor: WidgetStateProperty.resolveWith((states) {
+      if (states.contains(WidgetState.selected)) {
+        return const Color(0xFFFF6A00);
+      }
+      return const Color(0xFFFFF600);
+      }),
+      trackColor: WidgetStateProperty.resolveWith((states) {
+      if (states.contains(WidgetState.selected)) {
+        return const Color(0xFFFFB743);
+      }
+      return const Color(0xFFFFDD97);
+      }),
+      trackOutlineColor: WidgetStateProperty.all(const Color.fromARGB(255, 0, 0, 0)),
     ),
 
     elevatedButtonTheme: ElevatedButtonThemeData(
@@ -139,7 +155,7 @@ final ThemeData appTheme = ThemeData(
         maxHeight: 50,
       ),
       filled: true,
-      fillColor: const Color.fromARGB(255, 255, 253, 126),
+      fillColor: const Color(0xFFFFF600),
       hintStyle: const TextStyle(
         color: Color.fromARGB(255, 0, 0, 0),
         fontFamily: 'Inter_18pt',
@@ -193,7 +209,7 @@ final ThemeData appTheme = ThemeData(
 
     checkboxTheme: CheckboxThemeData(
       fillColor: WidgetStateProperty.all(const Color.fromARGB(255, 255, 147, 24)),
-      checkColor: WidgetStateProperty.all(const Color.fromARGB(255, 255, 230, 0)),
+      checkColor: WidgetStateProperty.all(const Color(0xFFFFF600)),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(4),
       ),

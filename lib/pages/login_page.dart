@@ -155,7 +155,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
               ),
               const SizedBox(height: 10),
               const Text(
-                "or",
+                "-------------- or --------------",
                 textHeightBehavior: TextHeightBehavior(
                   applyHeightToFirstAscent: true,
                   applyHeightToLastDescent: true,
