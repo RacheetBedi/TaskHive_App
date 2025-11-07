@@ -117,15 +117,15 @@ final ThemeData appTheme = ThemeData(
     switchTheme: SwitchThemeData(
       thumbColor: WidgetStateProperty.resolveWith((states) {
       if (states.contains(WidgetState.selected)) {
-        return const Color(0xFFFF6A00);
+        return const Color.fromARGB(255, 255, 94, 0);
       }
-      return const Color(0xFFFFF600);
+      return const Color.fromARGB(255, 255, 94, 0);
       }),
       trackColor: WidgetStateProperty.resolveWith((states) {
       if (states.contains(WidgetState.selected)) {
-        return const Color(0xFFFFB743);
+        return const Color.fromARGB(255, 255, 157, 0);
       }
-      return const Color(0xFFFFDD97);
+      return const Color.fromARGB(255, 139, 93, 0);
       }),
       trackOutlineColor: WidgetStateProperty.all(const Color.fromARGB(255, 0, 0, 0)),
     ),
@@ -149,25 +149,29 @@ final ThemeData appTheme = ThemeData(
 
     inputDecorationTheme: InputDecorationTheme(
       constraints: const BoxConstraints(
-        maxWidth: 400,
-        minWidth: 300,
-        minHeight: 50,
-        maxHeight: 50,
+      maxWidth: 400,
+      minWidth: 300,
+      minHeight: 50,
+      maxHeight: 50,
       ),
       filled: true,
-      fillColor: const Color(0xFFFFF600),
+      fillColor: const Color.fromARGB(255, 252, 231, 49),
       hintStyle: const TextStyle(
-        color: Color.fromARGB(255, 0, 0, 0),
-        fontFamily: 'Inter_18pt',
+      color: Color.fromARGB(255, 0, 0, 0),
+      fontFamily: 'Inter_18pt',
+      ),
+      labelStyle: const TextStyle(
+      color: Color.fromARGB(255, 0, 0, 0),
+      fontFamily: 'Inter_18pt',
       ),
       contentPadding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
       border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(8),
-        borderSide: BorderSide.none,
+      borderRadius: BorderRadius.circular(8),
+      borderSide: BorderSide.none,
       ),
       focusedBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(8),
-        borderSide: const BorderSide(color: Colors.black, width: 2),
+      borderRadius: BorderRadius.circular(8),
+      borderSide: const BorderSide(color: Colors.black, width: 2),
       ),
     ),
 

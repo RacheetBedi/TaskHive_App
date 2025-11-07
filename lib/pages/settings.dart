@@ -15,6 +15,7 @@ class Settings extends ConsumerStatefulWidget {
 
 class _SettingsState extends ConsumerState<Settings> {
   bool _darkMode = false;
+  String _language = "English";
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -147,22 +148,75 @@ class _SettingsState extends ConsumerState<Settings> {
               decoration: const BoxDecoration(
                 color:Color.fromARGB(115, 0, 0, 0),
                 border: Border(
-                  top: BorderSide(color: Colors.black),
-                  bottom: BorderSide(color: Colors.black),
+                  bottom: BorderSide(color: Colors.black, width: 6.0),
                 ),
               ),
               child: Padding(
                 padding: const EdgeInsets.all(5),
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
                     const Text(
-                      'Dark Mode:',
-                      style: TextStyle(color: Colors.white, fontSize: 25),
+                      'Dark Mode',
+                      style: TextStyle(color: Colors.white, fontSize: 48),
                     ),
-                    Switch(
+                    const SizedBox(width: 150),
+                    Transform.scale(
+                      scale: 1.5,
+                      child: Switch(
                       value: _darkMode,
                       onChanged: (val) => setState(() => _darkMode = val),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            Container(
+              width: double.infinity,
+              decoration: const BoxDecoration(
+                color:Color.fromARGB(115, 0, 0, 0),
+                border: Border(
+                  bottom: BorderSide(color: Colors.black, width: 6.0),
+                ),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(5),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    const Text(
+                      'Language',
+                      style: TextStyle(color: Colors.white, fontSize: 48),
+                    ),
+                    const SizedBox(width: 150),
+                    Transform.scale(
+                      scale: 1.5,
+                      child: DropdownButton(
+                        items: const [
+                          DropdownMenuItem(
+                            child: Text("English"),
+                          ),
+                          DropdownMenuItem(
+                            child: Text("Spanish"),
+                          ),
+                          DropdownMenuItem(
+                            child: Text("Hindi"),
+                          ),
+                          DropdownMenuItem(
+                            child: Text("Chinese"),
+                          ),
+                          DropdownMenuItem(
+                            child: Text("Arabic"),
+                          ),
+                          DropdownMenuItem(
+                            child: Text("Japanese"),
+                          ),
+                        ],
+                        onChanged: (val) => setState(() => _language = val.toString()),
+                      ),
                     ),
                   ],
                 ),
