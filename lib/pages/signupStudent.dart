@@ -25,18 +25,39 @@ class _SignupStudentState extends ConsumerState<SignupStudent> {
   TextEditingController last_name = TextEditingController();
   TextEditingController password2 = TextEditingController();
 
+  populate() async{
+    final authState = ref.watch(authProvider);
+    final authNotifier = ref.read(authProvider.notifier);
+    final isGoogleSignIn = await authNotifier.checkGoogleSignIn();
+
+    if(isGoogleSignIn){
+      setState(() {
+        email.text = authState.asData?.value?.email ?? '';
+
+        first_name.text = authState.asData?.value?.displayFirstName ?? '';
+
+        last_name.text = authState.asData?.value?.displayLastName ?? '';
+
+        username.text = authState.asData?.value?.userName ?? '';
+      });
+    }
+  }
+
+    @override
+    void dispose(){
+      email.dispose();
+      first_name.dispose();
+      last_name.dispose();
+      username.dispose();
+      password.dispose();
+      password2.dispose();
+      super.dispose();
+    }
+
   signupGoogle() async{
     final authNotifier = ref.read(authProvider.notifier);
     final authState = ref.watch(authProvider);
 
-
-    email.text = authState.asData?.value?.email ?? '';
-
-    first_name.text = authState.asData?.value?.displayFirstName ?? '';
-
-    last_name.text = authState.asData?.value?.displayLastName ?? '';
-
-    username.text = authState.asData?.value?.userName ?? '';
 
     if(password.text != password2.text){
       Get.snackbar("Error", "Passwords do not match");
@@ -45,7 +66,8 @@ class _SignupStudentState extends ConsumerState<SignupStudent> {
 
     try{
     final currentUser = UserRepository(ref);
-    await currentUser.createUserDocIfNeededWithGoogle(); //Add a non-goole version later.
+    await currentUser.createUserDocIfNeededWithGoogle();
+    dispose(); //Add a non-goole version later.
     Get.offAll(() => const Wrapper());
     } on FirebaseAuthException catch(e){
         Get.snackbar(
@@ -88,9 +110,22 @@ class _SignupStudentState extends ConsumerState<SignupStudent> {
     }
   }
 
+  Future<bool> checkGoogleSignIn() async{
+    final authNotifier = ref.read(authProvider.notifier);
+    final isGoogleSignIn = await authNotifier.checkGoogleSignIn();
+    return isGoogleSignIn;
+  }
+
+  @override
+  void initState(){
+    super.initState();
+
+  }
+
   @override
   Widget build(BuildContext context) {
-    final authNotifier = ref.read(authProvider.notifier);
+
+    populate();
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(
@@ -178,7 +213,8 @@ class _SignupStudentState extends ConsumerState<SignupStudent> {
                     const SizedBox(height: 10,),
                     ElevatedButton(
                       onPressed: (() async{
-                        final isGoogleSignIn = await authNotifier.checkGoogleSignIn();
+                        final isGoogleSignIn = await checkGoogleSignIn();
+
                         if(isGoogleSignIn == true){
                           signupGoogle();
                         }
