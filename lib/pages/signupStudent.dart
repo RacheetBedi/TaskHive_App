@@ -25,6 +25,19 @@ class _SignupStudentState extends ConsumerState<SignupStudent> {
   TextEditingController last_name = TextEditingController();
   TextEditingController password2 = TextEditingController();
 
+  bool _isEmailFieldEnabled = true;
+  bool _isFirstNameFieldEnabled = true;
+  bool _isLastNameFieldEnabled = true;
+  bool _isUsernameFieldEnabled = true;
+  bool _isPasswordFieldEnabled = true;
+  bool _isReEnterPasswordFieldEnabled = true;
+
+  @override
+  void initState(){
+    super.initState();
+    callPopulate();
+  }
+
   populate() async{
     final authState = ref.watch(authProvider);
     final authNotifier = ref.read(authProvider.notifier);
@@ -32,15 +45,35 @@ class _SignupStudentState extends ConsumerState<SignupStudent> {
 
     if(isGoogleSignIn){
       setState(() {
-        email.text = authState.asData?.value?.email ?? '';
+        String storedEmail = authState.asData?.value?.email ?? '';
+        String storedFirstName = authState.asData?.value?.displayFirstName ?? '';
+        String storedLastName = authState.asData?.value?.displayLastName ?? '';
+        String storedUsername = authState.asData?.value?.userName ?? '';
+        if(storedEmail != ''){
+          email.text = storedEmail;
+          _isEmailFieldEnabled = false;
+        }
 
-        first_name.text = authState.asData?.value?.displayFirstName ?? '';
+        if(storedFirstName != ''){
+          first_name.text = storedFirstName;
+          _isFirstNameFieldEnabled = false;
+        }
 
-        last_name.text = authState.asData?.value?.displayLastName ?? '';
+        if(storedLastName != ''){
+          last_name.text = storedLastName;
+          _isLastNameFieldEnabled = false;
+        }
 
-        username.text = authState.asData?.value?.userName ?? '';
+        if(storedUsername != ''){
+          username.text = storedUsername;
+          _isUsernameFieldEnabled  = false;
+        }
       });
     }
+  }
+
+  void callPopulate(){
+    populate();
   }
 
     @override
@@ -93,7 +126,7 @@ class _SignupStudentState extends ConsumerState<SignupStudent> {
     try{
     await FirebaseAuth.instance.createUserWithEmailAndPassword(email: email.text, password: password.text);
     final currentUser = UserRepository(ref);
-    await currentUser.createUserDocIfNeededWithGoogle(); //Add a non-goole version later.
+    //await currentUser.createUserDocIfNeededWithGoogle(); //Add a non-goole version later.
     Get.offAll(() => const Wrapper());
     } on FirebaseAuthException catch(e){
         Get.snackbar(
@@ -114,12 +147,6 @@ class _SignupStudentState extends ConsumerState<SignupStudent> {
     final authNotifier = ref.read(authProvider.notifier);
     final isGoogleSignIn = await authNotifier.checkGoogleSignIn();
     return isGoogleSignIn;
-  }
-
-  @override
-  void initState(){
-    super.initState();
-
   }
 
   @override
@@ -183,31 +210,37 @@ class _SignupStudentState extends ConsumerState<SignupStudent> {
                     const SizedBox(height: 15,),
                     TextField(
                       controller: email,
+                      enabled: _isEmailFieldEnabled,
                       decoration: const InputDecoration(hintText: 'email@domain.com'),
                     ),
                     const SizedBox(height: 10,),
                     TextField(
                       controller: username,
+                      enabled: _isUsernameFieldEnabled,
                       decoration: const InputDecoration(hintText: 'username'),
                     ),
                     const SizedBox(height: 10,),
                     TextField(
                       controller: first_name,
+                      enabled: _isFirstNameFieldEnabled,
                       decoration: const InputDecoration(hintText: 'first name'),
                     ),
                     const SizedBox(height: 10,),
                     TextField(
                       controller: last_name,
+                      enabled: _isLastNameFieldEnabled,
                       decoration: const InputDecoration(hintText: 'last name'),
                     ),
                     const SizedBox(height: 10,),
                     TextField(
                       controller: password,
+                      enabled: _isPasswordFieldEnabled,
                       decoration: const InputDecoration(hintText: 'password'),
                     ),
                     const SizedBox(height: 10,),
                     TextField(
                       controller: password2,
+                      enabled: _isReEnterPasswordFieldEnabled,
                       decoration: const InputDecoration(hintText: 're-enter password'),
                     ),
                     const SizedBox(height: 10,),
