@@ -177,7 +177,7 @@ class _SignupStudentState extends ConsumerState<SignupStudent> {
                       'Create your student account', 
                       style: TextStyle(
                         fontSize: 16, 
-                        fontFamily: 'inter_18pt'
+                        fontFamily: 'Inter'
                       ),
                     ),
                     const SizedBox(height: 15,),

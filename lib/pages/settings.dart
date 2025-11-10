@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_app/pages/login_page.dart';
 import 'package:flutter_app/pages/signupStudent.dart';
@@ -152,16 +154,15 @@ class _SettingsState extends ConsumerState<Settings> {
                 ),
               ),
               child: Padding(
-                padding: const EdgeInsets.all(5),
+                padding: const EdgeInsets.all(10),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                     const Text(
                       'Dark Mode',
-                      style: TextStyle(color: Colors.white, fontSize: 48),
+                      style: TextStyle(color: Colors.white, fontSize: 48, fontFamily: 'Jomhuria'),
                     ),
-                    const SizedBox(width: 150),
                     Transform.scale(
                       scale: 1.5,
                       child: Switch(
@@ -182,40 +183,25 @@ class _SettingsState extends ConsumerState<Settings> {
                 ),
               ),
               child: Padding(
-                padding: const EdgeInsets.all(5),
+                padding: const EdgeInsets.all(10),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     const Text(
                       'Language',
-                      style: TextStyle(color: Colors.white, fontSize: 48),
+                      style: TextStyle(color: Colors.white, fontSize: 48, fontFamily: 'Jomhuria'),
                     ),
-                    const SizedBox(width: 150),
                     Transform.scale(
-                      scale: 1.5,
-                      child: DropdownButton(
-                        items: const [
-                          DropdownMenuItem(
-                            child: Text("English"),
-                          ),
-                          DropdownMenuItem(
-                            child: Text("Spanish"),
-                          ),
-                          DropdownMenuItem(
-                            child: Text("Hindi"),
-                          ),
-                          DropdownMenuItem(
-                            child: Text("Chinese"),
-                          ),
-                          DropdownMenuItem(
-                            child: Text("Arabic"),
-                          ),
-                          DropdownMenuItem(
-                            child: Text("Japanese"),
-                          ),
-                        ],
-                        onChanged: (val) => setState(() => _language = val.toString()),
+                      scale: 1,
+                      child: DropdownMenu<LanguageLabel>(
+                        initialSelection: LanguageLabel.english,
+                        onSelected: (LanguageLabel? language) {
+                          setState(() {
+                            _language = language?.label ?? "English";
+                          });
+                        },
+                        dropdownMenuEntries: LanguageLabel.entries,
                       ),
                     ),
                   ],
@@ -227,4 +213,26 @@ class _SettingsState extends ConsumerState<Settings> {
       ),
     );
   }
+}
+
+typedef LanguageEntry = DropdownMenuEntry<LanguageLabel>;
+
+enum LanguageLabel {
+  english('English'),
+  spanish('Spanish'),
+  french('French'),
+  german('German'),
+  italian('Italian'),
+  dutch('Dutch');
+
+  const LanguageLabel(this.label);
+  final String label;
+
+  static final List<DropdownMenuEntry<LanguageLabel>> entries =
+      LanguageLabel.values.map((language) {
+    return DropdownMenuEntry<LanguageLabel>(
+      value: language,
+      label: language.label,
+    );
+  }).toList();
 }
