@@ -208,6 +208,158 @@ class _SettingsState extends ConsumerState<Settings> {
                 ),
               ),
             ),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color.fromARGB(0, 0, 0, 0),
+                padding: EdgeInsets.zero,
+                elevation: 0,
+                shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.zero,
+                ),
+                maximumSize: const Size(double.infinity, double.infinity),
+              ),
+              onPressed: () {}, //Take to edit profile page
+              child: Container(
+                width: double.infinity,
+                decoration: const BoxDecoration(
+                  color:Color.fromARGB(115, 0, 0, 0),
+                  border: Border(
+                    bottom: BorderSide(color: Colors.black, width: 6.0),
+                  ),
+                ),
+                child: const Padding(
+                  padding: EdgeInsets.all(10),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        'Edit Profile',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 48,
+                          fontFamily: 'Jomhuria',
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color.fromARGB(0, 0, 0, 0),
+                padding: EdgeInsets.zero,
+                elevation: 0,
+                shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.zero,
+                ),
+                maximumSize: const Size(double.infinity, double.infinity),
+              ),
+              onPressed: () {}, //Contact us popup
+              child: Container(
+                width: double.infinity,
+                decoration: const BoxDecoration(
+                  color:Color.fromARGB(115, 0, 0, 0),
+                  border: Border(
+                    bottom: BorderSide(color: Colors.black, width: 6.0),
+                  ),
+                ),
+                child: const Padding(
+                  padding: EdgeInsets.all(10),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        'Contact Us',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 48,
+                          fontFamily: 'Jomhuria',
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color.fromARGB(115, 0, 0, 0),
+                padding: EdgeInsets.zero,
+                elevation: 0,
+                shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.zero,
+                ),
+                maximumSize: const Size(double.infinity, double.infinity),
+              ),
+              onPressed: () {}, //Logout
+              child: Container(
+                width: double.infinity,
+                decoration: const BoxDecoration(
+                  color:Color.fromARGB(115, 0, 0, 0),
+                  border: Border(
+                    bottom: BorderSide(color: Colors.black, width: 6.0),
+                  ),
+                ),
+                child: const Padding(
+                  padding: EdgeInsets.all(10),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        'LOGOUT',
+                        style: TextStyle(
+                          color: Color.fromARGB(255, 255, 0, 0),
+                          fontSize: 48,
+                          fontFamily: 'Jomhuria',
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color.fromARGB(115, 0, 0, 0),
+                padding: EdgeInsets.zero,
+                elevation: 0,
+                shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.zero,
+                ),
+                maximumSize: const Size(double.infinity, double.infinity),
+              ),
+              onPressed: () {}, //Delete Account
+              child: Container(
+                width: double.infinity,
+                decoration: const BoxDecoration(
+                  color:Color.fromARGB(115, 0, 0, 0),
+                  border: Border(
+                    bottom: BorderSide(color: Colors.black, width: 6.0),
+                  ),
+                ),
+                child: const Padding(
+                  padding: EdgeInsets.all(10),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        'DELETE ACCOUNT',
+                        style: TextStyle(
+                          color: Color.fromARGB(255, 255, 0, 0),
+                          fontSize: 48,
+                          fontFamily: 'Jomhuria',
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
           ],
         ),
       ),
