@@ -89,6 +89,7 @@ class _RoleState extends ConsumerState<Role> {
                       ),
                       style: TextStyle(
                         fontSize: 50,
+                        fontFamily: 'Jomhuria',
                         color: Color.fromARGB(255, 0, 0, 0),
                       ),
                     ),

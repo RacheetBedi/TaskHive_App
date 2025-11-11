@@ -3,7 +3,12 @@ import 'package:get/get_connect/http/src/utils/utils.dart';
 
 final ThemeData appTheme = ThemeData(
     //Main Colorings
-    fontFamily: 'Jomhuria',
+    textTheme: const TextTheme(
+      titleMedium: TextStyle(
+        fontFamily: 'Inter',
+        fontSize: 20,
+      ),
+    ),
     primaryColor: const Color(0xFFFFDD97),
     canvasColor: const Color(0xFFFFDD97),
     scaffoldBackgroundColor: const Color(0xFFFFDD97),
@@ -52,12 +57,12 @@ final ThemeData appTheme = ThemeData(
       ),
       selectedLabelStyle: TextStyle(
         color: Color.fromARGB(255, 0, 0, 0),
-        fontFamily: 'Inter_18pt',
+        fontFamily: 'Inter',
         fontSize: 14,
       ),
       unselectedLabelStyle: TextStyle(
         color: Color(0xFF000000),
-        fontFamily: 'Inter_18pt',
+        fontFamily: 'Inter',
         fontSize: 14,
       ),
       showSelectedLabels: true,
@@ -74,7 +79,7 @@ final ThemeData appTheme = ThemeData(
         foreground: Paint()
           ..strokeWidth = 1
           ..color = const Color.fromARGB(255, 255, 0, 0),
-        fontFamily: 'Inter_18pt',
+        fontFamily: 'Inter',
       ),
       behavior: SnackBarBehavior.floating,
       shape: RoundedRectangleBorder(
@@ -109,7 +114,7 @@ final ThemeData appTheme = ThemeData(
       selectedColor: const Color(0xFFFF6A00),
       fillColor: const Color(0xFFFFF600),
       textStyle: const TextStyle(
-      fontFamily: 'Inter_18pt',
+      fontFamily: 'Inter',
       fontSize: 16,
       ),
     ),
@@ -142,7 +147,7 @@ final ThemeData appTheme = ThemeData(
         padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 30),
         textStyle: const TextStyle(
           fontSize: 18,
-          fontFamily: 'Inter_18pt-Regular',
+          fontFamily: 'Inter',
         ),
       ),
     ),
@@ -158,11 +163,8 @@ final ThemeData appTheme = ThemeData(
       fillColor: const Color.fromARGB(255, 252, 231, 49),
       hintStyle: const TextStyle(
       color: Color.fromARGB(255, 0, 0, 0),
-      fontFamily: 'Inter_18pt',
-      ),
-      labelStyle: const TextStyle(
-      color: Color.fromARGB(255, 0, 0, 0),
-      fontFamily: 'Inter_18pt',
+      fontFamily: 'Inter',
+      fontSize: 20,
       ),
       contentPadding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
       border: OutlineInputBorder(
@@ -225,6 +227,25 @@ final ThemeData appTheme = ThemeData(
         elevation: WidgetStateProperty.all(8),
         shape: WidgetStateProperty.all(
           RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        ),
+      ),
+      disabledColor: const Color.fromARGB(255, 148, 106, 38),
+      inputDecorationTheme: InputDecorationTheme(
+        filled: true,
+        fillColor: const Color(0xFFFFB743),
+        hintStyle: const TextStyle(
+          color: Color.fromARGB(255, 0, 0, 0),
+          fontFamily: 'Inter',
+          fontSize: 20,
+        ),
+        contentPadding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+        border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(8),
+        borderSide: BorderSide.none,
+        ),
+        focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(8),
+        borderSide: const BorderSide(color: Colors.black, width: 2),
         ),
       ),
     ),

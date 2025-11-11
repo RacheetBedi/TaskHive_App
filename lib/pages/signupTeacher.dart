@@ -82,7 +82,7 @@ class _SignupTeacherState extends ConsumerState<SignupTeacher> {
                       'Create your teacher account', 
                       style: TextStyle(
                         fontSize: 16, 
-                        fontFamily: 'inter_18pt'
+                        fontFamily: 'Inter'
                       ),
                     ),
                     const SizedBox(height: 15,),

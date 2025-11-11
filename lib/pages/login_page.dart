@@ -132,6 +132,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                 ),
                 style: TextStyle(
                   fontSize: 50,
+                  fontFamily: 'Jomhuria',
                   color: Color.fromARGB(255, 0, 0, 0),
                 ),
               ),
@@ -144,6 +145,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 30,
+                  fontFamily: 'Jomhuria',
                   color: Color.fromARGB(255, 0, 0, 0),
                 ),
               ),
@@ -165,13 +167,14 @@ class _LoginPageState extends ConsumerState<LoginPage> {
               ),
               const SizedBox(height: 10),
               const Text(
-                "-------------- or --------------",
+                "------------------- or -------------------",
                 textHeightBehavior: TextHeightBehavior(
                   applyHeightToFirstAscent: true,
                   applyHeightToLastDescent: true,
                 ),
                 textAlign: TextAlign.center,
                 style: TextStyle(
+                  fontFamily: 'Jomhuria',
                   fontSize: 30,
                   color: Color.fromARGB(255, 0, 0, 0),
                 ),
@@ -218,6 +221,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 30,
+                  fontFamily: 'Jomhuria',
                   color: Color.fromARGB(255, 0, 0, 0),
                 ),
               ),
