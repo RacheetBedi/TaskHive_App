@@ -27,10 +27,20 @@ class _LoginPageState extends ConsumerState<LoginPage> {
   final TextEditingController googlePassword = TextEditingController();
 
   Future<void> _signInWithEmail() async {
+    final authState = ref.watch(authProvider);
+    final authNotifier = ref.read(authProvider.notifier);
+
     await ref.read(authProvider.notifier).signInWithEmail(
           email.text,
           password.text,
         );
+
+    if(authState == AsyncValue.data(null)){
+      Get.snackbar(
+        "SIGN IN ERROR:",
+        "Invalid Email/Password. Please try again or sign up if you don't have an account.",
+      );
+    }
   }
 
   Future<void> _signInWithGoogle() async {

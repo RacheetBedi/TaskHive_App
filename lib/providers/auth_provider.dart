@@ -104,16 +104,21 @@ class AuthNotifier extends StateNotifier<AsyncValue<AppUser?>> {
     state = const AsyncValue.data(null);
   }
 
+  void askSignUpPopup(){
+    
+  }
+
 
   Future<void> signInWithEmail(String email, String password) async {
     state = const AsyncValue.loading();
     try {
-      final credential = await FirebaseAuth.instance
+      var credential = await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email, password: password);
 
       if (credential.user != null) {
         isNativeSignIn = true;
-        state = AsyncValue.data(AppUser.fromFirebaseUser(credential.user!, hasCompletedSetup: true));
+        docExists = await (checkDocExists(credentialUser.user!.uid));
+        state = AsyncValue.data(AppUser.fromFirebaseUser(credential.user!, hasCompletedSetup: docExists));
       } else {
         state = const AsyncValue.data(null);
       }
