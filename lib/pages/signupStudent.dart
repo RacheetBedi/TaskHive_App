@@ -99,7 +99,7 @@ class _SignupStudentState extends ConsumerState<SignupStudent> {
 
     try{
     final currentUser = UserRepository(ref);
-    await currentUser.createUserDocIfNeededWithGoogle();
+    await currentUser.createUserDocIfNeeded();
     dispose(); //Add a non-goole version later.
     Get.offAll(() => const Wrapper());
     } on FirebaseAuthException catch(e){
@@ -126,7 +126,7 @@ class _SignupStudentState extends ConsumerState<SignupStudent> {
     try{
     await FirebaseAuth.instance.createUserWithEmailAndPassword(email: email.text, password: password.text);
     final currentUser = UserRepository(ref);
-    //await currentUser.createUserDocIfNeededWithGoogle(); //Add a non-goole version later.
+    await currentUser.createUserDocIfNeeded(); //Add a non-goole version later.
     Get.offAll(() => const Wrapper());
     } on FirebaseAuthException catch(e){
         Get.snackbar(

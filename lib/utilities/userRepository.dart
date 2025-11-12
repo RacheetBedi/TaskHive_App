@@ -122,13 +122,9 @@ class UserRepository {
     }
   }
 
-  Future<void> createUserDocIfNeededWithNative({bool isNewUser = false}) async{
-    
-  }
 
 
-
-  Future<void> createUserDocIfNeededWithGoogle({bool isNewUser = false}) async {
+  Future<void> createUserDocIfNeeded({bool isNewUser = false}) async {
     final user = currentAppUser;
     if(user == null) return null;
 
