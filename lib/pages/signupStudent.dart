@@ -118,15 +118,19 @@ class _SignupStudentState extends ConsumerState<SignupStudent> {
   }
 
   signupNative()async{
+    final authNotifier = ref.read(authProvider.notifier);
+    final authState = ref.watch(authProvider);
     if(password.text != password2.text){
       Get.snackbar("Error", "Passwords do not match");
       return;
     }
 
     try{
-    await FirebaseAuth.instance.createUserWithEmailAndPassword(email: email.text, password: password.text);
+    authNotifier.createFirebaseAccount(email.text, password.text);
     final currentUser = UserRepository(ref);
-    await currentUser.createUserDocIfNeeded(); //Add a non-goole version later.
+
+    await currentUser.createUserDocIfNeeded();
+    dispose(); //Add a non-goole version later.
     Get.offAll(() => const Wrapper());
     } on FirebaseAuthException catch(e){
         Get.snackbar(

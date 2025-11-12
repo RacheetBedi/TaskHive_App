@@ -104,8 +104,26 @@ class AuthNotifier extends StateNotifier<AsyncValue<AppUser?>> {
     state = const AsyncValue.data(null);
   }
 
-  void askSignUpPopup(){
-    
+  Future<void> createFirebaseAccount(String email, String password) async{
+    state = const AsyncValue.loading();
+    try{
+      final credential = await FirebaseAuth.instance.createUserWithEmailAndPassword(email: email, password: password);
+
+      if(credential.user != null){
+        isNativeSignIn = true;
+        state = AsyncValue.data(AppUser.fromFirebaseUser(credential.user!, hasCompletedSetup: false));
+      }
+      else{
+        state = const AsyncValue.data(null);
+      } 
+    } catch (error, st) {
+      state = AsyncValue.error(error, st);
+      Get.snackbar(
+        "Error",
+        "Email Sign-Up Error: ${error.toString()}",
+        duration: const Duration(seconds: 10),
+      );
+    }
   }
 
 
