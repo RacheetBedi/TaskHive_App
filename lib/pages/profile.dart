@@ -2,7 +2,7 @@ import 'dart:collection';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_app/pages/login_page.dart';
-import 'package:flutter_app/pages/profile.dart';
+import 'package:flutter_app/pages/settings.dart';
 import 'package:flutter_app/pages/signupStudent.dart';
 import 'package:flutter_app/pages/signupTeacher.dart';
 import 'package:flutter_app/pages/home.dart';
@@ -10,15 +10,21 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/get_navigation.dart';
 
-class Settings extends ConsumerStatefulWidget {
-  const Settings({super.key});
+class Profile extends ConsumerStatefulWidget {
+  const Profile({super.key});
   @override
-  ConsumerState<Settings> createState() => _SettingsState();
+  ConsumerState<Profile> createState() => _ProfileState();
 }
 
-class _SettingsState extends ConsumerState<Settings> {
-  bool _darkMode = false;
-  String _language = "English";
+class _ProfileState extends ConsumerState<Profile> {
+
+  TextEditingController email = TextEditingController();
+  TextEditingController password = TextEditingController();
+  TextEditingController username = TextEditingController();
+  TextEditingController firstName = TextEditingController();
+  TextEditingController lastName = TextEditingController();
+  TextEditingController password2 = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -66,10 +72,12 @@ class _SettingsState extends ConsumerState<Settings> {
                                 onPressed: () {},
                               ),
                               IconButton(
-                                icon: const Icon(Icons.settings_outlined, color: Color.fromARGB(255, 0, 0, 0)),
+                                icon: const Icon(Icons.settings_outlined, color: Colors.red),
                                 iconSize: 26,
                                 padding: const EdgeInsets.symmetric(horizontal: 6),
-                                onPressed: () {},
+                                onPressed: () {
+                                  Get.offAll(() => const Settings());
+                                },
                               ),
                             ],
                           ),
@@ -85,7 +93,7 @@ class _SettingsState extends ConsumerState<Settings> {
                   right: 0,
                   child: Center(
                     child: Text(
-                      "Settings",
+                      "Profile",
                       textHeightBehavior: TextHeightBehavior(
                         applyHeightToFirstAscent: false,
                         applyHeightToLastDescent: false,
@@ -161,14 +169,19 @@ class _SettingsState extends ConsumerState<Settings> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                     const Text(
-                      'Dark Mode',
+                      'First Name',
                       style: TextStyle(color: Colors.white, fontSize: 48, fontFamily: 'Jomhuria'),
                     ),
-                    Transform.scale(
-                      scale: 1.5,
-                      child: Switch(
-                      value: _darkMode,
-                      onChanged: (val) => setState(() => _darkMode = val),
+                    TextField(
+                      controller: firstName,
+                      decoration: const InputDecoration(
+                        hintText: 'First Name',
+                        constraints: BoxConstraints(
+                          maxWidth: 225,
+                          minWidth: 50,
+                          minHeight: 50,
+                          maxHeight: 50,
+                        ),
                       ),
                     ),
                   ],
@@ -188,178 +201,58 @@ class _SettingsState extends ConsumerState<Settings> {
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
+                    children: [
                     const Text(
-                      'Language',
+                      'Last Name',
                       style: TextStyle(color: Colors.white, fontSize: 48, fontFamily: 'Jomhuria'),
                     ),
-                    Transform.scale(
-                      scale: 1,
-                      child: DropdownMenu<LanguageLabel>(
-                        initialSelection: LanguageLabel.english,
-                        onSelected: (LanguageLabel? language) {
-                          setState(() {
-                            _language = language?.label ?? "English";
-                          });
-                        },
-                        dropdownMenuEntries: LanguageLabel.entries,
+                    TextField(
+                      controller: lastName,
+                      decoration: const InputDecoration(
+                        hintText: 'Last Name',
+                        constraints: BoxConstraints(
+                          maxWidth: 225,
+                          minWidth: 50,
+                          minHeight: 50,
+                          maxHeight: 50,
+                        ),
                       ),
                     ),
                   ],
                 ),
               ),
             ),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color.fromARGB(0, 0, 0, 0),
-                padding: EdgeInsets.zero,
-                elevation: 0,
-                shape: const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.zero,
+            Container(
+              width: double.infinity,
+              decoration: const BoxDecoration(
+                color:Color.fromARGB(115, 0, 0, 0),
+                border: Border(
+                  bottom: BorderSide(color: Colors.black, width: 6.0),
                 ),
-                maximumSize: const Size(double.infinity, double.infinity),
               ),
-              onPressed: () {
-                Get.offAll(() => const Profile());
-              }, //Take to edit profile page
-              child: Container(
-                width: double.infinity,
-                decoration: const BoxDecoration(
-                  color:Color.fromARGB(115, 0, 0, 0),
-                  border: Border(
-                    bottom: BorderSide(color: Colors.black, width: 6.0),
-                  ),
-                ),
-                child: const Padding(
-                  padding: EdgeInsets.all(10),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.center,
+              child: Padding(
+                padding: const EdgeInsets.all(10),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        'Profile',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 48,
-                          fontFamily: 'Jomhuria',
+                    const Text(
+                      'Username',
+                      style: TextStyle(color: Colors.white, fontSize: 48, fontFamily: 'Jomhuria'),
+                    ),
+                    TextField(
+                      controller: username,
+                      decoration: const InputDecoration(
+                        hintText: 'Username',
+                        constraints: BoxConstraints(
+                          maxWidth: 225,
+                          minWidth: 50,
+                          minHeight: 50,
+                          maxHeight: 50,
                         ),
                       ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color.fromARGB(0, 0, 0, 0),
-                padding: EdgeInsets.zero,
-                elevation: 0,
-                shape: const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.zero,
-                ),
-                maximumSize: const Size(double.infinity, double.infinity),
-              ),
-              onPressed: () {}, //Contact us popup
-              child: Container(
-                width: double.infinity,
-                decoration: const BoxDecoration(
-                  color:Color.fromARGB(115, 0, 0, 0),
-                  border: Border(
-                    bottom: BorderSide(color: Colors.black, width: 6.0),
-                  ),
-                ),
-                child: const Padding(
-                  padding: EdgeInsets.all(10),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        'Contact Us',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 48,
-                          fontFamily: 'Jomhuria',
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color.fromARGB(115, 0, 0, 0),
-                padding: EdgeInsets.zero,
-                elevation: 0,
-                shape: const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.zero,
-                ),
-                maximumSize: const Size(double.infinity, double.infinity),
-              ),
-              onPressed: () => Get.offAll(() => const LoginPage()), //Logout still need to add backend functionality.
-              child: Container(
-                width: double.infinity,
-                decoration: const BoxDecoration(
-                  color:Color.fromARGB(115, 0, 0, 0),
-                  border: Border(
-                    bottom: BorderSide(color: Colors.black, width: 6.0),
-                  ),
-                ),
-                child: const Padding(
-                  padding: EdgeInsets.all(10),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        'LOGOUT',
-                        style: TextStyle(
-                          color: Color.fromARGB(255, 255, 0, 0),
-                          fontSize: 48,
-                          fontFamily: 'Jomhuria',
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color.fromARGB(115, 0, 0, 0),
-                padding: EdgeInsets.zero,
-                elevation: 0,
-                shape: const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.zero,
-                ),
-                maximumSize: const Size(double.infinity, double.infinity),
-              ),
-              onPressed: () {}, //Delete Account
-              child: Container(
-                width: double.infinity,
-                decoration: const BoxDecoration(
-                  color:Color.fromARGB(115, 0, 0, 0),
-                  border: Border(
-                    bottom: BorderSide(color: Colors.black, width: 6.0),
-                  ),
-                ),
-                child: const Padding(
-                  padding: EdgeInsets.all(10),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        'DELETE ACCOUNT',
-                        style: TextStyle(
-                          color: Color.fromARGB(255, 255, 0, 0),
-                          fontSize: 48,
-                          fontFamily: 'Jomhuria',
-                        ),
-                      ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
             ),

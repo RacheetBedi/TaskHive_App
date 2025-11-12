@@ -160,7 +160,7 @@ final ThemeData appTheme = ThemeData(
       maxHeight: 50,
       ),
       filled: true,
-      fillColor: const Color.fromARGB(255, 252, 231, 49),
+      fillColor: Colors.white,
       hintStyle: const TextStyle(
       color: Color.fromARGB(255, 0, 0, 0),
       fontFamily: 'Inter',
