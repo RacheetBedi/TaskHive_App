@@ -1,4 +1,5 @@
 import 'dart:collection';
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_app/pages/login_page.dart';
@@ -6,6 +7,8 @@ import 'package:flutter_app/pages/profile.dart';
 import 'package:flutter_app/pages/signupStudent.dart';
 import 'package:flutter_app/pages/signupTeacher.dart';
 import 'package:flutter_app/pages/home.dart';
+import 'package:flutter_app/providers/auth_provider.dart';
+import 'package:flutter_app/routing/wrapper.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/get_navigation.dart';
@@ -19,6 +22,16 @@ class Settings extends ConsumerStatefulWidget {
 class _SettingsState extends ConsumerState<Settings> {
   bool _darkMode = false;
   String _language = "English";
+
+  logOut() async{
+    final authState = ref.watch(authProvider);
+    final authNotifier = ref.read(authProvider.notifier);
+    authNotifier.signOut();
+    Get.offAll(() => const Wrapper());
+  }
+
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -296,7 +309,7 @@ class _SettingsState extends ConsumerState<Settings> {
                 ),
                 maximumSize: const Size(double.infinity, double.infinity),
               ),
-              onPressed: () => Get.offAll(() => const LoginPage()), //Logout still need to add backend functionality.
+              onPressed: () => logOut(),
               child: Container(
                 width: double.infinity,
                 decoration: const BoxDecoration(

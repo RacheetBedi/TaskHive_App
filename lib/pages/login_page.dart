@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_app/models/app_user.dart';
 import 'package:flutter_app/pages/forgot.dart';
+import 'package:flutter_app/pages/home.dart';
 import 'package:flutter_app/pages/homepage.dart';
 import 'package:flutter_app/pages/role.dart';
 import 'package:flutter_app/pages/signupStudent.dart';
@@ -79,7 +80,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
             return const Role();
           }
           //return const Homepage();
-          return const Homepage();
+          return const Home();
         }
 
         return _buildLoginScreen();
