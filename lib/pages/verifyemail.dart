@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_app/pages/forgot.dart';
+import 'package:flutter_app/pages/home.dart';
 import 'package:flutter_app/pages/homepage.dart';
 import 'package:flutter_app/pages/login_page.dart';
 import 'package:flutter_app/pages/signupStudent.dart';
@@ -33,7 +34,7 @@ class _VerifyState extends ConsumerState<Verify> {
 
   reload() async{
     await FirebaseAuth.instance.currentUser!.reload().then((value)=> {
-      Get.offAll(() => const Homepage()),
+      Get.offAll(() => const Home()),
     });
   }
 

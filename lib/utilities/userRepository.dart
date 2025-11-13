@@ -126,6 +126,7 @@ class UserRepository {
 // Fix login issues
 // Add signUp error handling
 // Add document creation for teachers (NEXT TO NEXT, NOT NEXT, RUBRIC)
+// Delete account code
 
 
   Future<void> createUserDocIfNeeded(String email, String userName, String firstName, String lastName, String password, {bool isNewUser = true}) async {

@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_app/pages/home.dart';
 import 'package:flutter_app/pages/homepage.dart';
 import 'package:flutter_app/pages/login_page.dart';
 import 'package:flutter_app/pages/role.dart';
@@ -35,7 +36,7 @@ class _WrapperState extends ConsumerState<Wrapper> {
           if(appUser.hasCompletedSetup == false){
             return const Role();
           }
-          return const Homepage();
+          return const Home();
         }
       },
       loading: () => const Scaffold(
