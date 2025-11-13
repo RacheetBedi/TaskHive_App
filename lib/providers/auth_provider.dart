@@ -99,9 +99,17 @@ class AuthNotifier extends StateNotifier<AsyncValue<AppUser?>> {
   }
 
   Future<void> signOut() async {
+    state = const AsyncValue.loading();
     final authService = ref.read(GoogleAuthServiceProvider);
-    await authService.signOut();
-    state = const AsyncValue.data(null);
+    if(isNativeSignIn){
+      await FirebaseAuth.instance.signOut();
+      state = const AsyncValue.data(null);
+    }
+    else{ 
+      final authService = ref.read(GoogleAuthServiceProvider);
+      await authService.signOutGoogle();
+      state = const AsyncValue.data(null);
+    }
   }
 
   Future<void> createFirebaseAccount(String email, String password) async{

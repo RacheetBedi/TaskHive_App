@@ -50,7 +50,7 @@ class GoogleAuthService {
   GoogleSignInAccount? get currentUser => _currentUser;
   bool get isSignedIn => _currentUser != null;
 
-  Future<void> signOut() async {
+  Future<void> signOutGoogle() async {
     try {
   
       await _ensureGoogleSignInInitialized();
@@ -65,10 +65,27 @@ class GoogleAuthService {
       print("Sign out error: $error");
       Get.snackbar(
         "Error",
-        "Sign out failed: ${error.toString()}",
+        "Google Sign out failed: ${error.toString()}",
         duration: const Duration(seconds: 10),
       );
       rethrow;
+    }
+  }
+
+  Future<void> signOutNative() async{
+    try {
+      
+      await _firebaseAuth.signOut();
+      
+      _currentUser = null;
+      
+    } catch (error) {
+      print("Native Sign out error: $error");
+      Get.snackbar(
+        "Error",
+        "Native Sign out failed: ${error.toString()}",
+        duration: const Duration(seconds: 10),
+      );
     }
   }
 

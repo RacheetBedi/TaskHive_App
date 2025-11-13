@@ -24,7 +24,6 @@ class UserRepository {
           child: CircularProgressIndicator(),
         )
       );
-      return null;
       },
       error: (error, st){
         Get.snackbar(
@@ -122,38 +121,51 @@ class UserRepository {
     }
   }
 
+// update appUser fields in both appUser and userRepository
+// migrate homepage to home
+// Fix login issues
+// Add signUp error handling
+// Add document creation for teachers (NEXT TO NEXT, NOT NEXT, RUBRIC)
 
 
-  Future<void> createUserDocIfNeeded({bool isNewUser = false}) async {
+  Future<void> createUserDocIfNeeded(String email, String userName, String firstName, String lastName, String password, {bool isNewUser = true}) async {
+    try{
     final user = currentAppUser;
-    if(user == null) return null;
+    //if(user == null) return null;
 
-    final docRef = _firestore.collection('users').doc(user.uid);
+    final docRef = _firestore.collection('users').doc(user?.uid);
     final doc = await docRef.get();
 
     if (!doc.exists) {
       await docRef.set({
         "dark_mode": false,
-        "isEmailVerified": user.isEmailVerified,
-        "hasCompletedSetup": null,
+        "isEmailVerified": user?.isEmailVerified,
+        "hasCompletedSetup": false,
         "is_teacher": false,
         "lang": "EN",
         "logo_preference": 1,
-        "password": "22222222",
+        "password": password,
         "public profile": {
           "contact_info": {
             "country_code": 1,
-            "email_address": user.email,
-            "phone_number": user.phoneNumber,
+            "email_address": email,
+            "phone_number": user?.phoneNumber,
           },
           "description": null,
-          "firstName": user.displayFirstName,
-          "lastName": user.displayLastName,
-          "photo_URL": user.photoURL,
+          "firstName": firstName,
+          "lastName": lastName,
+          "photo_URL": user?.photoURL,
         },
-        'uid': user.uid,
+        'uid': user?.uid,
         'username': null,
       });
+    }
+    } catch(err, st){
+        Get.snackbar(
+          "Error",
+          "Unexpected Firestore Document Creation Error: ${err.toString()}",
+          duration: const Duration(seconds: 10),
+        );
     }
   }
 

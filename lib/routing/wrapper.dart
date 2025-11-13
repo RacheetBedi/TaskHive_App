@@ -51,7 +51,7 @@ class _WrapperState extends ConsumerState<Wrapper> {
         return const LoginPage();
       }
     ),
-    );
+  );
 
     // return Scaffold(
     //   body: StreamBuilder(
