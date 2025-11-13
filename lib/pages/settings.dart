@@ -143,7 +143,6 @@ class _SettingsState extends ConsumerState<Settings> {
             fit: BoxFit.cover,
           ),
         ),
-        clipBehavior: Clip.hardEdge,
         child: Column(
           children: [
             Container(

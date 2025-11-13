@@ -72,7 +72,7 @@ class _ProfileState extends ConsumerState<Profile> {
                                 onPressed: () {},
                               ),
                               IconButton(
-                                icon: const Icon(Icons.settings_outlined, color: Colors.red),
+                                icon: const Icon(Icons.settings_outlined, color: Color.fromARGB(255, 0, 0, 0)),
                                 iconSize: 26,
                                 padding: const EdgeInsets.symmetric(horizontal: 6),
                                 onPressed: () {
@@ -86,7 +86,22 @@ class _ProfileState extends ConsumerState<Profile> {
                     ),
                   ),
                 ),
-
+                Positioned(
+                  top: 0,
+                  left: 0,
+                  child: SafeArea(
+                    child: IconButton(
+                      icon: const Icon(
+                        Icons.arrow_back,
+                        color: Colors.black,
+                      ),
+                      iconSize: 20,
+                      onPressed: () {
+                        Get.to(() => const Settings());
+                      },
+                    ),
+                    ),
+                ),
                 const Positioned(
                   top: 64,
                   left: 0,
@@ -151,7 +166,6 @@ class _ProfileState extends ConsumerState<Profile> {
             fit: BoxFit.cover,
           ),
         ),
-        clipBehavior: Clip.hardEdge,
         child: Column(
           children: [
             Container(
@@ -252,6 +266,29 @@ class _ProfileState extends ConsumerState<Profile> {
                         ),
                       ),
                     ),
+                  ],
+                ),
+              ),
+            ),
+            Container(
+              width: double.infinity,
+              decoration: const BoxDecoration(
+                color:Color.fromARGB(115, 0, 0, 0),
+                border: Border(
+                  bottom: BorderSide(color: Colors.black, width: 6.0),
+                ),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(10),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                    const Text(
+                      'Profile Picture',
+                      style: TextStyle(color: Colors.white, fontSize: 48, fontFamily: 'Jomhuria'),
+                    ),
+                    Image.asset('assets/images/TempUserPFP.png'),
                   ],
                 ),
               ),
