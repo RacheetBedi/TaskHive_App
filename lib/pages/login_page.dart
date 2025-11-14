@@ -102,7 +102,8 @@ class _LoginPageState extends ConsumerState<LoginPage> {
         decoration: const BoxDecoration(
           image: DecorationImage(
             image: AssetImage("assets/images/Hive Background.png"),
-            fit: BoxFit.cover,
+            repeat: ImageRepeat.repeat,
+            fit: BoxFit.none,
           ),
         ),
         child: Padding(
