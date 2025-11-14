@@ -127,6 +127,8 @@ class UserRepository {
 // Add signUp error handling
 // Add document creation for teachers (NEXT TO NEXT, NOT NEXT, RUBRIC)
 // Delete account code
+// Tasks for Jeevanth:
+//    When you select a text field during log in or sign up, the text field outlines itself.
 
 
   Future<void> createUserDocIfNeeded(String email, String userName, String firstName, String lastName, String password, {bool isNewUser = true}) async {

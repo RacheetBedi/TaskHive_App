@@ -31,11 +31,16 @@ class _SignupStudentState extends ConsumerState<SignupStudent> {
   bool _isUsernameFieldEnabled = true;
   bool _isPasswordFieldEnabled = true;
   bool _isReEnterPasswordFieldEnabled = true;
+  bool _obscureText = true;
 
   @override
   void initState(){
     super.initState();
     callPopulate();
+  }
+
+  bool checkIfHidden(){
+    return _obscureText;
   }
 
   populate() async{
@@ -236,11 +241,28 @@ class _SignupStudentState extends ConsumerState<SignupStudent> {
                       decoration: const InputDecoration(hintText: 'last name'),
                     ),
                     const SizedBox(height: 10,),
-                    TextField(
+                    TextFormField(
                       controller: password,
-                      enabled: _isPasswordFieldEnabled,
-                      decoration: const InputDecoration(hintText: 'password'),
+                      obscureText: _obscureText,
+                      decoration:  InputDecoration(
+                        hintText: 'password',
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                              _obscureText ? Icons.visibility_off : Icons.visibility,
+                              color: Theme.of(context).primaryColorDark,
+                          ),
+                          onPressed: (){
+                            setState(() {
+                              _obscureText = !_obscureText;
+                            });
+                          },
+                          )),
                     ),
+                    // TextField(
+                    //   controller: password,
+                    //   enabled: _isPasswordFieldEnabled,
+                    //   decoration: const InputDecoration(hintText: 'password'),
+                    // ),
                     const SizedBox(height: 10,),
                     TextField(
                       controller: password2,
