@@ -160,10 +160,13 @@ class _ProfileState extends ConsumerState<Profile> {
         ],
       ),
       body: Container(
+        height: double.infinity,
+        width: double.infinity,
         decoration: const BoxDecoration(
           image: DecorationImage(
             image: AssetImage("assets/images/Hive Background.png"),
-            fit: BoxFit.cover,
+            repeat: ImageRepeat.repeat,
+            fit: BoxFit.none,
           ),
         ),
         child: Column(

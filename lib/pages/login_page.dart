@@ -99,6 +99,8 @@ class _LoginPageState extends ConsumerState<LoginPage> {
   Widget _buildLoginScreen() {
     return Scaffold(
       body: Container(
+        height: double.infinity,
+        width: double.infinity,
         decoration: const BoxDecoration(
           image: DecorationImage(
             image: AssetImage("assets/images/Hive Background.png"),
