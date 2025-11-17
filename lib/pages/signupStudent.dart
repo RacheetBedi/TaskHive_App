@@ -1,3 +1,5 @@
+import 'dart:nativewrappers/_internal/vm/lib/ffi_patch.dart';
+
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_app/pages/login_page.dart';
@@ -8,6 +10,8 @@ import 'package:flutter_app/utilities/userRepository.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:fancy_password_field/fancy_password_field.dart';
 
 class SignupStudent extends ConsumerStatefulWidget {
   const SignupStudent({super.key});
@@ -24,6 +28,7 @@ class _SignupStudentState extends ConsumerState<SignupStudent> {
   TextEditingController first_name = TextEditingController();
   TextEditingController last_name = TextEditingController();
   TextEditingController password2 = TextEditingController();
+  final FancyPasswordController _password = FancyPasswordController();
 
   bool _isEmailFieldEnabled = true;
   bool _isFirstNameFieldEnabled = true;
@@ -31,16 +36,21 @@ class _SignupStudentState extends ConsumerState<SignupStudent> {
   bool _isUsernameFieldEnabled = true;
   bool _isPasswordFieldEnabled = true;
   bool _isReEnterPasswordFieldEnabled = true;
-  bool _obscureText = true;
+  bool _obscureText1 = true;
+  bool _obscureText2 = true;
+
+  final FocusNode focusNode = FocusNode();
+
+  final GlobalKey<TooltipState> _toolTipKey = GlobalKey<TooltipState>();
+
+  final String passwordRules = 
+  "Passwords must contain:\n"
+  ""
 
   @override
   void initState(){
     super.initState();
     callPopulate();
-  }
-
-  bool checkIfHidden(){
-    return _obscureText;
   }
 
   populate() async{
@@ -244,19 +254,28 @@ class _SignupStudentState extends ConsumerState<SignupStudent> {
                       decoration: const InputDecoration(hintText: 'last name'),
                     ),
                     const SizedBox(height: 10,),
+                    FancyPasswordField(
+                      passwordController: _password,
+                      validationRules: {
+
+                      },
+                      onChanged: (password){
+                        print('Password strength: ${_password.passwordStrength}')
+                      },
+                    )
                     TextFormField(
                       controller: password,
-                      obscureText: _obscureText,
+                      obscureText: _obscureText1,
                       decoration:  InputDecoration(
                         hintText: 'password',
                         suffixIcon: IconButton(
                           icon: Icon(
-                              _obscureText ? Icons.visibility_off : Icons.visibility,
+                              _obscureText1 ? Icons.visibility_off : Icons.visibility,
                               color: Theme.of(context).primaryColorDark,
                           ),
                           onPressed: (){
                             setState(() {
-                              _obscureText = !_obscureText;
+                              _obscureText1 = !_obscureText1;
                             });
                           },
                           )),
@@ -267,11 +286,28 @@ class _SignupStudentState extends ConsumerState<SignupStudent> {
                     //   decoration: const InputDecoration(hintText: 'password'),
                     // ),
                     const SizedBox(height: 10,),
-                    TextField(
+                    TextFormField(
                       controller: password2,
-                      enabled: _isReEnterPasswordFieldEnabled,
-                      decoration: const InputDecoration(hintText: 're-enter password'),
+                      obscureText: _obscureText2,
+                      decoration:  InputDecoration(
+                        hintText: 're-enter password',
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                              _obscureText2 ? Icons.visibility_off : Icons.visibility,
+                              color: Theme.of(context).primaryColorDark,
+                          ),
+                          onPressed: (){
+                            setState(() {
+                              _obscureText2 = !_obscureText2;
+                            });
+                          },
+                          )),
                     ),
+                    // TextField(
+                    //   controller: password2,
+                    //   enabled: _isReEnterPasswordFieldEnabled,
+                    //   decoration: const InputDecoration(hintText: 're-enter password'),
+                    // ),
                     const SizedBox(height: 10,),
                     ElevatedButton(
                       onPressed: (() async{
