@@ -1,5 +1,3 @@
-import 'dart:nativewrappers/_internal/vm/lib/ffi_patch.dart';
-
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_app/pages/login_page.dart';
@@ -23,7 +21,7 @@ class SignupStudent extends ConsumerStatefulWidget {
 class _SignupStudentState extends ConsumerState<SignupStudent> {
 
   TextEditingController email = TextEditingController();
-  TextEditingController password = TextEditingController();
+  // TextEditingController password = TextEditingController();
   TextEditingController username = TextEditingController();
   TextEditingController first_name = TextEditingController();
   TextEditingController last_name = TextEditingController();
@@ -42,10 +40,6 @@ class _SignupStudentState extends ConsumerState<SignupStudent> {
   final FocusNode focusNode = FocusNode();
 
   final GlobalKey<TooltipState> _toolTipKey = GlobalKey<TooltipState>();
-
-  final String passwordRules = 
-  "Passwords must contain:\n"
-  ""
 
   @override
   void initState(){
@@ -97,7 +91,7 @@ class _SignupStudentState extends ConsumerState<SignupStudent> {
       first_name.dispose();
       last_name.dispose();
       username.dispose();
-      password.dispose();
+      _password.dispose();
       password2.dispose();
       super.dispose();
     }
@@ -107,14 +101,14 @@ class _SignupStudentState extends ConsumerState<SignupStudent> {
     final authState = ref.watch(authProvider);
 
 
-    if(password.text != password2.text){
+    if(_password.toString() != password2.text){
       Get.snackbar("Error", "Passwords do not match");
       return;
     }
 
     try{
     final currentUser = UserRepository(ref);
-    await currentUser.createUserDocIfNeeded(email.text, username.text, first_name.text, last_name.text, password.text);
+    await currentUser.createUserDocIfNeeded(email.text, username.text, first_name.text, last_name.text, _password.toString());
     dispose(); //Add a non-goole version later.
     Get.offAll(() => const Wrapper());
     } on FirebaseAuthException catch(e){
@@ -135,16 +129,16 @@ class _SignupStudentState extends ConsumerState<SignupStudent> {
   signupNative()async{
     final authNotifier = ref.read(authProvider.notifier);
     final authState = ref.watch(authProvider);
-    if(password.text != password2.text){
+    if(_password.toString() != password2.text){
       Get.snackbar("Error", "Passwords do not match");
       return;
     }
 
     try{
-    authNotifier.createFirebaseAccount(email.text, password.text);
+    authNotifier.createFirebaseAccount(email.text, _password.toString());
     final currentUser = UserRepository(ref);
 
-    await currentUser.createUserDocIfNeeded(email.text, username.text, first_name.text, last_name.text, password.text);
+    await currentUser.createUserDocIfNeeded(email.text, username.text, first_name.text, last_name.text, _password.toString());
     dispose(); //Add a non-goole version later.
     Get.offAll(() => const Wrapper());
     } on FirebaseAuthException catch(e){
@@ -203,158 +197,156 @@ class _SignupStudentState extends ConsumerState<SignupStudent> {
                   ),
                   ),
               ),
-              Container(
-                padding: const EdgeInsets.only(top: 10.0),
-                child: Column(
-                  children: [
-                    const SizedBox(height: 15,),
-                    DecoratedBox(
-                      decoration: BoxDecoration(
-                        color: const Color.fromARGB(0, 255, 255, 255),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Image.asset(
-                          "assets/images/Oval Logo.png",
-                          height: 125,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 15,),
-                    const Text(
-                      'Create your student account', 
-                      style: TextStyle(
-                        fontSize: 16, 
-                        fontFamily: 'Inter'
-                      ),
-                    ),
-                    const SizedBox(height: 15,),
-                    TextField(
-                      controller: email,
-                      enabled: _isEmailFieldEnabled,
-                      decoration: const InputDecoration(hintText: 'email@domain.com'),
-                    ),
-                    const SizedBox(height: 10,),
-                    TextField(
-                      controller: username,
-                      enabled: _isUsernameFieldEnabled,
-                      decoration: const InputDecoration(hintText: 'username'),
-                    ),
-                    const SizedBox(height: 10,),
-                    TextField(
-                      controller: first_name,
-                      enabled: _isFirstNameFieldEnabled,
-                      decoration: const InputDecoration(hintText: 'first name'),
-                    ),
-                    const SizedBox(height: 10,),
-                    TextField(
-                      controller: last_name,
-                      enabled: _isLastNameFieldEnabled,
-                      decoration: const InputDecoration(hintText: 'last name'),
-                    ),
-                    const SizedBox(height: 10,),
-                    FancyPasswordField(
-                      passwordController: _password,
-                      validationRules: {
-
-                      },
-                      onChanged: (password){
-                        print('Password strength: ${_password.passwordStrength}')
-                      },
-                    )
-                    TextFormField(
-                      controller: password,
-                      obscureText: _obscureText1,
-                      decoration:  InputDecoration(
-                        hintText: 'password',
-                        suffixIcon: IconButton(
-                          icon: Icon(
-                              _obscureText1 ? Icons.visibility_off : Icons.visibility,
-                              color: Theme.of(context).primaryColorDark,
-                          ),
-                          onPressed: (){
-                            setState(() {
-                              _obscureText1 = !_obscureText1;
-                            });
-                          },
-                          )),
-                    ),
-                    // TextField(
-                    //   controller: password,
-                    //   enabled: _isPasswordFieldEnabled,
-                    //   decoration: const InputDecoration(hintText: 'password'),
-                    // ),
-                    const SizedBox(height: 10,),
-                    TextFormField(
-                      controller: password2,
-                      obscureText: _obscureText2,
-                      decoration:  InputDecoration(
-                        hintText: 're-enter password',
-                        suffixIcon: IconButton(
-                          icon: Icon(
-                              _obscureText2 ? Icons.visibility_off : Icons.visibility,
-                              color: Theme.of(context).primaryColorDark,
-                          ),
-                          onPressed: (){
-                            setState(() {
-                              _obscureText2 = !_obscureText2;
-                            });
-                          },
-                          )),
-                    ),
-                    // TextField(
-                    //   controller: password2,
-                    //   enabled: _isReEnterPasswordFieldEnabled,
-                    //   decoration: const InputDecoration(hintText: 're-enter password'),
-                    // ),
-                    const SizedBox(height: 10,),
-                    ElevatedButton(
-                      onPressed: (() async{
-                        final isGoogleSignIn = await checkGoogleSignIn();
-
-                        if(isGoogleSignIn == true){
-                          signupGoogle();
-                        }
-                        else{
-                          signupNative();
-                        }
-                      }),
-                      child: const Text("Sign Up")
-                    ),
-                    const SizedBox(height: 20,),
-                    ElevatedButton(
-                      onPressed: () {},
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color.fromARGB(255, 149, 252, 124),
-                        shape: RoundedRectangleBorder(
+              SingleChildScrollView(
+                child: Container(
+                  padding: const EdgeInsets.only(top: 10.0),
+                  child: Column(
+                    children: [
+                      const SizedBox(height: 15,),
+                      DecoratedBox(
+                        decoration: BoxDecoration(
+                          color: const Color.fromARGB(0, 255, 255, 255),
                           borderRadius: BorderRadius.circular(8),
-                          side: const BorderSide(color: Color.fromARGB(255, 0, 0, 0), width: 6),
                         ),
-                        maximumSize: const Size(300, 100),
-                        minimumSize: const Size(300, 100),
-                      ),
-                      child: const Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Image(
-                            image: AssetImage("assets/images/Student.png"),
-                            height: 50,
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Image.asset(
+                            "assets/images/Oval Logo.png",
+                            height: 125,
                           ),
-                          Padding(
-                            padding: EdgeInsets.all(8.0),
-                            child: Text(
-                              "Student",
-                              style: TextStyle(
-                                color: Color.fromARGB(255, 255, 86, 86), 
-                                fontSize: 40,
+                        ),
+                      ),
+                      const SizedBox(height: 15,),
+                      const Text(
+                        'Create your student account', 
+                        style: TextStyle(
+                          fontSize: 16, 
+                          fontFamily: 'Inter'
+                        ),
+                      ),
+                      const SizedBox(height: 15,),
+                      TextField(
+                        controller: email,
+                        enabled: _isEmailFieldEnabled,
+                        decoration: const InputDecoration(hintText: 'email@domain.com'),
+                      ),
+                      const SizedBox(height: 10,),
+                      TextField(
+                        controller: username,
+                        enabled: _isUsernameFieldEnabled,
+                        decoration: const InputDecoration(hintText: 'username'),
+                      ),
+                      const SizedBox(height: 10,),
+                      TextField(
+                        controller: first_name,
+                        enabled: _isFirstNameFieldEnabled,
+                        decoration: const InputDecoration(hintText: 'first name'),
+                      ),
+                      const SizedBox(height: 10,),
+                      TextField(
+                        controller: last_name,
+                        enabled: _isLastNameFieldEnabled,
+                        decoration: const InputDecoration(hintText: 'last name'),
+                      ),
+                      const SizedBox(height: 10,),
+                      FancyPasswordField(
+                        passwordController: _password,
+                        hasStrengthIndicator: true,
+                        decoration: const InputDecoration(
+                          hintText: 'Password',
+                        ),
+                        validationRules: {
+                          DigitValidationRule(),
+                          UppercaseValidationRule(),
+                          LowercaseValidationRule(),
+                          SpecialCharacterValidationRule(),
+                          MinCharactersValidationRule(6),
+                        },
+                        onChanged: (value){
+                          setState(() {
+                            
+                          });
+                        },
+                      ),
+                      const Text(
+                        "Your password must have:\n"
+                        "Minimum 6 Length\n"
+                        "1 Uppercase Letter\n"
+                        "1 Lowercase Letter\n"
+                        "1 Numerical digit \n"
+                        "1 Non-Numerical Special Character"
+                      ),
+                      const SizedBox(height: 10,),
+                      TextFormField(
+                        controller: password2,
+                        obscureText: _obscureText2,
+                        decoration:  InputDecoration(
+                          hintText: 're-enter password',
+                          suffixIcon: IconButton(
+                            icon: Icon(
+                                _obscureText2 ? Icons.visibility_off : Icons.visibility,
+                                color: Theme.of(context).primaryColorDark,
+                            ),
+                            onPressed: (){
+                              setState(() {
+                                _obscureText2 = !_obscureText2;
+                              });
+                            },
+                            )),
+                      ),
+                      // TextField(
+                      //   controller: password2,
+                      //   enabled: _isReEnterPasswordFieldEnabled,
+                      //   decoration: const InputDecoration(hintText: 're-enter password'),
+                      // ),
+                      const SizedBox(height: 10,),
+                      ElevatedButton(
+                        onPressed: (() async{
+                          final isGoogleSignIn = await checkGoogleSignIn();
+                
+                          if(isGoogleSignIn == true){
+                            signupGoogle();
+                          }
+                          else{
+                            signupNative();
+                          }
+                        }),
+                        child: const Text("Sign Up")
+                      ),
+                      const SizedBox(height: 20,),
+                      ElevatedButton(
+                        onPressed: () {},
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color.fromARGB(255, 149, 252, 124),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                            side: const BorderSide(color: Color.fromARGB(255, 0, 0, 0), width: 6),
+                          ),
+                          maximumSize: const Size(300, 100),
+                          minimumSize: const Size(300, 100),
+                        ),
+                        child: const Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Image(
+                              image: AssetImage("assets/images/Student.png"),
+                              height: 50,
+                            ),
+                            Padding(
+                              padding: EdgeInsets.all(8.0),
+                              child: Text(
+                                "Student",
+                                style: TextStyle(
+                                  color: Color.fromARGB(255, 255, 86, 86), 
+                                  fontSize: 40,
+                                ),
                               ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
-                  ]
+                    ]
+                  ),
                 ),
               ),
             ]
@@ -364,3 +356,52 @@ class _SignupStudentState extends ConsumerState<SignupStudent> {
     );
   }
 }
+
+                      // strengthIndicatorBuilder: (double strength){
+                      //   String label;
+                      //   Color color;
+
+                      //   if(strength < 0.33){
+                      //     label = "Weak";
+                      //     color = Colors.red;
+                      //   } else if (strength < 0.66){
+                      //     label = 'Fair';
+                      //     color = Colors.orange;
+                      //   } else{
+                      //     label = 'Strong';
+                      //     color = Colors.green;
+                      //   }
+
+                      //   return Column(
+                      //     crossAxisAlignment: CrossAxisAlignment.start,
+                      //     children: [
+                      //       Padding(
+                      //         padding: const EdgeInsets,
+                      //       ),
+                      //     ],
+                      //   )
+                      // },
+
+                    // TextFormField(
+                    //   controller: password,
+                    //   obscureText: _obscureText1,
+                    //   decoration:  InputDecoration(
+                    //     hintText: 'password',
+                    //     suffixIcon: IconButton(
+                    //       icon: Icon(
+                    //           _obscureText1 ? Icons.visibility_off : Icons.visibility,
+                    //           color: Theme.of(context).primaryColorDark,
+                    //       ),
+                    //       onPressed: (){
+                    //         setState(() {
+                    //           _obscureText1 = !_obscureText1;
+                    //         });
+                    //       },
+                    //       )),
+                    // ),
+                    // TextField(
+                    //   controller: password,
+                    //   enabled: _isPasswordFieldEnabled,
+                    //   decoration: const InputDecoration(hintText: 'password'),
+                    // ),
+
