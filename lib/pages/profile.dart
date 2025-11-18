@@ -19,11 +19,11 @@ class Profile extends ConsumerStatefulWidget {
 class _ProfileState extends ConsumerState<Profile> {
 
   TextEditingController email = TextEditingController();
-  TextEditingController password = TextEditingController();
+  TextEditingController phone = TextEditingController();
   TextEditingController username = TextEditingController();
   TextEditingController firstName = TextEditingController();
   TextEditingController lastName = TextEditingController();
-  TextEditingController password2 = TextEditingController();
+  TextEditingController description = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -169,158 +169,264 @@ class _ProfileState extends ConsumerState<Profile> {
             fit: BoxFit.none,
           ),
         ),
-        child: Column(
-          children: [
-            Container(
-              width: double.infinity,
-              decoration: const BoxDecoration(
-                color:Color.fromARGB(115, 0, 0, 0),
-                border: Border(
-                  bottom: BorderSide(color: Colors.black, width: 6.0),
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              Container(
+                width: double.infinity,
+                decoration: const BoxDecoration(
+                  color:Color.fromARGB(115, 0, 0, 0),
+                  border: Border(
+                    bottom: BorderSide(color: Colors.black, width: 6.0),
+                  ),
                 ),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(10),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                    const Text(
-                      'First Name',
-                      style: TextStyle(color: Colors.white, fontSize: 48, fontFamily: 'Jomhuria'),
-                    ),
-                    TextField(
-                      controller: firstName,
-                      decoration: const InputDecoration(
-                        hintText: 'First Name',
-                        constraints: BoxConstraints(
-                          maxWidth: 225,
-                          minWidth: 50,
-                          minHeight: 50,
-                          maxHeight: 50,
+                child: Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                      const Text(
+                        'First Name',
+                        style: TextStyle(color: Colors.white, fontSize: 48, fontFamily: 'Jomhuria'),
+                      ),
+                      TextField(
+                        controller: firstName,
+                        decoration: const InputDecoration(
+                          hintText: 'First Name',
+                          constraints: BoxConstraints(
+                            maxWidth: 225,
+                            minWidth: 50,
+                            minHeight: 50,
+                            maxHeight: 50,
+                          ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
-            ),
-            Container(
-              width: double.infinity,
-              decoration: const BoxDecoration(
-                color:Color.fromARGB(115, 0, 0, 0),
-                border: Border(
-                  bottom: BorderSide(color: Colors.black, width: 6.0),
+              Container(
+                width: double.infinity,
+                decoration: const BoxDecoration(
+                  color:Color.fromARGB(115, 0, 0, 0),
+                  border: Border(
+                    bottom: BorderSide(color: Colors.black, width: 6.0),
+                  ),
                 ),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(10),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                    const Text(
-                      'Last Name',
-                      style: TextStyle(color: Colors.white, fontSize: 48, fontFamily: 'Jomhuria'),
-                    ),
-                    TextField(
-                      controller: lastName,
-                      decoration: const InputDecoration(
-                        hintText: 'Last Name',
-                        constraints: BoxConstraints(
-                          maxWidth: 225,
-                          minWidth: 50,
-                          minHeight: 50,
-                          maxHeight: 50,
+                child: Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                      const Text(
+                        'Last Name',
+                        style: TextStyle(color: Colors.white, fontSize: 48, fontFamily: 'Jomhuria'),
+                      ),
+                      TextField(
+                        controller: lastName,
+                        decoration: const InputDecoration(
+                          hintText: 'Last Name',
+                          constraints: BoxConstraints(
+                            maxWidth: 225,
+                            minWidth: 50,
+                            minHeight: 50,
+                            maxHeight: 50,
+                          ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
-            ),
-            Container(
-              width: double.infinity,
-              decoration: const BoxDecoration(
-                color:Color.fromARGB(115, 0, 0, 0),
-                border: Border(
-                  bottom: BorderSide(color: Colors.black, width: 6.0),
+              Container(
+                width: double.infinity,
+                decoration: const BoxDecoration(
+                  color:Color.fromARGB(115, 0, 0, 0),
+                  border: Border(
+                    bottom: BorderSide(color: Colors.black, width: 6.0),
+                  ),
                 ),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(10),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                    const Text(
-                      'Username',
-                      style: TextStyle(color: Colors.white, fontSize: 48, fontFamily: 'Jomhuria'),
-                    ),
-                    TextField(
-                      controller: username,
-                      decoration: const InputDecoration(
-                        hintText: 'Username',
-                        constraints: BoxConstraints(
-                          maxWidth: 225,
-                          minWidth: 50,
-                          minHeight: 50,
-                          maxHeight: 50,
+                child: Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                      const Text(
+                        'Username',
+                        style: TextStyle(color: Colors.white, fontSize: 48, fontFamily: 'Jomhuria'),
+                      ),
+                      TextField(
+                        controller: username,
+                        decoration: const InputDecoration(
+                          hintText: 'Username',
+                          constraints: BoxConstraints(
+                            maxWidth: 225,
+                            minWidth: 50,
+                            minHeight: 50,
+                            maxHeight: 50,
+                          ),
                         ),
                       ),
+                    ],
+                  ),
+                ),
+              ),
+              Container(
+                width: double.infinity,
+                decoration: const BoxDecoration(
+                  color:Color.fromARGB(115, 0, 0, 0),
+                  border: Border(
+                    bottom: BorderSide(color: Colors.black, width: 6.0),
+                  ),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                      const Text(
+                        'Profile Picture',
+                        style: TextStyle(color: Colors.white, fontSize: 48, fontFamily: 'Jomhuria'),
+                      ),
+                      Image.asset('assets/images/TempUserPFP.png'),
+                    ],
+                  ),
+                ),
+              ),
+              Container(
+                width: double.infinity,
+                decoration: const BoxDecoration(
+                  color:Color.fromARGB(115, 0, 0, 0),
+                  border: Border(
+                    bottom: BorderSide(color: Colors.black, width: 6.0),
+                  ),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                      const Text(
+                        'Email',
+                        style: TextStyle(color: Colors.white, fontSize: 48, fontFamily: 'Jomhuria'),
+                      ),
+                      TextField(
+                        controller: email,
+                        decoration: const InputDecoration(
+                          hintText: 'email@domain.com',
+                          constraints: BoxConstraints(
+                            maxWidth: 225,
+                            minWidth: 50,
+                            minHeight: 50,
+                            maxHeight: 50,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              Container(
+                width: double.infinity,
+                decoration: const BoxDecoration(
+                  color:Color.fromARGB(115, 0, 0, 0),
+                  border: Border(
+                    bottom: BorderSide(color: Colors.black, width: 6.0),
+                  ),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                      const Text(
+                        'Phone #',
+                        style: TextStyle(color: Colors.white, fontSize: 48, fontFamily: 'Jomhuria'),
+                      ),
+                      TextField(
+                        controller: phone,
+                        decoration: const InputDecoration(
+                          hintText: 'number',
+                          constraints: BoxConstraints(
+                            maxWidth: 225,
+                            minWidth: 50,
+                            minHeight: 50,
+                            maxHeight: 50,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              Container(
+                width: double.infinity,
+                decoration: const BoxDecoration(
+                  color:Color.fromARGB(115, 0, 0, 0),
+                  border: Border(
+                    bottom: BorderSide(color: Colors.black, width: 6.0),
+                  ),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                      const Text(
+                        'Description',
+                        style: TextStyle(color: Colors.white, fontSize: 48, fontFamily: 'Jomhuria'),
+                      ),
+                      TextField(
+                        controller: description,
+                        decoration: const InputDecoration(
+                          hintText: 'description',
+                          constraints: BoxConstraints(
+                            maxWidth: 225,
+                            minWidth: 50,
+                            minHeight: 50,
+                            maxHeight: 50,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 20,),
+              ElevatedButton(
+                onPressed: () => {}, //Should allow us to edit the fields
+                child: const Text("Edit Profile"),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Container(
+                  padding: const EdgeInsets.all(4.0),
+                  width: double.infinity,
+                  height: 210,
+                  decoration: BoxDecoration(
+                    color: const Color.fromARGB(180, 0, 0, 0),
+                    borderRadius: BorderRadius.circular(31.0),
+                  ),
+                  child: const Center(
+                    child: Text(
+                      'NOTE:\nOnly your name, contact information, description, and profile picture will appear on your public profile. Any other information entered will remain confidential and only accessible by you.',
+                      style: TextStyle(color: Colors.red, fontSize: 20, fontFamily: 'Inter'),
+                      textAlign: TextAlign.center,
                     ),
-                  ],
+                  ),
                 ),
               ),
-            ),
-            Container(
-              width: double.infinity,
-              decoration: const BoxDecoration(
-                color:Color.fromARGB(115, 0, 0, 0),
-                border: Border(
-                  bottom: BorderSide(color: Colors.black, width: 6.0),
-                ),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(10),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                    const Text(
-                      'Profile Picture',
-                      style: TextStyle(color: Colors.white, fontSize: 48, fontFamily: 'Jomhuria'),
-                    ),
-                    Image.asset('assets/images/TempUserPFP.png'),
-                  ],
-                ),
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
   }
-}
-
-typedef LanguageEntry = DropdownMenuEntry<LanguageLabel>;
-
-enum LanguageLabel {
-  english('English'),
-  spanish('Spanish'),
-  french('French'),
-  german('German'),
-  italian('Italian'),
-  dutch('Dutch');
-
-  const LanguageLabel(this.label);
-  final String label;
-
-  static final List<DropdownMenuEntry<LanguageLabel>> entries =
-      LanguageLabel.values.map((language) {
-    return DropdownMenuEntry<LanguageLabel>(
-      value: language,
-      label: language.label,
-    );
-  }).toList();
 }
