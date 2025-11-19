@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_app/pages/login_page.dart';
@@ -21,7 +22,7 @@ class SignupStudent extends ConsumerStatefulWidget {
 class _SignupStudentState extends ConsumerState<SignupStudent> {
 
   TextEditingController email = TextEditingController();
-  // TextEditingController password = TextEditingController();
+  TextEditingController password = TextEditingController();
   TextEditingController username = TextEditingController();
   TextEditingController first_name = TextEditingController();
   TextEditingController last_name = TextEditingController();
@@ -263,8 +264,13 @@ class _SignupStudentState extends ConsumerState<SignupStudent> {
                           MinCharactersValidationRule(6),
                         },
                         onChanged: (value){
+                          password.text = value;
                           setState(() {
-                            
+                            Get.snackbar(
+                              "Password text: ${password.text}", 
+                              "Re-enter password text: ${password2.text}",
+                              duration: const Duration(seconds: 10),
+                            );
                           });
                         },
                       ),
@@ -292,7 +298,13 @@ class _SignupStudentState extends ConsumerState<SignupStudent> {
                                 _obscureText2 = !_obscureText2;
                               });
                             },
-                            )),
+                          ),
+                        ),
+                        onChanged: (value){
+                          setState(() {
+                            
+                          });
+                        },
                       ),
                       // TextField(
                       //   controller: password2,
@@ -300,6 +312,31 @@ class _SignupStudentState extends ConsumerState<SignupStudent> {
                       //   decoration: const InputDecoration(hintText: 're-enter password'),
                       // ),
                       const SizedBox(height: 10,),
+                      Row(
+                        children: [
+                          Icon(
+                            password.toString() == password2.text && password2.text.isNotEmpty
+                            ? Icons.check_circle
+                            : Icons.cancel,
+                            color: password.toString() == password2.text && password2.text.isNotEmpty
+                            ? Colors.green
+                            : Colors.red,
+                            size: 18,
+                          ),
+                          const SizedBox(width: 8,),
+                          Text(
+                            password.toString() == password2.text && password2.text.isNotEmpty
+                            ? "Passwords match"
+                            : "Passwords do not match",
+                            style: TextStyle(
+                              color: password.toString() == password2.text && password2.text.isNotEmpty
+                              ? Colors.green
+                              : Colors.red,
+                            ),
+                          ),
+
+                        ],
+                      ),
                       ElevatedButton(
                         onPressed: (() async{
                           final isGoogleSignIn = await checkGoogleSignIn();
@@ -355,6 +392,15 @@ class _SignupStudentState extends ConsumerState<SignupStudent> {
       )
     );
   }
+}
+
+class PasswordCheck extends StatefulWidget{
+     PasswordCheck({super.key});
+
+     String password;
+     String password2;
+
+    PasswordCheck(required this.password, this.password2)
 }
 
                       // strengthIndicatorBuilder: (double strength){
