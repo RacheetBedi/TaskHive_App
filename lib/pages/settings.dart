@@ -2,6 +2,7 @@ import 'dart:collection';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_app/pages/addTasks.dart';
 import 'package:flutter_app/pages/login_page.dart';
 import 'package:flutter_app/pages/profile.dart';
 import 'package:flutter_app/pages/signupStudent.dart';
@@ -377,6 +378,13 @@ class _SettingsState extends ConsumerState<Settings> {
                   ),
                 ),
               ),
+            ),
+            const SizedBox(height: 10.0),
+            ElevatedButton(
+              onPressed: () {
+                Get.offAll(() => const AddTasks());
+              },
+              child: const Text("Temp: To Add Tasks"),
             ),
           ],
         ),
