@@ -1,24 +1,24 @@
 import 'package:firebase_auth/firebase_auth.dart';
 
 class AppUser{
-  final String uid;
-  final bool? dark_mode;
-  final bool? is_teacher;
-  final String? lang;
-  final int? logoPref;
-  final String? password;
-  final int? country_code;
-  final String? displayFirstName;
-  final String? displayLastName;
-  final String? userName;
-  final String? email;
-  final String? photoURL;
-  final bool isEmailVerified;
-  final String? phoneNumber;
-  final bool hasCompletedSetup;
-  final String? description;
+  String uid;
+  bool? dark_mode;
+  bool? is_teacher;
+  String? lang;
+  int? logoPref;
+  String? password;
+  int? country_code;
+  String? displayFirstName;
+  String? displayLastName;
+  String? userName;
+  String? email;
+  String? photoURL;
+  bool isEmailVerified;
+  String? phoneNumber;
+  bool hasCompletedSetup;
+  String? description;
 
-  const AppUser({
+  AppUser({
     required this.uid,
     this.displayFirstName,
     this.displayLastName,

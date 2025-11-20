@@ -101,12 +101,6 @@ class _SignupStudentState extends ConsumerState<SignupStudent> {
     final authNotifier = ref.read(authProvider.notifier);
     final authState = ref.watch(authProvider);
 
-
-    if(_password.toString() != password2.text){
-      Get.snackbar("Error", "Passwords do not match");
-      return;
-    }
-
     try{
     final currentUser = UserRepository(ref);
     await currentUser.createUserDocIfNeeded(email.text, username.text, first_name.text, last_name.text, _password.toString());
@@ -130,16 +124,12 @@ class _SignupStudentState extends ConsumerState<SignupStudent> {
   signupNative()async{
     final authNotifier = ref.read(authProvider.notifier);
     final authState = ref.watch(authProvider);
-    if(_password.toString() != password2.text){
-      Get.snackbar("Error", "Passwords do not match");
-      return;
-    }
 
     try{
-    authNotifier.createFirebaseAccount(email.text, _password.toString());
+    await authNotifier.createFirebaseAccount(email.text, password.text);
     final currentUser = UserRepository(ref);
 
-    await currentUser.createUserDocIfNeeded(email.text, username.text, first_name.text, last_name.text, _password.toString());
+    await currentUser.createUserDocIfNeeded(email.text, username.text, first_name.text, last_name.text, password.text);
     dispose(); //Add a non-goole version later.
     Get.offAll(() => const Wrapper());
     } on FirebaseAuthException catch(e){
@@ -193,7 +183,7 @@ class _SignupStudentState extends ConsumerState<SignupStudent> {
                     ),
                     iconSize: 40,
                     onPressed: () {
-                      Get.to(() => const Role());
+                      Get.back();
                     },
                   ),
                   ),
@@ -266,11 +256,6 @@ class _SignupStudentState extends ConsumerState<SignupStudent> {
                         onChanged: (value){
                           password.text = value;
                           setState(() {
-                            Get.snackbar(
-                              "Password text: ${password.text}", 
-                              "Re-enter password text: ${password2.text}",
-                              duration: const Duration(seconds: 10),
-                            );
                           });
                         },
                       ),
@@ -290,8 +275,7 @@ class _SignupStudentState extends ConsumerState<SignupStudent> {
                           hintText: 're-enter password',
                           suffixIcon: IconButton(
                             icon: Icon(
-                                _obscureText2 ? Icons.visibility_off : Icons.visibility,
-                                color: Theme.of(context).primaryColorDark,
+                                _obscureText2 ? Icons.visibility : Icons.visibility_off,
                             ),
                             onPressed: (){
                               setState(() {
@@ -302,50 +286,38 @@ class _SignupStudentState extends ConsumerState<SignupStudent> {
                         ),
                         onChanged: (value){
                           setState(() {
-                            
+                            // PasswordCheck(password: password.text, password2: password2.text,);
                           });
                         },
                       ),
+                      const SizedBox(height: 10),
+                      PasswordCheck(password: password.text, password2: password2.text),
                       // TextField(
                       //   controller: password2,
                       //   enabled: _isReEnterPasswordFieldEnabled,
                       //   decoration: const InputDecoration(hintText: 're-enter password'),
                       // ),
                       const SizedBox(height: 10,),
-                      Row(
-                        children: [
-                          Icon(
-                            password.toString() == password2.text && password2.text.isNotEmpty
-                            ? Icons.check_circle
-                            : Icons.cancel,
-                            color: password.toString() == password2.text && password2.text.isNotEmpty
-                            ? Colors.green
-                            : Colors.red,
-                            size: 18,
-                          ),
-                          const SizedBox(width: 8,),
-                          Text(
-                            password.toString() == password2.text && password2.text.isNotEmpty
-                            ? "Passwords match"
-                            : "Passwords do not match",
-                            style: TextStyle(
-                              color: password.toString() == password2.text && password2.text.isNotEmpty
-                              ? Colors.green
-                              : Colors.red,
-                            ),
-                          ),
-
-                        ],
-                      ),
                       ElevatedButton(
                         onPressed: (() async{
-                          final isGoogleSignIn = await checkGoogleSignIn();
-                
-                          if(isGoogleSignIn == true){
-                            signupGoogle();
+
+                          if(password.text != password2.text){
+                            Get.snackbar("Error", "Passwords do not match");
+                            return;
                           }
-                          else{
-                            signupNative();
+                          else if(!_password.areAllRulesValidated){
+                            Get.snackbar("Error", "Password missing requirements");
+                            return;
+                          }
+                          else{ 
+                             final isGoogleSignIn = await checkGoogleSignIn();
+
+                            if(isGoogleSignIn == true){
+                              signupGoogle();
+                            }
+                            else{
+                              signupNative();
+                            }
                           }
                         }),
                         child: const Text("Sign Up")
@@ -394,13 +366,40 @@ class _SignupStudentState extends ConsumerState<SignupStudent> {
   }
 }
 
-class PasswordCheck extends StatefulWidget{
-     PasswordCheck({super.key});
+class PasswordCheck extends StatelessWidget{
 
      String password;
      String password2;
 
-    PasswordCheck(required this.password, this.password2)
+    PasswordCheck({super.key, required this.password, required this.password2});
+
+    @override
+    Widget build(BuildContext context){
+      return Row(
+              children: [
+                Icon(
+                  password == password2 && password2.isNotEmpty
+                  ? Icons.check_circle
+                  : Icons.cancel,
+                  color: password.toString() == password2 && password2.isNotEmpty
+                  ? Colors.green
+                  : Colors.red,
+                  size: 18,
+                ),
+                const SizedBox(width: 8,),
+                Text(
+                  password.toString() == password2 && password2.isNotEmpty
+                  ? "Passwords match"
+                  : "Passwords do not match",
+                  style: TextStyle(
+                    color: password.toString() == password2 && password2.isNotEmpty
+                    ? Colors.green
+                    : Colors.red,
+                  ),
+                ),
+              ],
+            );
+    }
 }
 
                       // strengthIndicatorBuilder: (double strength){

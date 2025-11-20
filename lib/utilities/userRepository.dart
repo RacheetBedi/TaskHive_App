@@ -16,23 +16,7 @@ class UserRepository {
 
   AppUser? get currentAppUser {
     final authState = ref.read(authProvider);
-    return authState.when(
-      data: (user) => user,
-      loading: (){
-        const Scaffold(
-        body: Center(
-          child: CircularProgressIndicator(),
-        )
-      );
-      },
-      error: (error, st){
-        Get.snackbar(
-          "Error",
-          "User repository connection error: ${error.toString()}",
-          duration: const Duration(seconds: 10),
-        );
-      },
-    );
+    return authState.asData?.value;
   }
 
   FirebaseFirestore get _firestore => FirebaseFirestore.instance;
@@ -127,40 +111,56 @@ class UserRepository {
 // Add signUp error handling
 // Add document creation for teachers (NEXT TO NEXT, NOT NEXT, RUBRIC)
 // Delete account code
+// Settings profile button
+// Edit tasks button
+// Fix signUpAsStudent back button functionality
+// Make it so that signUp takes you to a separate page involving final account creation tasks such as verifying your username is allowed, etc...
 // Tasks for Jeevanth:
 //    When you select a text field during log in or sign up, the text field outlines itself.
+//    Make the password rules on student and teacher sign-in look good.
 
 
   Future<void> createUserDocIfNeeded(String email, String userName, String firstName, String lastName, String password, {bool isNewUser = true}) async {
     try{
     final user = currentAppUser;
-    //if(user == null) return null;
+    if(user == null){
+      Get.snackbar("User Error:", "The User is null");
+      return;
+    }
+
+    user!.email = email;
+    user!.userName = userName;
+    user!.displayFirstName = firstName;
+    user!.displayLastName = lastName;
+    user!.password = password;
+    //user!.hasCompletedSetup = !isNewUser;
+
 
     final docRef = _firestore.collection('users').doc(user?.uid);
     final doc = await docRef.get();
 
     if (!doc.exists) {
       await docRef.set({
-        "dark_mode": false,
-        "isEmailVerified": user?.isEmailVerified,
-        "hasCompletedSetup": false,
-        "is_teacher": false,
-        "lang": "EN",
-        "logo_preference": 1,
-        "password": password,
+        "dark_mode": user.dark_mode ?? false,
+        "isEmailVerified": user?.isEmailVerified ?? false,
+        "hasCompletedSetup": user.hasCompletedSetup ?? false,
+        "is_teacher": user.is_teacher ?? false,
+        "lang": user.lang ?? 'EN',
+        "logo_preference": user.logoPref ?? 1,
+        "password": user.password ?? '',
         "public profile": {
           "contact_info": {
-            "country_code": 1,
-            "email_address": email,
-            "phone_number": user?.phoneNumber,
+            "country_code": user.country_code ?? 1,
+            "email_address": user.email ?? '',
+            "phone_number": user?.phoneNumber ?? 0000000000,
           },
-          "description": null,
-          "firstName": firstName,
-          "lastName": lastName,
-          "photo_URL": user?.photoURL,
+          "description": user.description ?? '',
+          "firstName": user.displayFirstName ?? '',
+          "lastName": user.displayLastName ?? '',
+          "photo_URL": user?.photoURL ?? '',
         },
-        'uid': user?.uid,
-        'username': null,
+        'uid': user?.uid ?? '',
+        'username': user.userName ?? '',
       });
     }
     } catch(err, st){
@@ -192,4 +192,22 @@ class UserRepository {
   //     'updatedAt': FieldValue.serverTimestamp(),
   //   }, SetOptions(merge: true));
   // }
+
+
+    // final authState = ref.read(authProvider);
+    // return authState.when(
+    //   data: (user) => user,
+    //   loading: (){
+    //     const Center(
+    //       child: CircularProgressIndicator(),
+    //     );
+    //   },
+    //   error: (error, st){
+    //     Get.snackbar(
+    //       "Error",
+    //       "User repository connection error: ${error.toString()}",
+    //       duration: const Duration(seconds: 10),
+    //     );
+    //   },
+    // );
 }
