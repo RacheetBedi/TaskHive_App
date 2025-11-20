@@ -103,8 +103,9 @@ class _SignupStudentState extends ConsumerState<SignupStudent> {
 
     try{
     final currentUser = UserRepository(ref);
-    await currentUser.createUserDocIfNeeded(email.text, username.text, first_name.text, last_name.text, _password.toString());
-    dispose(); //Add a non-goole version later.
+    await currentUser.createUserDocIfNeeded(email.text, username.text, first_name.text, last_name.text, password.text);//Add a non-goole version later.
+
+    authState.asData!.value!.hasCompletedSetup = true;
     Get.offAll(() => const Wrapper());
     } on FirebaseAuthException catch(e){
         Get.snackbar(

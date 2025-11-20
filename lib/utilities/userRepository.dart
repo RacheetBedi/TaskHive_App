@@ -114,6 +114,7 @@ class UserRepository {
 // Settings profile button
 // Edit tasks button
 // Fix signUpAsStudent back button functionality
+// Change all hasCompletedSetup references to hasCreatedDocument
 // Make it so that signUp takes you to a separate page involving final account creation tasks such as verifying your username is allowed, etc...
 // Tasks for Jeevanth:
 //    When you select a text field during log in or sign up, the text field outlines itself.
