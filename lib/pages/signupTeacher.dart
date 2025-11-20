@@ -112,7 +112,7 @@ class _SignupTeacherState extends ConsumerState<SignupTeacher> {
                       Get.to(() => const Role());
                     },
                   ),
-                  ),
+                ),
               ),
               Container(
                 padding: const EdgeInsets.only(top: 10.0),
@@ -136,8 +136,8 @@ class _SignupTeacherState extends ConsumerState<SignupTeacher> {
                     const Text(
                       'Create your teacher account', 
                       style: TextStyle(
-                        fontSize: 16, 
-                        fontFamily: 'Inter'
+                        fontSize: 50, 
+                        fontFamily: 'Jomhuria'
                       ),
                     ),
                     const SizedBox(height: 15,),
