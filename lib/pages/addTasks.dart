@@ -13,6 +13,7 @@ import 'package:flutter_app/routing/wrapper.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/get_navigation.dart';
+import 'package:choice/choice.dart';
 
 class AddTasks extends ConsumerStatefulWidget {
   const AddTasks({super.key});
@@ -24,6 +25,42 @@ class _AddTasksState extends ConsumerState<AddTasks> {
   String _Hive = "Hive 1";
   String _Difficulty = "Easy Task";
   String _TaskOwner = "Task Owner";
+  List<String> Hives = [
+    'Hive 1',
+    'Hive 2',
+    'Hive 3',
+    'Hive 4',
+    'Hive 5',
+    'Hive 6',
+    'Hive 7',
+    'Hive 8',
+  ];
+  String? hiveValue;
+  void setHiveValue(String? value) {
+    setState(() => hiveValue = value);
+  }
+
+  List<String> Difficulties = [
+    'Easy Task',
+    'Medium Task',
+    'Hard Task',
+  ];
+  String? diffValue;
+  void setDiffValue(String? value) {
+    setState(() => diffValue = value);
+  }
+
+  List<String> Owner = [
+    'You',
+    'BobyJoe',
+    'JoeyBob',
+  ];
+  String? ownerValue;
+  void setOwnerValue(String? value) {
+    setState(() => ownerValue = value);
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -146,16 +183,24 @@ class _AddTasksState extends ConsumerState<AddTasks> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-              Transform.scale(
-                scale: 1,
-                child: DropdownMenu<HiveLabel>(
-                  initialSelection: HiveLabel.hive1,
-                  onSelected: (HiveLabel? hive) {
-                    setState(() {
-                      _Hive = hive?.label ?? "Hive 1";
-                    });
-                  },
-                  dropdownMenuEntries: HiveLabel.entries,
+              Choice<String>.inline(
+                clearable: true,
+                value: ChoiceSingle.value(hiveValue),
+                onChanged: ChoiceSingle.onChanged(setHiveValue),
+                itemCount: Hives.length,
+                itemBuilder: (state, i) {
+                  return ChoiceChip(
+                    selected: state.selected(Hives[i]),
+                    onSelected: state.onSelected(Hives[i]),
+                    label: Text(Hives[i]),
+                  );
+                },
+                listBuilder: ChoiceList.createScrollable(
+                  spacing: 10,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                    vertical: 25,
+                  ),
                 ),
               ),
               Transform.scale(
