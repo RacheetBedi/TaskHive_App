@@ -40,8 +40,6 @@ class _SignupStudentState extends ConsumerState<SignupStudent> {
 
   final FocusNode focusNode = FocusNode();
 
-  final GlobalKey<TooltipState> _toolTipKey = GlobalKey<TooltipState>();
-
   @override
   void initState(){
     super.initState();

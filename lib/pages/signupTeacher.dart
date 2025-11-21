@@ -1,16 +1,21 @@
 import 'dart:ui';
 
+import 'package:fancy_password_field/fancy_password_field.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_app/models/app_user.dart';
 import 'package:flutter_app/pages/login_page.dart';
 import 'package:flutter_app/pages/role.dart';
+import 'package:flutter_app/providers/auth_provider.dart';
 import 'package:flutter_app/routing/wrapper.dart';
+import 'package:flutter_app/utilities/userRepository.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart' as http;
 
 class SignupTeacher extends ConsumerStatefulWidget {
@@ -29,6 +34,117 @@ class _SignupTeacherState extends ConsumerState<SignupTeacher> {
   TextEditingController last_name = TextEditingController();
   TextEditingController password2 = TextEditingController();
   TextEditingController school = TextEditingController();
+  final FancyPasswordController _password = FancyPasswordController();
+
+  bool _isEmailFieldEnabled = true;
+  bool _isFirstNameFieldEnabled = true;
+  bool _isLastNameFieldEnabled = true;
+  bool _isUsernameFieldEnabled = true;
+  bool _isPasswordFieldEnabled = true;
+  bool _isReEnterPasswordFieldEnabled = true;
+  bool _obscureText1 = true;
+  bool _obscureText2 = true;
+
+  @override
+  void initState() {
+    super.initState();
+    callPopulate();
+  }
+
+  populate() async{
+    final authState = ref.watch(authProvider);
+    final authNotifier = ref.watch(authProvider.notifier);
+    final isGoogleSignIn = await authNotifier.checkGoogleSignIn();
+
+    if(isGoogleSignIn){
+      setState(() {
+        AppUser currentUser = authState.asData?.value as AppUser;
+        String storedEmail = currentUser?.email ?? '';
+        String storedFirstName = currentUser?.displayFirstName ?? '';
+        String storedLastName = currentUser?.displayLastName ?? '';
+        String storedUsername = currentUser?.userName ?? '';
+
+        if(storedEmail != ''){
+          email.text = storedEmail;
+          _isEmailFieldEnabled = false;
+        }
+
+        if(storedFirstName != ''){
+          first_name.text = storedFirstName;
+          _isFirstNameFieldEnabled = false;
+        }
+
+        if(storedLastName != ''){
+          last_name.text = storedLastName;
+          _isLastNameFieldEnabled = false;
+        }
+
+        if(storedUsername != ''){
+          username.text = storedUsername;
+          _isUsernameFieldEnabled  = false;
+        }
+      });
+    }
+  }
+
+  void callPopulate(){
+    populate();
+  }
+
+  @override
+  void dispose() {
+    email.dispose();
+    first_name.dispose();
+    last_name.dispose();
+    username.dispose();
+    _password.dispose();
+    password2.dispose();
+    super.dispose();
+  }
+
+  final FocusNode focusNode = FocusNode();
+
+  signUp() async{
+    final authState = ref.watch(authProvider);
+    final authNotifier = ref.watch(authProvider.notifier);
+    final isGoogleSignIn = await authNotifier.checkGoogleSignIn();
+
+    try{
+      if(!isGoogleSignIn){
+        await authNotifier.createFirebaseAccount(email.text, password.text);
+      }
+
+      final currentUser = UserRepository(ref);
+      await currentUser.createUserDocIfNeeded(email.text, username.text, first_name.text, last_name.text, password.text);
+
+      authState.asData!.value!.hasCompletedSetup = true;
+      Get.offAll(() => const Wrapper());
+    } on FirebaseAuthException catch(e){
+        Get.snackbar(
+          "Error",
+          "Unexpected Firebase Sign-In Error: ${e.toString()}",
+          duration: const Duration(seconds: 10),
+        );
+    } on GoogleSignInException catch(e){
+        Get.snackbar(
+          "Error",
+          "Unexpected Google Sign-In Error: ${e.toString()}",
+          duration: const Duration(seconds: 10),
+        );
+    } catch (e){
+        Get.snackbar(
+          "Error",
+          "Unexpected User Sign-In Error: ${e.toString()}",
+          duration: const Duration(seconds: 10),
+        );
+    }
+  }
+
+  Future<bool> checkGoogleSignIn() async{
+    final authNotifier = ref.read(authProvider.notifier);
+    final isGoogleSignIn = await authNotifier.checkGoogleSignIn();
+    return isGoogleSignIn;
+  }
 
   final String pdlApiKey = 'ed8540c975fb8e6345d1ef14611b8e09c56b7fd3ce0e3c6ad701a593003665aa';
   Map<String, dynamic>? _selectedSchool;
@@ -37,18 +153,6 @@ class _SignupTeacherState extends ConsumerState<SignupTeacher> {
     if(query.length <2){
       return [];
     }
-
-    // final uri = Uri.https(
-    //   'api.peopledatalabs.com',
-    //   '/v5/autocomplete',
-    //   {
-    //     'api_key': pdlApiKey,
-    //     'field': 'school',
-    //     'text': query,
-    //     'size': 10,
-    //     'titlecase': 'true',
-    //   }
-    // );
 
     final url = 'https://api.peopledatalabs.com/v5/autocomplete?api_key=$pdlApiKey&field=school&text=$query&size=10&titlecase=true';
 
@@ -83,6 +187,8 @@ class _SignupTeacherState extends ConsumerState<SignupTeacher> {
 
   @override
   Widget build(BuildContext context) {
+
+    populate();
     return Scaffold(
       body: Container(
         height: double.infinity,
@@ -98,6 +204,7 @@ class _SignupTeacherState extends ConsumerState<SignupTeacher> {
           padding: const EdgeInsets.all(8.0),
           child: Stack(
             children: [
+              
               Positioned(
                 top: 0,
                 left: 0,
