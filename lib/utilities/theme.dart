@@ -88,8 +88,8 @@ final ThemeData appTheme = ThemeData(
     ),
 
     dialogTheme: DialogThemeData(
-      backgroundColor: const Color.fromARGB(174, 255, 241, 176),
-      titleTextStyle: const TextStyle(color: Color.fromARGB(255, 0, 0, 0), fontSize: 20),
+      backgroundColor: const Color(0xFFFFB743),
+      titleTextStyle: const TextStyle(color: Color.fromARGB(255, 0, 0, 0), fontSize: 15, fontFamily: 'Jomhuria', fontWeight: FontWeight.normal),
       contentTextStyle: const TextStyle(color: Color.fromARGB(179, 66, 66, 66)),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
     ),
@@ -173,7 +173,7 @@ final ThemeData appTheme = ThemeData(
       ),
       focusedBorder: OutlineInputBorder(
       borderRadius: BorderRadius.circular(8),
-      borderSide: const BorderSide(color: Colors.black, width: 2),
+      borderSide: const BorderSide(color: Colors.black, width: 4),
       ),
     ),
 
