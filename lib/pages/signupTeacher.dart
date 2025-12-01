@@ -204,177 +204,228 @@ class _SignupTeacherState extends ConsumerState<SignupTeacher> {
           padding: const EdgeInsets.all(8.0),
           child: Stack(
             children: [
-              Positioned(
-                top: 0,
-                left: 0,
-                child: SafeArea(
-                  child: IconButton(
-                    icon: const Icon(
-                      Icons.arrow_back,
-                      color: Colors.black,
-                    ),
-                    iconSize: 40,
-                    onPressed: () {
-                      Get.to(() => const Role());
-                    },
-                  ),
-                ),
-              ),
-              Container(
-                padding: const EdgeInsets.only(top: 10.0),
-                child: Column(
-                  children: [
-                    const SizedBox(height: 15,),
-                    DecoratedBox(
-                      decoration: BoxDecoration(
-                        color: const Color.fromARGB(0, 255, 255, 255),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Image.asset(
-                          "assets/images/Oval Logo.png",
-                          height: 125,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 15,),
-                    const Text(
-                      'Create your teacher account', 
-                      style: TextStyle(
-                        fontSize: 50, 
-                        fontFamily: 'Jomhuria'
-                      ),
-                    ),
-                    const SizedBox(height: 15,),
-                    TextField(
-                      controller: email,
-                      decoration: const InputDecoration(hintText: 'email@domain.com'),
-                    ),
-                    const SizedBox(height: 10,),
-                    TextField(
-                      controller: username,
-                      decoration: const InputDecoration(hintText: 'username'),
-                    ),
-                    const SizedBox(height: 10,),
-                    TextField(
-                      controller: first_name,
-                      decoration: const InputDecoration(hintText: 'first name'),
-                    ),
-                    const SizedBox(height: 10,),
-                    TextField(
-                      controller: last_name,
-                      decoration: const InputDecoration(hintText: 'last name'),
-                    ),
-                    const SizedBox(height: 10,),
-                    TypeAheadField<Map<String, dynamic>>(
-                      controller: school,
-                      builder: (context, controller, focusNode){
-                        return TextField(
-                          controller: controller,
-                          decoration: const InputDecoration(hintText: 'school name'),
-                          focusNode: focusNode,
-                          autofocus: false,
-                        );
-                      },
-                      itemBuilder: (context, suggestion){
-                        return ListTile(
-                          title: Text(suggestion['name'] ?? ''),
-                          subtitle: Text(suggestion['meta']?['location_name'] ?? ''),
-                        );
-                      }, 
-                      onSelected: (suggestion){
-                        setState(() {
-                          school.text = suggestion['name'] ?? '';
-                          _selectedSchool = suggestion;
-                        });
-
-                        //print('Selected school: ${_selectedSchool!}');
-                      }, 
-                      debounceDuration: const Duration(milliseconds: 300),
-                      emptyBuilder: (context){
-                        return const Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: Text('No schools found'),
-                        );
-                      },
-                      errorBuilder: (context, error) {
-                        return Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text('Error: ${error.toString()}'),
-                        );
-                      },
-                      loadingBuilder: (context){
-                        return const Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: Text('Loading Schools'),
-                        );
-                      },
-                      suggestionsCallback: (pattern) async{
-                        try{
-                        return await getSchools(pattern);
-                        } catch(e){
-                            Get.snackbar(
-                            "Error",
-                            "User repository connection error: ${e.toString()}",
-                            duration: const Duration(seconds: 10),
-                          );
-                          return [];
-                        }
-                        },
-                      ),
-                    // TextField(
-                    //   controller: school,
-                    //   decoration: const InputDecoration(hintText: 'school name'),
-                    //),
-                    const SizedBox(height: 10,),
-                    TextField(
-                      controller: password,
-                      decoration: const InputDecoration(hintText: 'password'),
-                    ),
-                    const SizedBox(height: 10,),
-                    TextField(
-                      controller: password2,
-                      decoration: const InputDecoration(hintText: 're-enter password'),
-                    ),
-                    const SizedBox(height: 10,),
-                    ElevatedButton(
-                      onPressed: (()=> signup()),
-                      child: const Text("Sign Up")
-                    ),
-                    const SizedBox(height: 20,),
-                    ElevatedButton(
-                      onPressed: () {},
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color.fromARGB(255, 100, 149, 255),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
-                          side: const BorderSide(color: Color.fromARGB(255, 0, 0, 0), width: 6),
-                        ),
-                        maximumSize: const Size(300, 100),
-                        minimumSize: const Size(300, 100),
-                      ),
-                      child: const Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Image(
-                            image: AssetImage("assets/images/Teacher.png"),
-                            height: 50,
+              SingleChildScrollView(
+                child: Container(
+                  padding: const EdgeInsets.only(top: 10.0),
+                  child: Stack(
+                    children:[
+                      Positioned(
+                        top: 0,
+                        left: 0,
+                        child: SafeArea(
+                          child: IconButton(
+                            icon: const Icon(
+                              Icons.arrow_back,
+                              color: Colors.black,
+                            ),
+                            iconSize: 40,
+                            onPressed: () {
+                              Get.to(() => const Role());
+                            },
                           ),
-                          Padding(
-                            padding: EdgeInsets.all(8.0),
-                            child: Text(
-                              "Teacher",
-                              style: TextStyle(
-                                color: Color.fromARGB(255, 245, 255, 101), 
-                                fontSize: 40,
+                        ),
+                      ),
+                      Container(
+                        padding: const EdgeInsets.only(top: 10.0),
+                        child: Column(
+                          children: [
+                            const SizedBox(height: 15,),
+                            DecoratedBox(
+                              decoration: BoxDecoration(
+                                color: const Color.fromARGB(0, 255, 255, 255),
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Image.asset(
+                                  "assets/images/Oval Logo.png",
+                                  height: 125,
+                                ),
                               ),
                             ),
-                          ),
-                        ],
+                            const SizedBox(height: 15,),
+                            const Text(
+                              'Create your teacher account', 
+                              style: TextStyle(
+                                fontSize: 50, 
+                                fontFamily: 'Jomhuria'
+                              ),
+                            ),
+                            const SizedBox(height: 15,),
+                            TextField(
+                              controller: email,
+                              decoration: const InputDecoration(hintText: 'email@domain.com'),
+                            ),
+                            const SizedBox(height: 10,),
+                            TextField(
+                              controller: username,
+                              decoration: const InputDecoration(hintText: 'username'),
+                            ),
+                            const SizedBox(height: 10,),
+                            TextField(
+                              controller: first_name,
+                              decoration: const InputDecoration(hintText: 'first name'),
+                            ),
+                            const SizedBox(height: 10,),
+                            TextField(
+                              controller: last_name,
+                              decoration: const InputDecoration(hintText: 'last name'),
+                            ),
+                            const SizedBox(height: 10,),
+                            TypeAheadField<Map<String, dynamic>>(
+                              controller: school,
+                              builder: (context, controller, focusNode){
+                                return TextField(
+                                  controller: controller,
+                                  decoration: const InputDecoration(hintText: 'school name'),
+                                  focusNode: focusNode,
+                                  autofocus: false,
+                                );
+                              },
+                              itemBuilder: (context, suggestion){
+                                return ListTile(
+                                  title: Text(suggestion['name'] ?? ''),
+                                  subtitle: Text(suggestion['meta']?['location_name'] ?? ''),
+                                );
+                              }, 
+                              onSelected: (suggestion){
+                                setState(() {
+                                  school.text = suggestion['name'] ?? '';
+                                  _selectedSchool = suggestion;
+                                });
+
+                                //print('Selected school: ${_selectedSchool!}');
+                              }, 
+                              debounceDuration: const Duration(milliseconds: 300),
+                              emptyBuilder: (context){
+                                return const Padding(
+                                  padding: EdgeInsets.all(8.0),
+                                  child: Text('No schools found'),
+                                );
+                              },
+                              errorBuilder: (context, error) {
+                                return Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text('Error: ${error.toString()}'),
+                                );
+                              },
+                              loadingBuilder: (context){
+                                return const Padding(
+                                  padding: EdgeInsets.all(8.0),
+                                  child: Text('Loading Schools'),
+                                );
+                              },
+                              suggestionsCallback: (pattern) async{
+                                try{
+                                return await getSchools(pattern);
+                                } catch(e){
+                                    Get.snackbar(
+                                    "Error",
+                                    "User repository connection error: ${e.toString()}",
+                                    duration: const Duration(seconds: 10),
+                                  );
+                                  return [];
+                                }
+                                },
+                              ),
+                            const SizedBox(height: 10,),
+                            // TextField(
+                            //   controller: password,
+                            //   decoration: const InputDecoration(hintText: 'password'),
+                            // ),
+                            FancyPasswordField(
+                              passwordController: _password,
+                              hasStrengthIndicator: true,
+                              decoration: const InputDecoration(
+                                hintText: 'Password',
+                              ),
+                              validationRules: {
+                                DigitValidationRule(),
+                                UppercaseValidationRule(),
+                                LowercaseValidationRule(),
+                                SpecialCharacterValidationRule(),
+                                MinCharactersValidationRule(6),
+                              },
+                              onChanged: (value){
+                                password.text = value;
+                                setState(() {
+                                });
+                              },
+                            ),
+                            const Text(
+                              "Your password must have:\n"
+                              "Minimum 6 Length\n"
+                              "1 Uppercase Letter\n"
+                              "1 Lowercase Letter\n"
+                              "1 Numerical digit \n"
+                              "1 Non-Numerical Special Character"
+                            ),
+                            const SizedBox(height: 10,),
+                            TextFormField(
+                              controller: password2,
+                              obscureText: _obscureText2,
+                              decoration: InputDecoration(
+                                hintText: 'Re-enter Password',
+                                suffixIcon: IconButton(
+                                  icon: Icon(
+                                      _obscureText2 ? Icons.visibility : Icons.visibility_off,
+                                  ),
+                                  onPressed: (){
+                                    setState(() {
+                                      _obscureText2 = !_obscureText2;
+                                    });
+                                  },
+                                )
+                              ),
+                              onChanged: (value){
+                                setState(() {
+                                });
+                              },
+                            ),
+                            const SizedBox(height: 10,),
+                            PasswordCheck(password: password.text, password2: password2.text),
+                            const SizedBox(height: 10,),
+                            ElevatedButton(
+                              onPressed: (()=> signup()),
+                              child: const Text("Sign Up"),
+                            ),
+                            const SizedBox(height: 20,),
+                            ElevatedButton(
+                              onPressed: () {},
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: const Color.fromARGB(255, 100, 149, 255),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                  side: const BorderSide(color: Color.fromARGB(255, 0, 0, 0), width: 6),
+                                ),
+                                maximumSize: const Size(300, 100),
+                                minimumSize: const Size(300, 100),
+                              ),
+                              child: const Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Image(
+                                    image: AssetImage("assets/images/Teacher.png"),
+                                    height: 50,
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.all(8.0),
+                                    child: Text(
+                                      "Teacher",
+                                      style: TextStyle(
+                                        color: Color.fromARGB(255, 245, 255, 101), 
+                                        fontSize: 40,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ]
+                        ),
                       ),
-                    ),
-                  ]
+                    ],
+                  ),
                 ),
               ),
             ]
@@ -383,4 +434,40 @@ class _SignupTeacherState extends ConsumerState<SignupTeacher> {
       )
     );
   }
+}
+
+class PasswordCheck extends StatelessWidget{
+
+     String password;
+     String password2;
+
+    PasswordCheck({super.key, required this.password, required this.password2});
+
+    @override
+    Widget build(BuildContext context){
+      return Row(
+              children: [
+                Icon(
+                  password == password2 && password2.isNotEmpty
+                  ? Icons.check_circle
+                  : Icons.cancel,
+                  color: password.toString() == password2 && password2.isNotEmpty
+                  ? Colors.green
+                  : Colors.red,
+                  size: 18,
+                ),
+                const SizedBox(width: 8,),
+                Text(
+                  password.toString() == password2 && password2.isNotEmpty
+                  ? "Passwords match"
+                  : "Passwords do not match",
+                  style: TextStyle(
+                    color: password.toString() == password2 && password2.isNotEmpty
+                    ? Colors.green
+                    : Colors.red,
+                  ),
+                ),
+              ],
+            );
+    }
 }
