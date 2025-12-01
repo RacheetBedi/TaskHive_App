@@ -273,7 +273,7 @@ class _SignupStudentState extends ConsumerState<SignupStudent> {
                           controller: password2,
                           obscureText: _obscureText2,
                           decoration:  InputDecoration(
-                            hintText: 're-enter password',
+                            hintText: 'Re-enter password',
                             suffixIcon: IconButton(
                               icon: Icon(
                                   _obscureText2 ? Icons.visibility : Icons.visibility_off,
@@ -287,17 +287,11 @@ class _SignupStudentState extends ConsumerState<SignupStudent> {
                           ),
                           onChanged: (value){
                             setState(() {
-                              // PasswordCheck(password: password.text, password2: password2.text,);
                             });
                           },
                         ),
                         const SizedBox(height: 10),
                         PasswordCheck(password: password.text, password2: password2.text),
-                        // TextField(
-                        //   controller: password2,
-                        //   enabled: _isReEnterPasswordFieldEnabled,
-                        //   decoration: const InputDecoration(hintText: 're-enter password'),
-                        // ),
                         const SizedBox(height: 10,),
                         ElevatedButton(
                           onPressed: (() async{
