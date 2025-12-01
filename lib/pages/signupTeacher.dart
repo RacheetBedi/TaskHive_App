@@ -204,7 +204,6 @@ class _SignupTeacherState extends ConsumerState<SignupTeacher> {
           padding: const EdgeInsets.all(8.0),
           child: Stack(
             children: [
-              
               Positioned(
                 top: 0,
                 left: 0,
