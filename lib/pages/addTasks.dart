@@ -257,7 +257,7 @@ class _AddTasksState extends ConsumerState<AddTasks> {
                       vertical: 25,
                     ),
                   ),
-                ),
+                )
               ),
               Container(
                 width: double.infinity,
