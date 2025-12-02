@@ -9,6 +9,8 @@ import 'package:flutter_app/pages/home.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/get_navigation.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:io';
 
 class Profile extends ConsumerStatefulWidget {
   const Profile({super.key});
@@ -24,6 +26,19 @@ class _ProfileState extends ConsumerState<Profile> {
   TextEditingController firstName = TextEditingController();
   TextEditingController lastName = TextEditingController();
   TextEditingController description = TextEditingController();
+
+  File? _pickedImage;
+
+  Future<void> _pickImageFromCamera() async {
+    final ImagePicker _picker = ImagePicker();
+    final XFile? pickedFile = await _picker.pickImage(source: ImageSource.camera);
+
+    if (pickedFile != null) {
+      setState(() {
+        _pickedImage = File(pickedFile.path); 
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -292,7 +307,10 @@ class _ProfileState extends ConsumerState<Profile> {
                         'Profile Picture',
                         style: TextStyle(color: Colors.white, fontSize: 48, fontFamily: 'Jomhuria'),
                       ),
-                      Image.asset('assets/images/TempUserPFP.png'),
+                      GestureDetector(
+                        onTap: _pickImageFromCamera,
+                        child: _pickedImage == null ? Image.asset("assets/images/TempUserPFP.png") : Image.asset(_pickedImage!.path)
+                      ),
                     ],
                   ),
                 ),
