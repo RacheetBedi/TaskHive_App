@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_app/pages/forgot.dart';
@@ -20,9 +22,40 @@ class Verify extends ConsumerStatefulWidget {
 
 class _VerifyState extends ConsumerState<Verify> {
 
+  int _countdown = 60;
+  Timer? _timer;
+  bool _isResendEnabled = true;
+
   @override
   void initState() {
     super.initState();
+  }
+
+  void _startTimer()
+  {
+    setState((){
+      _isResendEnabled = false;
+      _countdown = 60;
+    });
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      setState((){
+        if(_countdown > 0)
+        {
+          _countdown--;
+        }
+        else
+        {
+          _timer?.cancel();
+          _isResendEnabled = true;
+        }
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
   }
 
   sendverifylink() async{
@@ -53,16 +86,97 @@ class _VerifyState extends ConsumerState<Verify> {
        });
 
        return Scaffold(
-        body: Column(
-          children: [
-            const Center(
-              child:  Text('A verficiation email has been sent to your inbox.'),
+        body: Container(
+          height: double.infinity,
+          width: double.infinity,
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage("assets/images/Hive Background.png"),
+              repeat: ImageRepeat.repeat,
+              fit: BoxFit.none,
             ),
-            ElevatedButton(
-              onPressed: () => reload(), 
-              child: const Text("Email Verified."),
-              )
-          ],
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Stack(
+              children: [
+                Positioned(
+                  top: 0,
+                  left: 0,
+                  child: SafeArea(
+                    child: IconButton(
+                      icon: const Icon(
+                        Icons.arrow_back,
+                        color: Colors.black,
+                      ),
+                      iconSize: 40,
+                      onPressed: () => Get.to(() => const LoginPage()),
+                    ),
+                    ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    children: [
+                      const SizedBox(height: 15,),
+                      DecoratedBox(
+                        decoration: BoxDecoration(
+                          color: const Color.fromARGB(0, 255, 255, 255),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Image.asset(
+                            "assets/images/Oval Logo.png",
+                            height: 125,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 15),
+                      const Text(
+                        'Verify Your Email',
+                        style: TextStyle(
+                          fontSize: 50, 
+                          fontFamily: 'Jomhuria'
+                        ),
+                      ),
+                      const SizedBox(height: 15),
+                      const Text(
+                        'You have been sent a verification email. Please check and verify the email.',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 20.0, 
+                          fontFamily: 'Inter',
+                          fontWeight: FontWeight.bold,
+                          color: Color.fromARGB(255, 0, 0, 0)
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      ElevatedButton(
+                        onPressed: () => reload(),
+                        child: const Text("I Have Verified"),
+                      ),
+                      const SizedBox(height: 15),
+                      const Text(
+                        'Didn\'t get the email?', 
+                        style: TextStyle(
+                          fontSize: 20.0, 
+                          fontFamily: 'Inter', 
+                          fontWeight: FontWeight.bold,
+                          color: Color.fromARGB(255, 73, 73, 73)
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      ElevatedButton(
+                        onPressed: _isResendEnabled ? _startTimer : null,
+                        child: Text(_isResendEnabled ? "Resend Email" : '$_countdown s'),
+                      ),
+                    ],
+                  ),
+                )
+              ],
+            ),
+          ),
         )
        );
       }, 
