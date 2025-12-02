@@ -115,7 +115,7 @@ class _SignupTeacherState extends ConsumerState<SignupTeacher> {
       }
 
       final currentUser = UserRepository(ref);
-      await currentUser.createUserDocIfNeeded(email.text, username.text, first_name.text, last_name.text, password.text);
+      await currentUser.createTeacherUserDocIfNeeded(email.text, username.text, first_name.text, last_name.text, password.text, true, school.text);
 
       authState.asData!.value!.hasCompletedSetup = true;
       Get.offAll(() => const Wrapper());
@@ -386,7 +386,20 @@ class _SignupTeacherState extends ConsumerState<SignupTeacher> {
                             PasswordCheck(password: password.text, password2: password2.text),
                             const SizedBox(height: 10,),
                             ElevatedButton(
-                              onPressed: (()=> signup()),
+                              onPressed: (() async{
+
+                                if(password.text != password2.text){
+                                  Get.snackbar("Error", "Passwords do not match");
+                                  return;
+                                }
+                                else if(!_password.areAllRulesValidated){
+                                  Get.snackbar("Error", "Password missing requirements");
+                                  return;
+                                }
+                                else{
+                                  await signUp();
+                                 }
+                              }),
                               child: const Text("Sign Up"),
                             ),
                             const SizedBox(height: 20,),

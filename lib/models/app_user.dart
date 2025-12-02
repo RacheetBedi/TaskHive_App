@@ -17,6 +17,7 @@ class AppUser{
   String? phoneNumber;
   bool hasCompletedSetup;
   String? description;
+  String? school;
 
   AppUser({
     required this.uid,
@@ -35,9 +36,10 @@ class AppUser{
     this.password,
     this.country_code,
     this.userName,
+    this.school,
   });
 
-  factory AppUser.fromFirebaseUser(User user, {
+  factory AppUser.fromFirebaseUser(User user,{
     bool hasCompletedSetup = false,
     bool dark_mode = false,
     bool is_teacher = false,
@@ -49,6 +51,7 @@ class AppUser{
     String description = "",
     String firstName = "",
     String lastName = "",
+    String school = "",
     }){
     return AppUser(
       uid: user.uid,
@@ -66,6 +69,7 @@ class AppUser{
       country_code: country_code,
       userName: userName,
       description: description,
+      school: school,
     );
   }
 
@@ -76,6 +80,7 @@ class AppUser{
     bool? isEmailVerified,
     bool? isNewUser,
     String? description,
+    String? school,
     //ADD OTHER PROPERTIES LATER HERE!
   }) {
     return AppUser(
@@ -88,6 +93,7 @@ class AppUser{
       phoneNumber: phoneNumber ?? this.phoneNumber,
       hasCompletedSetup: isNewUser ?? this.hasCompletedSetup,
       description: description ?? this.description,
+      school: school ?? this.school,
     );
   }
 }

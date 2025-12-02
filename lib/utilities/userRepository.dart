@@ -47,6 +47,7 @@ class UserRepository {
       country_code: doc.data()?['country_code'] ?? false,
       userName: doc.data()?['userName'] ?? false,
       password: doc.data()?['password'],
+      school: doc.data()?['school'] ?? "",
     );
 
     //USE COPYWITH INSTEAD OF RETURN HERE!
@@ -71,6 +72,7 @@ class UserRepository {
     int? country_code,
     String? userName,
     String? password,
+    String? school,
     }) async{
 
     final user = currentAppUser;
@@ -101,6 +103,7 @@ class UserRepository {
         },
         'uid': user.uid,
         'username': userName,
+        'school': school,
       });
     }
   }
@@ -114,10 +117,16 @@ class UserRepository {
 // Settings profile button
 // Edit tasks button
 // Fix signUpAsStudent back button functionality
+// Make the "I don't see my school" popup
+// Fix copy paste functionality (with a copied or pasted snackbar when the copy/paste is executed)
 // Change all hasCompletedSetup references to hasCreatedDocument
 // Make it so that signUp takes you to a separate page involving final account creation tasks such as verifying your username is allowed, etc...
 // Make the https call safe
 // Add Firebase and Firestore security rules
+// Add possessions for teachers
+// Create a possessions collection with the necessary documents for each student user.
+// Fix nameCase and make it standardized throughout the Firestore database
+// Add each username to a separate collection for easy searching
 // Encrypt the password
 // Tasks for Jeevanth:
 //    When you select a text field during log in or sign up, the text field outlines itself.
@@ -132,11 +141,11 @@ class UserRepository {
       return;
     }
 
-    user!.email = email;
-    user!.userName = userName;
-    user!.displayFirstName = firstName;
-    user!.displayLastName = lastName;
-    user!.password = password;
+    user.email = email;
+    user.userName = userName;
+    user.displayFirstName = firstName;
+    user.displayLastName = lastName;
+    user.password = password;
     //user!.hasCompletedSetup = !isNewUser;
 
 
@@ -165,6 +174,62 @@ class UserRepository {
         },
         'uid': user?.uid ?? '',
         'username': user.userName ?? '',
+        'school': user.school ?? '',
+      });
+    }
+    } catch(err, st){
+        Get.snackbar(
+          "Error",
+          "Unexpected Firestore Document Creation Error: ${err.toString()}",
+          duration: const Duration(seconds: 10),
+        );
+    }
+  }
+
+    Future<void> createTeacherUserDocIfNeeded(String email, String userName, String firstName, String lastName, String password, bool isTeacher, String school, {bool isNewUser = true}) async {
+    try{
+    final user = currentAppUser;
+    if(user == null){
+      Get.snackbar("User Error:", "The User is null");
+      return;
+    }
+
+    user.email = email;
+    user.userName = userName;
+    user.displayFirstName = firstName;
+    user.displayLastName = lastName;
+    user.password = password;
+    user.is_teacher = isTeacher;
+    user.school = school;
+    //user!.hasCompletedSetup = !isNewUser;
+
+
+    final docRef = _firestore.collection('teacher_users').doc(user?.uid);
+    final doc = await docRef.get();
+
+    if (!doc.exists) {
+      await docRef.set({
+        "dark_mode": user.dark_mode ?? false,
+        "isEmailVerified": user?.isEmailVerified ?? false,
+        "hasCompletedSetup": user.hasCompletedSetup ?? false,
+        "is_teacher": user.is_teacher ?? false,
+        "lang": user.lang ?? 'EN',
+        "logo_preference": user.logoPref ?? 1,
+        "password": user.password ?? '',
+        "public profile": {
+          "contact_info": {
+            "country_code": user.country_code ?? 1,
+            "email_address": user.email ?? '',
+            "phone_number": user?.phoneNumber ?? 0000000000,
+          },
+          "description": user.description ?? '',
+          "firstName": user.displayFirstName ?? '',
+          "lastName": user.displayLastName ?? '',
+          "photo_URL": user?.photoURL ?? '',
+        },
+        'uid': user?.uid ?? '',
+        'username': user.userName ?? '',
+        'school': user.school ?? '',
       });
     }
     } catch(err, st){

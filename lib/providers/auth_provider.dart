@@ -82,7 +82,7 @@ class AuthNotifier extends StateNotifier<AsyncValue<AppUser?>> {
 
         final appUser = AppUser.fromFirebaseUser(
           credentialUser!.user!,
-          hasCompletedSetup: docExists);
+          hasCompletedSetup: docExists,);
         isGoogleSignIn = true;
         state = AsyncValue.data(appUser);
       } else {
