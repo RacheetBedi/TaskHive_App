@@ -32,6 +32,7 @@ class _WrapperState extends ConsumerState<Wrapper> {
           return const LoginPage();
         } else if(!appUser.isEmailVerified){
           return const Verify();
+          // Switch hasCompletedSetup
         } else{
           if(appUser.hasCompletedSetup == false){
             return const Role();

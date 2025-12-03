@@ -23,12 +23,62 @@ class Settings extends ConsumerStatefulWidget {
 class _SettingsState extends ConsumerState<Settings> {
   bool _darkMode = false;
   String _language = "English";
+  final _formKey = GlobalKey<FormState>();
+  final _nameController = TextEditingController();
+  String userFullName = "";
+  bool _isNameValid = false;
 
   logOut() async{
     final authState = ref.watch(authProvider);
     final authNotifier = ref.read(authProvider.notifier);
     authNotifier.signOut();
     Get.offAll(() => const Wrapper());
+  }
+
+    deleteAccountPopup() async {
+    final authNotifier = ref.read(authProvider.notifier);
+    final authState = ref.watch(authProvider);
+    userFullName = "${authState.asData!.value!.displayFirstName ?? ""} ${authState.asData!.value!.displayLastName ?? ""}";
+    final result = await showDialog<bool>(
+      context: context, 
+      builder: (context) => AlertDialog(
+        title: const Text("NOTE: You are about to delete your account. This action cannot be undone."),
+        content: const Text("Are you sure you desire to proceed? Enter your full name below to confirm."),
+        actions: [
+          Form(
+            key: _formKey,
+            child: Column(
+              children: [
+                TextFormField(
+                  controller: _nameController,
+                  decoration: const InputDecoration(
+                    hintText: "Full Name",
+                  ),
+                  onChanged: (value){
+                    setState(() {
+                      _isNameValid = value.trim() == userFullName;
+                    });
+                  },
+                ),
+              ],
+            ),
+          ),
+          ElevatedButton(
+            onPressed: _isNameValid ? (){
+              Navigator.pop(context, true);
+            } : null,
+            
+            child: const Text(
+              "Delete Account",
+              style: TextStyle(color: Colors.red)),
+          ),
+        ]
+      ),
+    );
+
+    if (result == true){
+      //
+    }
   }
 
 
@@ -351,7 +401,7 @@ class _SettingsState extends ConsumerState<Settings> {
                 ),
                 maximumSize: const Size(double.infinity, double.infinity),
               ),
-              onPressed: () {}, //Delete Account
+              onPressed: deleteAccountPopup(), //Delete Account
               child: Container(
                 width: double.infinity,
                 decoration: const BoxDecoration(
