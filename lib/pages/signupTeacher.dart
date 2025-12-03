@@ -117,7 +117,7 @@ class _SignupTeacherState extends ConsumerState<SignupTeacher> {
       final currentUser = UserRepository(ref);
       await currentUser.createTeacherUserDocIfNeeded(email.text, username.text, first_name.text, last_name.text, password.text, true, school.text);
 
-      authState.asData!.value!.hasCompletedSetup = true;
+      //authState.asData!.value!.hasCompletedSetup = true;
       Get.offAll(() => const Wrapper());
     } on FirebaseAuthException catch(e){
         Get.snackbar(

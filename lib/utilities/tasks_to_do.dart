@@ -1,5 +1,5 @@
 
-//Racheet's Tasks
+//Racheet's Tasks:
 //update appUser fields in both appUser and userRepository
 // migrate homepage to home
 // Fix login issues
@@ -9,6 +9,7 @@
 // Settings profile button
 // Edit tasks button
 // Fix signUpAsStudent back button functionality
+// Add a popup checker for the back button on the email verification page
 // Make the "I don't see my school" popup
 // Fix copy paste functionality (with a copied or pasted snackbar when the copy/paste is executed)
 // Change all hasCompletedSetup references to hasCreatedDocument
