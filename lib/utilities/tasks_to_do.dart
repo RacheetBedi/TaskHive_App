@@ -1,14 +1,13 @@
 
 //Racheet's Tasks:
-//update appUser fields in both appUser and userRepository
-// migrate homepage to home
-// Fix login issues
-// Add signUp error handling
-// Add document creation for teachers (NEXT TO NEXT, NOT NEXT, RUBRIC)
 // Delete account code
 // Settings profile button
 // Edit tasks button
+// Fix the back button on the Role page if you click signUp without actually signing In
+// Add edit Profile page blurring when you click the edit Profile button
 // Fix signUpAsStudent back button functionality
+// Profile page picture popup
+// Phone number request prompt on initial log-in, and if the phone number is entered, profile verification
 // Add a popup checker for the back button on the email verification page
 // Make the "I don't see my school" popup
 // Fix copy paste functionality (with a copied or pasted snackbar when the copy/paste is executed)
@@ -24,3 +23,4 @@
 // Tasks for Jeevanth:
 //    When you select a text field during log in or sign up, the text field outlines itself.
 //    Make the password rules on student and teacher sign-in look good.
+//.   Make the back popups on all of the login pages look good.

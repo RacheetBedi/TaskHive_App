@@ -6,6 +6,7 @@ import 'package:flutter_app/pages/settings.dart';
 import 'package:flutter_app/pages/signupStudent.dart';
 import 'package:flutter_app/pages/signupTeacher.dart';
 import 'package:flutter_app/pages/home.dart';
+import 'package:flutter_app/providers/auth_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/get_navigation.dart';
@@ -27,7 +28,40 @@ class _ProfileState extends ConsumerState<Profile> {
   TextEditingController lastName = TextEditingController();
   TextEditingController description = TextEditingController();
 
+  bool _isEmailEnabled = false;
+
+  @override
+  void initState() {
+    super.initState();
+    checkGoogleSignIn().then((isGoogle) {
+      setState(() {
+        _isEmailEnabled = !isGoogle;
+      });
+    });
+  }
+
   File? _pickedImage;
+  bool _isProfileEditEnabled = false;
+
+  bool checkEmail(profileEdit, emailEnabled){
+    if(profileEdit){
+      if(emailEnabled){
+        return true;
+      }
+      else{
+        return false;
+      }
+    }
+    else{
+      return false;
+    }
+  }
+
+  Future<bool> checkGoogleSignIn() async{
+    final authNotifier = ref.read(authProvider.notifier);
+    final isGoogleSignIn = await authNotifier.checkGoogleSignIn();
+    return isGoogleSignIn;
+  }
 
   Future<void> _pickImageFromCamera() async {
     final ImagePicker _picker = ImagePicker();
@@ -216,6 +250,7 @@ class _ProfileState extends ConsumerState<Profile> {
                             maxHeight: 50,
                           ),
                         ),
+                        enabled: _isProfileEditEnabled,
                       ),
                     ],
                   ),
@@ -250,6 +285,7 @@ class _ProfileState extends ConsumerState<Profile> {
                             maxHeight: 50,
                           ),
                         ),
+                        enabled: _isProfileEditEnabled,
                       ),
                     ],
                   ),
@@ -284,6 +320,7 @@ class _ProfileState extends ConsumerState<Profile> {
                             maxHeight: 50,
                           ),
                         ),
+                        enabled: _isProfileEditEnabled,
                       ),
                     ],
                   ),
@@ -344,6 +381,7 @@ class _ProfileState extends ConsumerState<Profile> {
                             maxHeight: 50,
                           ),
                         ),
+                        enabled: checkEmail(_isProfileEditEnabled, _isEmailEnabled),
                       ),
                     ],
                   ),
@@ -378,6 +416,7 @@ class _ProfileState extends ConsumerState<Profile> {
                             maxHeight: 50,
                           ),
                         ),
+                        enabled: _isProfileEditEnabled,
                       ),
                     ],
                   ),
@@ -412,6 +451,7 @@ class _ProfileState extends ConsumerState<Profile> {
                             maxHeight: 50,
                           ),
                         ),
+                        enabled: _isProfileEditEnabled,
                       ),
                     ],
                   ),
@@ -419,8 +459,12 @@ class _ProfileState extends ConsumerState<Profile> {
               ),
               const SizedBox(height: 20,),
               ElevatedButton(
-                onPressed: () => {}, //Should allow us to edit the fields
-                child: const Text("Edit Profile"),
+                onPressed: () => {
+                  setState(() {
+                    _isProfileEditEnabled = !_isProfileEditEnabled;
+                  }),
+                }, //Should allow us to edit the fields
+                child: _isProfileEditEnabled ? const Text("Finish Editing Profile") : const Text("Edit Profile"),
               ),
               Padding(
                 padding: const EdgeInsets.all(20.0),

@@ -36,49 +36,56 @@ class _SettingsState extends ConsumerState<Settings> {
   }
 
     deleteAccountPopup() async {
-    final authNotifier = ref.read(authProvider.notifier);
-    final authState = ref.watch(authProvider);
-    userFullName = "${authState.asData!.value!.displayFirstName ?? ""} ${authState.asData!.value!.displayLastName ?? ""}";
-    final result = await showDialog<bool>(
-      context: context, 
-      builder: (context) => AlertDialog(
-        title: const Text("NOTE: You are about to delete your account. This action cannot be undone."),
-        content: const Text("Are you sure you desire to proceed? Enter your full name below to confirm."),
-        actions: [
-          Form(
-            key: _formKey,
-            child: Column(
-              children: [
-                TextFormField(
-                  controller: _nameController,
-                  decoration: const InputDecoration(
-                    hintText: "Full Name",
-                  ),
-                  onChanged: (value){
-                    setState(() {
-                      _isNameValid = value.trim() == userFullName;
-                    });
-                  },
-                ),
-              ],
+      final authNotifier = ref.read(authProvider.notifier);
+      final authState = ref.watch(authProvider);
+      if(authState != null && authState.asData !=null && authState.asData!.value != null){
+        userFullName = authState.asData!.value!.userName ?? "";
+      }
+      final result = await showDialog<bool>(
+        context: context, 
+        builder: (context){ 
+          return StatefulBuilder(
+          builder: (context, setState){
+          return AlertDialog(
+          title: const Text("NOTE: You are about to delete your account. This action cannot be undone."),
+          content: const Text("Are you sure you desire to proceed? Enter your full userName below to confirm."),
+          actions: [
+            TextFormField(
+              controller: _nameController,
+              decoration: const InputDecoration(
+                hintText: "Username",
+              ),
+              onChanged: (value){
+                setState(() {
+                  if(value.trim() == "Bob"){
+                    _isNameValid = true;
+                  }
+                  else{
+                    _isNameValid = false;
+                  }
+                  Get.snackbar("Trimmed value:", "$_isNameValid");
+                });
+              },
             ),
-          ),
-          ElevatedButton(
-            onPressed: _isNameValid ? (){
-              Navigator.pop(context, true);
-            } : null,
-            
-            child: const Text(
-              "Delete Account",
-              style: TextStyle(color: Colors.red)),
-          ),
-        ]
-      ),
-    );
-
-    if (result == true){
-      //
-    }
+            ElevatedButton(
+              
+              onPressed: _isNameValid ? (){
+                Navigator.pop(context, true);
+              } : null,
+              
+              child: const Text(
+                "Delete Account",
+                style: TextStyle(color: Colors.red)),
+            ),
+          ]
+        );
+          },
+          );
+        }
+      );
+      if (result == true){
+        Get.to(() => const LoginPage());
+      }
   }
 
 
@@ -401,7 +408,10 @@ class _SettingsState extends ConsumerState<Settings> {
                 ),
                 maximumSize: const Size(double.infinity, double.infinity),
               ),
-              onPressed: deleteAccountPopup(), //Delete Account
+              onPressed: () async{ 
+                Get.snackbar("Popup clicked", "Delete account button was clicked");
+                await deleteAccountPopup();
+              }, //Delete Account
               child: Container(
                 width: double.infinity,
                 decoration: const BoxDecoration(
