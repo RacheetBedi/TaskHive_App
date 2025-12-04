@@ -259,6 +259,75 @@ class _SignupStudentState extends ConsumerState<SignupStudent> {
                             setState(() {
                             });
                           },
+                          validationRuleBuilder: (rules, value) {
+                            if (value.isEmpty) {
+                              return const SizedBox.shrink();
+                            }
+                            return ListView(
+                              shrinkWrap: true,
+                              children: rules
+                                  .map(
+                                    (rule) => rule.validate(value)
+                                        ? Column(
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            children: [
+                                              Stack(
+                                                fit: StackFit.loose,
+                                                children: [
+                                                  Container(
+                                                    width: 150,
+                                                    height: 50,
+                                                    color: Colors.amber,
+                                                  ),
+                                                  Row(
+                                                    children: [
+                                                      const Icon(
+                                                          Icons.check,
+                                                          color: Colors.green,
+                                                      ),
+                                                      const SizedBox(width: 12),
+                                                      Text(
+                                                          rule.name,
+                                                          style: const TextStyle(
+                                                              color: Colors.black,
+                                                          ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
+                                          )
+                                        : Column(
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            children: [
+                                              Stack(
+                                                fit: StackFit.loose,
+                                                children: [
+                                                  Container(
+                                                    width: 150,
+                                                    height: 50,
+                                                    color: Colors.amber,
+                                                  ),
+                                                  const Icon(
+                                                    Icons.close,
+                                                    color: Colors.red,
+                                                  ),
+                                                  const SizedBox(width: 12),
+                                                  Text(
+                                                      rule.name,
+                                                      style: const TextStyle(
+                                                        color: Colors.black,
+                                                      ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
+                                          ),
+                                  )
+                                  .toList(),
+                            );
+                          },
                         ),
                         const Text(
                           "Your password must have:\n"
