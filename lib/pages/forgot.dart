@@ -1,24 +1,65 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_app/pages/login_page.dart';
+import 'package:flutter_app/providers/auth_provider.dart';
 import 'package:flutter_app/routing/wrapper.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 
-class Forgot extends StatefulWidget {
+class Forgot extends ConsumerStatefulWidget {
   const Forgot({super.key});
 
   @override
-  State<Forgot> createState() => _ForgotState();
+  ConsumerState<Forgot> createState() => _ForgotState();
 }
 
-class _ForgotState extends State<Forgot> {
+class _ForgotState extends ConsumerState<Forgot> {
 
   TextEditingController email = TextEditingController();
+  TextEditingController phone = TextEditingController();
 
-  reset()async{
-    await FirebaseAuth.instance.sendPasswordResetEmail(email: email.text,);
-    Get.offAll(Wrapper());
+  passwordReset()async{
+    if(email.text.isEmpty && phone.text.isEmpty){
+      Get.snackbar(
+        "Error",
+        "Please enter either your email or phone number to reset your password.",
+      );
+      return;
+    }
+    if(email.text.isNotEmpty && phone.text.isNotEmpty){
+      Get.snackbar(
+        "Error",
+        "Please enter EITHER your email or phone number, not both.",
+      );
+      return;
+    }
+
+    if(email.text.isNotEmpty){
+      await FirebaseAuth.instance.sendPasswordResetEmail(email: email.text,);
+
+      final authNotifier = ref.read(authProvider.notifier);
+      final result = await showDialog<bool>(
+        context: context, 
+        builder: (context) => AlertDialog(
+          title: const Text("If your email is registered, a password reset link has been sent. Please follow the instructions in the email to reset your password."),
+          content: const Text("NOTE: Check your spam/junk folder if you do not see the email in your inbox."),
+          actions: [
+            ElevatedButton(
+              onPressed: (){
+                Navigator.pop(context, true);
+              }, 
+              child: const Text("OK"),
+            ),
+          ]
+        ),
+      );
+
+      if (result == true){
+        Get.to(() => const LoginPage());
+      }
+    }
   }
 
   @override
@@ -83,9 +124,32 @@ class _ForgotState extends State<Forgot> {
                       controller: email,
                       decoration: const InputDecoration(hintText: 'Enter email'),
                     ),
+                    const SizedBox(height: 15,),
+                    const Text(
+                      "--- OR ----",
+                      textHeightBehavior: TextHeightBehavior(
+                        applyHeightToFirstAscent: true,
+                        applyHeightToLastDescent: true,
+                      ),
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontFamily: 'Jomhuria',
+                        fontSize: 30,
+                        color: Color.fromARGB(255, 0, 0, 0),
+                      ),
+                    ),
+                    const SizedBox(height: 15,),
+                    TextField(
+                      keyboardType: TextInputType.number,
+                      inputFormatters: [
+                        FilteringTextInputFormatter.digitsOnly,
+                      ],
+                      controller: phone,
+                      decoration: const InputDecoration(hintText: 'Enter phone number'),
+                    ),
                     const SizedBox(height: 30,),
                     ElevatedButton(
-                      onPressed: (()=> reset()),
+                      onPressed: (()=> passwordReset()),
                       child: const Text("Send link")
                     ),
                   ]
