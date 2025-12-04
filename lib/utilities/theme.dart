@@ -74,11 +74,11 @@ final ThemeData appTheme = ThemeData(
 
     //Popups Themes
     snackBarTheme: SnackBarThemeData(
-      backgroundColor: Colors.transparent,
+      backgroundColor: const Color(0xFFFFB743),
       contentTextStyle: TextStyle(
         foreground: Paint()
           ..strokeWidth = 1
-          ..color = const Color.fromARGB(255, 255, 0, 0),
+          ..color = const Color.fromARGB(255, 0, 0, 0),
         fontFamily: 'Inter',
       ),
       behavior: SnackBarBehavior.floating,

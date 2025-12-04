@@ -24,10 +24,11 @@ class _VerifyState extends ConsumerState<Verify> {
 
   int _countdown = 60;
   Timer? _timer;
-  bool _isResendEnabled = true;
+  bool _isResendEnabled = false;
 
   @override
   void initState() {
+    _startTimer();
     super.initState();
   }
 
@@ -64,6 +65,12 @@ class _VerifyState extends ConsumerState<Verify> {
       Get.snackbar('Link sent', 'A link has been sent to your email.', margin: EdgeInsets.all(30), snackPosition: SnackPosition.BOTTOM)
     });
   }
+
+  timeandSend() {
+    sendverifylink();
+    _startTimer();
+  }
+  
 
   reload() async{
     await FirebaseAuth.instance.currentUser!.reload().then((value)=> {
@@ -168,7 +175,7 @@ class _VerifyState extends ConsumerState<Verify> {
                       ),
                       const SizedBox(height: 10),
                       ElevatedButton(
-                        onPressed: _isResendEnabled ? _startTimer : null,
+                        onPressed: _isResendEnabled ? timeandSend : null,
                         child: Text(_isResendEnabled ? "Resend Email" : '$_countdown s'),
                       ),
                     ],

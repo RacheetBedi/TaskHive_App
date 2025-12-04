@@ -56,15 +56,37 @@ class _ForgotState extends State<Forgot> {
                 padding: const EdgeInsets.only(top: 20.0),
                 child: Column(
                   children: [
-                    const SizedBox(height: 30,),
+                    const SizedBox(height: 15,),
+                    DecoratedBox(
+                      decoration: BoxDecoration(
+                        color: const Color.fromARGB(0, 255, 255, 255),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Image.asset(
+                          "assets/images/Oval Logo.png",
+                          height: 125,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 15),
+                    const Text(
+                      'Forgot Your Password?',
+                      style: TextStyle(
+                        fontSize: 50, 
+                        fontFamily: 'Jomhuria'
+                      ),
+                    ),
+                    const SizedBox(height: 15),
                     TextField(
                       controller: email,
-                      decoration: InputDecoration(hintText: 'Enter email'),
+                      decoration: const InputDecoration(hintText: 'Enter email'),
                     ),
                     const SizedBox(height: 30,),
                     ElevatedButton(
                       onPressed: (()=> reset()),
-                      child: Text("Send link")
+                      child: const Text("Send link")
                     ),
                   ]
                 ),
