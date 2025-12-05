@@ -37,6 +37,14 @@ class _ForgotState extends ConsumerState<Forgot> {
     }
 
     if(email.text.isNotEmpty){
+      if((!email.text.contains("@gmail.com") && !email.text.contains("@icloud.com") && !email.text.contains("@outlook.com") && !email.text.contains("@yahoo.com")) ||
+        (email.text == "@gmail.com" || email.text == "@icloud.com" || email.text == "@outlook.com" || email.text == "@yahoo.com")){
+        Get.snackbar(
+          "ATTENTION:",
+          "Please ensure your email has the correct formatting.\nNOTE: We do not accept uncommon email domains. If your email fails, we recommend you send the reset request using your phone number instead.",
+        );
+        return;
+      }
       await FirebaseAuth.instance.sendPasswordResetEmail(email: email.text,);
 
       final authNotifier = ref.read(authProvider.notifier);
