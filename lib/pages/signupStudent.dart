@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_app/pages/login_page.dart';
 import 'package:flutter_app/pages/role.dart';
 import 'package:flutter_app/providers/auth_provider.dart';
@@ -244,6 +245,29 @@ class _SignupStudentState extends ConsumerState<SignupStudent> {
                         FancyPasswordField(
                           passwordController: _password,
                           hasStrengthIndicator: true,
+                          strengthIndicatorBuilder: (strength) {
+                            Color indicatorColor;
+                            String value;
+                            if (strength < 0.3) {
+                              indicatorColor = Colors.red;
+                              value = "Weak";
+                            } else if (strength < 0.5) {
+                              indicatorColor = Colors.orange;
+                              value = "Okay";
+                            } else if (strength < 0.7) {
+                              indicatorColor = Colors.lightGreenAccent;
+                              value = "Strong";
+                            } else {
+                              indicatorColor = Colors.green;
+                              value = "Very Strong";
+                            }
+                            return LinearProgressIndicator(
+                              value: strength.clamp(0.0, 1.0),
+                              valueColor: AlwaysStoppedAnimation<Color>(indicatorColor),
+                              backgroundColor: const Color.fromARGB(255, 0, 0, 0),
+                              semanticsLabel: value,
+                            );
+                          },
                           decoration: const InputDecoration(
                             hintText: 'Password',
                           ),
@@ -271,56 +295,64 @@ class _SignupStudentState extends ConsumerState<SignupStudent> {
                                         ? Column(
                                             mainAxisAlignment: MainAxisAlignment.center,
                                             children: [
-                                              Stack(
-                                                fit: StackFit.loose,
-                                                children: [
-                                                  Container(
-                                                    width: 150,
-                                                    height: 50,
-                                                    color: Colors.amber,
-                                                  ),
-                                                  Row(
-                                                    children: [
-                                                      const Icon(
-                                                          Icons.check,
-                                                          color: Colors.green,
-                                                      ),
-                                                      const SizedBox(width: 12),
-                                                      Text(
-                                                          rule.name,
-                                                          style: const TextStyle(
-                                                              color: Colors.black,
-                                                          ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ],
+                                              const SizedBox(height: 1,),
+                                              Container(
+                                                decoration: BoxDecoration(
+                                                  color: const Color(0xFFFFB743),
+                                                  border: Border.all(
+                                                    color: Colors.black,
+                                                    width: 2.0
+                                                  )
+                                                ),
+                                                width: 200,
+                                                height: 30,
+                                                child: Row(
+                                                  children: [
+                                                    const Icon(
+                                                    Icons.check,
+                                                    color: Colors.green,
+                                                    ),
+                                                    const SizedBox(width: 12),
+                                                    Text(
+                                                        rule.name,
+                                                        style: const TextStyle(
+                                                          color: Colors.black,
+                                                        ),
+                                                    ),
+                                                  ],
+                                                ),
                                               ),
                                             ],
                                           )
                                         : Column(
                                             mainAxisAlignment: MainAxisAlignment.center,
                                             children: [
-                                              Stack(
-                                                fit: StackFit.loose,
-                                                children: [
-                                                  Container(
-                                                    width: 150,
-                                                    height: 50,
-                                                    color: Colors.amber,
-                                                  ),
-                                                  const Icon(
+                                              const SizedBox(height: 2,),
+                                              Container(
+                                                decoration: BoxDecoration(
+                                                  color: const Color(0xFFFFB743),
+                                                  border: Border.all(
+                                                    color: Colors.black,
+                                                    width: 2.0
+                                                  )
+                                                ),
+                                                width: 200,
+                                                height: 30,
+                                                child: Row(
+                                                  children: [
+                                                    const Icon(
                                                     Icons.close,
                                                     color: Colors.red,
-                                                  ),
-                                                  const SizedBox(width: 12),
-                                                  Text(
-                                                      rule.name,
-                                                      style: const TextStyle(
-                                                        color: Colors.black,
-                                                      ),
-                                                  ),
-                                                ],
+                                                    ),
+                                                    const SizedBox(width: 12),
+                                                    Text(
+                                                        rule.name,
+                                                        style: const TextStyle(
+                                                          color: Colors.black,
+                                                        ),
+                                                    ),
+                                                  ],
+                                                ),
                                               ),
                                             ],
                                           ),
@@ -328,14 +360,6 @@ class _SignupStudentState extends ConsumerState<SignupStudent> {
                                   .toList(),
                             );
                           },
-                        ),
-                        const Text(
-                          "Your password must have:\n"
-                          "Minimum 6 Length\n"
-                          "1 Uppercase Letter\n"
-                          "1 Lowercase Letter\n"
-                          "1 Numerical digit \n"
-                          "1 Non-Numerical Special Character"
                         ),
                         const SizedBox(height: 10,),
                         TextFormField(
@@ -360,7 +384,26 @@ class _SignupStudentState extends ConsumerState<SignupStudent> {
                           },
                         ),
                         const SizedBox(height: 10),
-                        PasswordCheck(password: password.text, password2: password2.text),
+                        Container(
+                          alignment: AlignmentGeometry.center,
+                          width: 200,
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFFFB743),
+                            border: Border.all(
+                              color: Colors.black,
+                              width: 2.0
+                            ),
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              PasswordCheck(
+                                password: password.text,
+                                password2: password2.text,
+                              ),
+                            ],
+                          ),
+                        ),
                         const SizedBox(height: 10,),
                         ElevatedButton(
                           onPressed: (() async{

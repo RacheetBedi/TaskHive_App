@@ -89,7 +89,7 @@ final ThemeData appTheme = ThemeData(
 
     dialogTheme: DialogThemeData(
       backgroundColor: const Color(0xFFFFB743),
-      titleTextStyle: const TextStyle(color: Color.fromARGB(255, 0, 0, 0), fontSize: 15, fontFamily: 'Jomhuria', fontWeight: FontWeight.normal),
+      titleTextStyle: const TextStyle(color: Color.fromARGB(255, 0, 0, 0), fontSize: 40, fontFamily: 'Jomhuria', fontWeight: FontWeight.normal),
       contentTextStyle: const TextStyle(color: Color.fromARGB(179, 66, 66, 66)),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
     ),
