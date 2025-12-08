@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_app/pages/login_page.dart';
 import 'package:flutter_app/providers/auth_provider.dart';
 import 'package:flutter_app/routing/wrapper.dart';
+import 'package:flutter_app/utilities/userRepository.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
@@ -45,7 +46,7 @@ class _ForgotState extends ConsumerState<Forgot> {
         );
         return;
       }
-      await FirebaseAuth.instance.sendPasswordResetEmail(email: email.text,);
+      await FirebaseAuth.instance.sendPasswordResetEmail(email: email.text.trim(),);
 
       final authNotifier = ref.read(authProvider.notifier);
       final result = await showDialog<bool>(
@@ -67,6 +68,19 @@ class _ForgotState extends ConsumerState<Forgot> {
       if (result == true){
         Get.to(() => const LoginPage());
       }
+    }
+
+    if(phone.text.isNotEmpty){
+      if(phone.text.length > 10){
+        Get.snackbar(
+          'ATTENTION:',
+          'Please ensure your phone number has the correct formatting. Do NOT include the country code.\nNOTE: We only accept U.S. phone numbers. If you have an international number, please enter an email instead.',
+        );
+      }
+
+      final authNotifier = ref.read(authProvider.notifier);
+
+      await FirebaseAuth.instance.signInWithPhoneNumber(phone.text.trim());
     }
   }
 
@@ -155,7 +169,11 @@ class _ForgotState extends ConsumerState<Forgot> {
                       controller: phone,
                       decoration: const InputDecoration(hintText: 'Enter phone number'),
                     ),
-                    const SizedBox(height: 30,),
+                    const SizedBox(height: 10,),
+                    const Text(
+                      'NOTE: You will receive a verification message to sign in directly. Standard SMS rates apply.',
+                    ),
+                    const SizedBox(height: 15),
                     ElevatedButton(
                       onPressed: (()=> passwordReset()),
                       child: const Text("Send link")

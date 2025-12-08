@@ -13,18 +13,24 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/get_navigation.dart';
 
-class Verify extends ConsumerStatefulWidget {
-  const Verify({super.key});
+class VerifyPhone extends ConsumerStatefulWidget {
+  VerifyPhone(this.number, {super.key});
+
+  final int number;
 
   @override
-  ConsumerState<Verify> createState() => _VerifyState();
+  ConsumerState<VerifyPhone> createState() => _VerifyPhoneState(number);
 }
 
-class _VerifyState extends ConsumerState<Verify> {
+class _VerifyPhoneState extends ConsumerState<VerifyPhone> {
 
   int _countdown = 60;
   Timer? _timer;
   bool _isResendEnabled = false;
+  final int number;
+
+  _VerifyPhoneState(this.number);
+  
 
   @override
   void initState() {
@@ -59,15 +65,22 @@ class _VerifyState extends ConsumerState<Verify> {
     super.dispose();
   }
 
-  sendverifylink() async{
+  sendverifyMessage() async{
     final appUser = FirebaseAuth.instance.currentUser;
+
+    await FirebaseAuth.instance.signInWithPhoneNumber(number.toString()).then(
+      (value){
+        return Get.snackbar('Message Sent', 'If you possess an account, a message has been sent to your provided number. It may take up to 5 minutes.');
+      }
+    );
+
     await appUser?.sendEmailVerification().then((value)=>{
       Get.snackbar('Link sent', 'A link has been sent to your email.', margin: EdgeInsets.all(30), snackPosition: SnackPosition.BOTTOM)
     });
   }
 
   timeandSend() {
-    sendverifylink();
+    sendverifyMessage();
     _startTimer();
   }
   
@@ -89,7 +102,7 @@ class _VerifyState extends ConsumerState<Verify> {
         }
 
         WidgetsBinding.instance.addPostFrameCallback((_) {
-          sendverifylink();
+          sendverifyMessage();
        });
 
        return Scaffold(
