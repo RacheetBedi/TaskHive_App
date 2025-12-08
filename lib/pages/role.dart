@@ -30,6 +30,7 @@ class _RoleState extends ConsumerState<Role> {
             },
             child: const Text("YES"),
           ),
+          const SizedBox(height: 10,),
           ElevatedButton(
             onPressed: (){
               Navigator.pop(context, false);

@@ -384,26 +384,7 @@ class _SignupStudentState extends ConsumerState<SignupStudent> {
                           },
                         ),
                         const SizedBox(height: 10),
-                        Container(
-                          alignment: AlignmentGeometry.center,
-                          width: 200,
-                          decoration: BoxDecoration(
-                            color: const Color(0xFFFFB743),
-                            border: Border.all(
-                              color: Colors.black,
-                              width: 2.0
-                            ),
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              PasswordCheck(
-                                password: password.text,
-                                password2: password2.text,
-                              ),
-                            ],
-                          ),
-                        ),
+                        PasswordCheck(password: password.text, password2: password2.text),
                         const SizedBox(height: 10,),
                         ElevatedButton(
                           onPressed: (() async{
@@ -484,40 +465,53 @@ class _SignupStudentState extends ConsumerState<SignupStudent> {
   }
 }
 
-class PasswordCheck extends StatelessWidget{
+class PasswordCheck extends StatelessWidget {
+  final String password;
+  final String password2;
 
-     String password;
-     String password2;
+  const PasswordCheck({
+    super.key,
+    required this.password,
+    required this.password2,
+  });
 
-    PasswordCheck({super.key, required this.password, required this.password2});
-
-    @override
-    Widget build(BuildContext context){
-      return Row(
-              children: [
-                Icon(
-                  password == password2 && password2.isNotEmpty
-                  ? Icons.check_circle
-                  : Icons.cancel,
-                  color: password.toString() == password2 && password2.isNotEmpty
-                  ? Colors.green
-                  : Colors.red,
-                  size: 18,
-                ),
-                const SizedBox(width: 8,),
-                Text(
-                  password.toString() == password2 && password2.isNotEmpty
-                  ? "Passwords match"
-                  : "Passwords do not match",
-                  style: TextStyle(
-                    color: password.toString() == password2 && password2.isNotEmpty
-                    ? Colors.green
-                    : Colors.red,
-                  ),
-                ),
-              ],
-            );
+  @override
+  Widget build(BuildContext context) {
+    if (password2.isEmpty) {
+      return const SizedBox.shrink();
     }
+
+    return Container(
+      alignment: AlignmentGeometry.center,
+      width: 200,
+      decoration: BoxDecoration(
+        color: const Color(0xFFFFB743),
+        border: Border.all(
+          color: Colors.black,
+          width: 2.0
+        ),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            password == password2 ? Icons.check_circle : Icons.cancel,
+            color: password == password2 ? Colors.green : Colors.red,
+            size: 18,
+          ),
+          const SizedBox(width: 8),
+          Text(
+            password == password2
+                ? "Passwords match"
+                : "Passwords do not match",
+            style: const TextStyle(
+              color: Colors.black,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }
 
                       // strengthIndicatorBuilder: (double strength){
