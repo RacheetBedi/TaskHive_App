@@ -13,6 +13,7 @@ import 'package:flutter_app/routing/wrapper.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/get_navigation.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class Settings extends ConsumerStatefulWidget {
   const Settings({super.key});
@@ -34,6 +35,14 @@ class _SettingsState extends ConsumerState<Settings> {
     authNotifier.signOut();
     Get.offAll(() => const Wrapper());
   }
+  
+  Future<void> _launchWebsite() async {
+    final Uri url = Uri.parse('https://www.example.com');
+    if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
+      throw Exception('Could not launch $url');
+    }
+  }
+
 
     deleteAccountPopup() async {
       final authNotifier = ref.read(authProvider.notifier);
@@ -331,8 +340,98 @@ class _SettingsState extends ConsumerState<Settings> {
                   borderRadius: BorderRadius.zero,
                 ),
                 maximumSize: const Size(double.infinity, double.infinity),
-              ),
-              onPressed: () {}, //Contact us popup
+                 
+              ), 
+              onPressed: () {
+                Dialog contactUsDialog = Dialog(
+                  child: Container(
+                    padding: const EdgeInsets.all(20.0),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Text(
+                          'Contact Us',
+                          style: TextStyle(
+                            fontSize: 48,
+                            fontFamily: 'Jomhuria',
+                            color: Colors.white,
+                          ),
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            IconButton(icon: const Icon(Icons.email_outlined), color: const Color(0xFFFF7474), onPressed: () {}),
+                            const SizedBox(width: 10.0),
+                            const Text(
+                              'Email: taskhive@gmail.com',
+                              style: TextStyle(
+                                color: const Color(0xFFFF7474),
+                                // foreground: Paint()
+                                // ..style = PaintingStyle.stroke
+                                // ..strokeWidth = .2
+                                // ..color = Colors.black,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 10.0),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            IconButton(icon: const Icon(Icons.phone_outlined), color: const Color(0xFF58FF42), onPressed: () {}),
+                            const SizedBox(width: 10.0),
+                            const Text(
+                              'Phone: +1 234 567 8901',
+                              style: TextStyle(
+                                color: const Color(0xFF58FF42),
+                                // foreground: Paint()
+                                // ..style = PaintingStyle.stroke
+                                // ..strokeWidth = .2
+                                // ..color = Colors.black,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 10.0),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            IconButton(
+                              icon: const Icon(Icons.web_outlined), 
+                              color: const Color.fromARGB(255, 66, 227, 255), 
+                              onPressed: _launchWebsite,
+                            ),
+                            const SizedBox(width: 10.0),
+                            const Text(
+                              'Website: www.taskhive.com',
+                              style: TextStyle(
+                                color:Color.fromARGB(255, 66, 227, 255),
+                                // foreground: Paint()
+                                // ..style = PaintingStyle.stroke
+                                // ..strokeWidth = .2
+                                // ..color = Colors.black,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 20.0),
+                        ElevatedButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: const Text('Close'),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return contactUsDialog;
+                  },
+                );
+              }, //Contact us popup
               child: Container(
                 width: double.infinity,
                 decoration: const BoxDecoration(
