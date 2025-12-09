@@ -1,4 +1,4 @@
-import 'dart:ui';
+ import 'dart:ui';
 
 import 'package:fancy_password_field/fancy_password_field.dart';
 import 'package:flutter/material.dart';
@@ -336,6 +336,29 @@ class _SignupTeacherState extends ConsumerState<SignupTeacher> {
                             FancyPasswordField(
                               passwordController: _password,
                               hasStrengthIndicator: true,
+                              strengthIndicatorBuilder: (strength) {
+                                Color indicatorColor;
+                                String value;
+                                if (strength < 0.3) {
+                                  indicatorColor = Colors.red;
+                                  value = "Weak";
+                                } else if (strength < 0.5) {
+                                  indicatorColor = Colors.orange;
+                                  value = "Okay";
+                                } else if (strength < 0.7) {
+                                  indicatorColor = Colors.lightGreenAccent;
+                                  value = "Strong";
+                                } else {
+                                  indicatorColor = Colors.green;
+                                  value = "Very Strong";
+                                }
+                                return LinearProgressIndicator(
+                                  value: strength.clamp(0.0, 1.0),
+                                  valueColor: AlwaysStoppedAnimation<Color>(indicatorColor),
+                                  backgroundColor: const Color.fromARGB(255, 0, 0, 0),
+                                  semanticsLabel: value,
+                                );
+                              },
                               decoration: const InputDecoration(
                                 hintText: 'Password',
                               ),
@@ -351,14 +374,83 @@ class _SignupTeacherState extends ConsumerState<SignupTeacher> {
                                 setState(() {
                                 });
                               },
-                            ),
-                            const Text(
-                              "Your password must have:\n"
-                              "Minimum 6 Length\n"
-                              "1 Uppercase Letter\n"
-                              "1 Lowercase Letter\n"
-                              "1 Numerical digit \n"
-                              "1 Non-Numerical Special Character"
+                              validationRuleBuilder: (rules, value) {
+                                if (value.isEmpty) {
+                                  return const SizedBox.shrink();
+                                }
+                                return ListView(
+                                  shrinkWrap: true,
+                                  children: rules
+                                      .map(
+                                        (rule) => rule.validate(value)
+                                            ? Column(
+                                                mainAxisAlignment: MainAxisAlignment.center,
+                                                children: [
+                                                  const SizedBox(height: 1,),
+                                                  Container(
+                                                    decoration: BoxDecoration(
+                                                      color: const Color(0xFFFFB743),
+                                                      border: Border.all(
+                                                        color: Colors.black,
+                                                        width: 2.0
+                                                      )
+                                                    ),
+                                                    width: 200,
+                                                    height: 30,
+                                                    child: Row(
+                                                      children: [
+                                                        const Icon(
+                                                        Icons.check,
+                                                        color: Colors.green,
+                                                        ),
+                                                        const SizedBox(width: 12),
+                                                        Text(
+                                                            rule.name,
+                                                            style: const TextStyle(
+                                                              color: Colors.black,
+                                                            ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ],
+                                              )
+                                            : Column(
+                                                mainAxisAlignment: MainAxisAlignment.center,
+                                                children: [
+                                                  const SizedBox(height: 2,),
+                                                  Container(
+                                                    decoration: BoxDecoration(
+                                                      color: const Color(0xFFFFB743),
+                                                      border: Border.all(
+                                                        color: Colors.black,
+                                                        width: 2.0
+                                                      )
+                                                    ),
+                                                    width: 200,
+                                                    height: 30,
+                                                    child: Row(
+                                                      children: [
+                                                        const Icon(
+                                                        Icons.close,
+                                                        color: Colors.red,
+                                                        ),
+                                                        const SizedBox(width: 12),
+                                                        Text(
+                                                            rule.name,
+                                                            style: const TextStyle(
+                                                              color: Colors.black,
+                                                            ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                      )
+                                      .toList(),
+                                );
+                              },
                             ),
                             const SizedBox(height: 10,),
                             TextFormField(
@@ -449,38 +541,51 @@ class _SignupTeacherState extends ConsumerState<SignupTeacher> {
   }
 }
 
-class PasswordCheck extends StatelessWidget{
+class PasswordCheck extends StatelessWidget {
+  final String password;
+  final String password2;
 
-     String password;
-     String password2;
+  const PasswordCheck({
+    super.key,
+    required this.password,
+    required this.password2,
+  });
 
-    PasswordCheck({super.key, required this.password, required this.password2});
-
-    @override
-    Widget build(BuildContext context){
-      return Row(
-              children: [
-                Icon(
-                  password == password2 && password2.isNotEmpty
-                  ? Icons.check_circle
-                  : Icons.cancel,
-                  color: password.toString() == password2 && password2.isNotEmpty
-                  ? Colors.green
-                  : Colors.red,
-                  size: 18,
-                ),
-                const SizedBox(width: 8,),
-                Text(
-                  password.toString() == password2 && password2.isNotEmpty
-                  ? "Passwords match"
-                  : "Passwords do not match",
-                  style: TextStyle(
-                    color: password.toString() == password2 && password2.isNotEmpty
-                    ? Colors.green
-                    : Colors.red,
-                  ),
-                ),
-              ],
-            );
+  @override
+  Widget build(BuildContext context) {
+    if (password2.isEmpty) {
+      return const SizedBox.shrink();
     }
+
+    return Container(
+      alignment: AlignmentGeometry.center,
+      width: 200,
+      decoration: BoxDecoration(
+        color: const Color(0xFFFFB743),
+        border: Border.all(
+          color: Colors.black,
+          width: 2.0
+        ),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            password == password2 ? Icons.check_circle : Icons.cancel,
+            color: password == password2 ? Colors.green : Colors.red,
+            size: 18,
+          ),
+          const SizedBox(width: 8),
+          Text(
+            password == password2
+                ? "Passwords match"
+                : "Passwords do not match",
+            style: const TextStyle(
+              color: Colors.black,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }
