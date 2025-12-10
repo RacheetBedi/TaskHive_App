@@ -365,7 +365,7 @@ class _SettingsState extends ConsumerState<Settings> {
                             const Text(
                               'Email: taskhive@gmail.com',
                               style: TextStyle(
-                                color: const Color(0xFFFF7474),
+                                color: Colors.black,
                                 // foreground: Paint()
                                 // ..style = PaintingStyle.stroke
                                 // ..strokeWidth = .2
@@ -383,7 +383,7 @@ class _SettingsState extends ConsumerState<Settings> {
                             const Text(
                               'Phone: +1 234 567 8901',
                               style: TextStyle(
-                                color: const Color(0xFF58FF42),
+                                color: Colors.black,
                                 // foreground: Paint()
                                 // ..style = PaintingStyle.stroke
                                 // ..strokeWidth = .2
@@ -405,7 +405,7 @@ class _SettingsState extends ConsumerState<Settings> {
                             const Text(
                               'Website: www.taskhive.com',
                               style: TextStyle(
-                                color:Color.fromARGB(255, 66, 227, 255),
+                                color:Colors.black,
                                 // foreground: Paint()
                                 // ..style = PaintingStyle.stroke
                                 // ..strokeWidth = .2

@@ -21,6 +21,6 @@
 // Add each username to a separate collection for easy searching
 // Encrypt the password
 // Tasks for Jeevanth:
-//    When you select a text field during log in or sign up, the text field outlines itself.
-//    Make the password rules on student and teacher sign-in look good.
-//.   Make the back popups on all of the login pages look good.
+// Make all the pages and navigation
+// Fix the dark mode
+// Start making some widgets for each page

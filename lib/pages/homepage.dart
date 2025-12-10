@@ -24,7 +24,6 @@ class Homepage extends ConsumerStatefulWidget {
 }
 
 class _HomepageState extends ConsumerState<Homepage> {
-
   @override
   Widget build(BuildContext context) {
     final appUser = ref.watch(authProvider).asData?.value;
