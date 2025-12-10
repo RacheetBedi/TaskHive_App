@@ -8,6 +8,7 @@ import 'package:flutter_app/pages/homepage.dart';
 import 'package:flutter_app/pages/login_page.dart';
 import 'package:flutter_app/pages/signupStudent.dart';
 import 'package:flutter_app/providers/auth_provider.dart';
+import 'package:flutter_app/providers/current_user_provider.dart';
 import 'package:flutter_app/routing/wrapper.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get_core/src/get_main.dart';
@@ -25,6 +26,7 @@ class _VerifyState extends ConsumerState<Verify> {
   int _countdown = 60;
   Timer? _timer;
   bool _isResendEnabled = false;
+  bool _hasSent = false;
 
   @override
   void initState() {
@@ -73,9 +75,17 @@ class _VerifyState extends ConsumerState<Verify> {
   
 
   reload() async{
-    await FirebaseAuth.instance.currentUser!.reload().then((value)=> {
-      Get.offAll(() => const Home()),
-    });
+    ref.refresh(currentUserProvider);
+    final curUser = ref.watch(currentUserProvider);
+    if (curUser?.isEmailVerified == false){
+      Get.snackbar(
+        "ATTENTION:",
+        "You have not verified, or verification was unsuccessful. A new link has been sent to your email. Please try again."
+      );
+      return;
+    }
+
+    Get.offAll(() => const Home());
   }
 
   @override
@@ -89,7 +99,10 @@ class _VerifyState extends ConsumerState<Verify> {
         }
 
         WidgetsBinding.instance.addPostFrameCallback((_) {
-          sendverifylink();
+          if(!_hasSent){
+            sendverifylink();
+            _hasSent = true;
+          }
        });
 
        return Scaffold(

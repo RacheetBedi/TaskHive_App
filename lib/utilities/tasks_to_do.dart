@@ -20,6 +20,8 @@
 // Fix nameCase and make it standardized throughout the Firestore database
 // Add each username to a separate collection for easy searching
 // Encrypt the password
+//Finish sign-in-flow with adding the phone number, phone number verification, and fixing the forgot password with phone number code!
+// Refresh every 30 seconds to check on verify email page if they have actually verified instead of an i have verified button.
 // Tasks for Jeevanth:
 //    When you select a text field during log in or sign up, the text field outlines itself.
 //    Make the password rules on student and teacher sign-in look good.
