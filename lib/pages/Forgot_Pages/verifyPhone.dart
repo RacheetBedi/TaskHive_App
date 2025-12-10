@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_app/models/app_user.dart';
 import 'package:flutter_app/pages/Forgot_Pages/forgot.dart';
 import 'package:flutter_app/pages/home.dart';
 import 'package:flutter_app/pages/homepage.dart';
@@ -16,7 +17,7 @@ import 'package:get/get_navigation/get_navigation.dart';
 class VerifyPhone extends ConsumerStatefulWidget {
   VerifyPhone(this.number, {super.key});
 
-  final int number;
+  final String number;
 
   @override
   ConsumerState<VerifyPhone> createState() => _VerifyPhoneState(number);
@@ -27,7 +28,11 @@ class _VerifyPhoneState extends ConsumerState<VerifyPhone> {
   int _countdown = 60;
   Timer? _timer;
   bool _isResendEnabled = false;
-  final int number;
+  final String number;
+  ConfirmationResult? _confirmationResult;
+
+  TextEditingController phoneCode = TextEditingController();
+  bool isCodeEnabled = false;
 
   _VerifyPhoneState(this.number);
   
@@ -66,45 +71,77 @@ class _VerifyPhoneState extends ConsumerState<VerifyPhone> {
   }
 
   sendverifyMessage() async{
+    //FIX FOR MOBILE( USE KISWEB!!!)!!!
     final appUser = FirebaseAuth.instance.currentUser;
 
-    await FirebaseAuth.instance.signInWithPhoneNumber(number.toString()).then(
-      (value){
-        return Get.snackbar('Message Sent', 'If you possess an account, a message has been sent to your provided number. It may take up to 5 minutes.');
-      }
-    );
+    _confirmationResult = await FirebaseAuth.instance.signInWithPhoneNumber(number);
+    
+    return Get.snackbar('Message Sent', 'If you possess an account, a message has been sent to your provided number. It may take up to 5 minutes.');
 
-    await appUser?.sendEmailVerification().then((value)=>{
-      Get.snackbar('Link sent', 'A link has been sent to your email.', margin: EdgeInsets.all(30), snackPosition: SnackPosition.BOTTOM)
-    });
+    // await appUser?.sendEmailVerification().then((value)=>{
+    //   Get.snackbar('Link sent', 'A link has been sent to your email.', margin: EdgeInsets.all(30), snackPosition: SnackPosition.BOTTOM)
+    // });
   }
 
   timeandSend() {
     sendverifyMessage();
     _startTimer();
   }
+
+  checkCode(String code) async{
+    try{
+    final userCredential = await(_confirmationResult)?.confirm(code);
+    if(userCredential?.user != null){
+      AppUser appUser = AppUser.fromFirebaseUser(userCredential!.user! , hasCompletedSetup: true);
+      final authState = ref.read(authProvider);
+      // Add a set appUser to the current user for riverpod method in authProvider.
+      Get.offAll(() => const Home());
+    }
+    else{
+      Get.snackbar(
+        "ERROR",
+        "The code you entered is invalid. Please try again.",
+        duration: const Duration(seconds: 10),
+      );
+    }
+    } catch(e){
+      Get.snackbar(
+        "ERROR",
+        "User code verification error: ${e.toString()}",
+        duration: const Duration(seconds: 10),
+      );
+    }
+  }
   
 
-  reload() async{
-    await FirebaseAuth.instance.currentUser!.reload().then((value)=> {
-      Get.offAll(() => const Home()),
-    });
+  checkConfirmation(String code) async{
+    //FIX FOR MOBILE!!!
+    if(_confirmationResult == null){
+      Get.snackbar(
+        "ATTENTION",
+        "You failed to validate the request. Please try again.",
+        duration: const Duration(seconds: 10),
+      );
+      return;
+    }
+    else{
+      await checkCode(code);
+    }
+
+    // await FirebaseAuth.instance.currentUser!.reload().then((value)=> {
+    //   Get.offAll(() => const Home()),
+    // });
   }
 
   @override
   Widget build(BuildContext context) {
     final appUser = ref.watch(authProvider);
 
-    return appUser.when(
-      data: (user){
-        if (user == null){
-          return const SizedBox();
-        }
-
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          sendverifyMessage();
-       });
-
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _startTimer();
+        sendverifyMessage();
+      });
+    
        return Scaffold(
         body: Container(
           height: double.infinity,
@@ -130,9 +167,9 @@ class _VerifyPhoneState extends ConsumerState<VerifyPhone> {
                         color: Colors.black,
                       ),
                       iconSize: 40,
-                      onPressed: () => Get.to(() => const LoginPage()),
+                      onPressed: () => Get.to(() => const Forgot()),
                     ),
-                    ),
+                  ),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
@@ -154,7 +191,7 @@ class _VerifyPhoneState extends ConsumerState<VerifyPhone> {
                       ),
                       const SizedBox(height: 15),
                       const Text(
-                        'Verify Your Email',
+                        'Verify Your Phone',
                         style: TextStyle(
                           fontSize: 50, 
                           fontFamily: 'Jomhuria'
@@ -162,7 +199,7 @@ class _VerifyPhoneState extends ConsumerState<VerifyPhone> {
                       ),
                       const SizedBox(height: 15),
                       const Text(
-                        'You have been sent a verification email. Please check and verify the email.',
+                        'You have been sent a verification message. Please enter your received code.\nNOTE: Standard SMS rates apply.',
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontSize: 20.0, 
@@ -172,13 +209,19 @@ class _VerifyPhoneState extends ConsumerState<VerifyPhone> {
                         ),
                       ),
                       const SizedBox(height: 10),
+                      TextField(
+                        controller: phoneCode,
+                        decoration: const InputDecoration(
+                          hintText: 'Enter verification code',
+                        ),
+                      ),
                       ElevatedButton(
-                        onPressed: () => reload(),
-                        child: const Text("I Have Verified"),
+                        onPressed: () => checkConfirmation(phoneCode.text.trim()),
+                        child: const Text("Check Code"),
                       ),
                       const SizedBox(height: 15),
                       const Text(
-                        'Didn\'t get the email?', 
+                        'Didn\'t get the message?', 
                         style: TextStyle(
                           fontSize: 20.0, 
                           fontFamily: 'Inter', 
@@ -189,7 +232,7 @@ class _VerifyPhoneState extends ConsumerState<VerifyPhone> {
                       const SizedBox(height: 10),
                       ElevatedButton(
                         onPressed: _isResendEnabled ? timeandSend : null,
-                        child: Text(_isResendEnabled ? "Resend Email" : '$_countdown s'),
+                        child: Text(_isResendEnabled ? "Resend Message" : '$_countdown s'),
                       ),
                     ],
                   ),
@@ -199,17 +242,5 @@ class _VerifyPhoneState extends ConsumerState<VerifyPhone> {
           ),
         )
        );
-      }, 
-      error:(err, stack){
-        Get.snackbar(
-          "Error",
-          "Unexpected Email Verification Error: ${err.toString()}",
-          duration: const Duration(seconds: 10),
-        );
-
-        return const LoginPage();
-      }, 
-      loading: () => const Center(child: CircularProgressIndicator()),
-    );
   }
 }
