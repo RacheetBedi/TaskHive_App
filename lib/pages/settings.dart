@@ -49,6 +49,7 @@ class _SettingsState extends ConsumerState<Settings> {
     deleteAccountPopup() async {
       final authNotifier = ref.read(authProvider.notifier);
       final authState = ref.watch(authProvider);
+      final curUser = UserRepository(ref).currentAppUser;
       if(authState != null && authState.asData !=null && authState.asData!.value != null){
         userFullName = authState.asData!.value!.userName ?? "";
       }
@@ -68,7 +69,7 @@ class _SettingsState extends ConsumerState<Settings> {
               ),
               onChanged: (value){
                 setState(() {
-                  if(value.trim() == "Bob"){
+                  if(value.trim() == curUser?.userName){
                     _isNameValid = true;
                   }
                   else{

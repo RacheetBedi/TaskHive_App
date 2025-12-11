@@ -75,9 +75,8 @@ class _VerifyState extends ConsumerState<Verify> {
   
 
   reload() async{
-    ref.refresh(currentUserProvider);
-    final curUser = ref.watch(currentUserProvider);
-    if (curUser?.isEmailVerified == false){
+    await FirebaseAuth.instance.currentUser?.reload();
+    if (FirebaseAuth.instance.currentUser?.emailVerified == false){
       Get.snackbar(
         "ATTENTION:",
         "You have not verified, or verification was unsuccessful. A new link has been sent to your email. Please try again."
