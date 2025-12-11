@@ -46,6 +46,10 @@ class AuthNotifier extends StateNotifier<AsyncValue<AppUser?>> {
     );
   }
 
+  void updateUser(AppUser user){
+    state = AsyncValue.data(user);
+  }
+
   // Future<void> _loadCurrentUser() async {
   //   final firebaseUser = FirebaseAuth.instance.currentUser;
   //   if (firebaseUser != null) {

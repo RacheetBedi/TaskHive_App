@@ -99,6 +99,7 @@ class _SignupStudentState extends ConsumerState<SignupStudent> {
   signupGoogle() async{
     final authNotifier = ref.read(authProvider.notifier);
     final authState = ref.watch(authProvider);
+    final curUser = UserRepository(ref).currentAppUser;
 
     try{
     final currentUser = UserRepository(ref);

@@ -19,37 +19,45 @@ class UserRepository {
     return authState.asData?.value;
   }
 
+  DocumentReference<Map<String, dynamic>> get currentUserDocument => _firestore.collection('users').doc(currentAppUser?.uid);
+
   FirebaseFirestore get _firestore => FirebaseFirestore.instance;
+
+
 
   //USE COPYWITH
 
-  Future<AppUser?> getAppuser() async{
+  Future<AppUser?> initializeAppuser() async{
     final user = currentAppUser;
     if(user == null) return null;
 
     final doc = await _firestore.collection('users').doc(user.uid).get();
+    final data = doc.data();
 
-    return AppUser(
+    final updatedUser = AppUser(
       //FIX THESE WITH FIREBASE REFERENCES!
       uid: user.uid, 
-      displayFirstName: user.displayFirstName,
-      displayLastName: user.displayLastName,
+      displayFirstName: data?['firstName'] ?? '',
+      displayLastName: data?['lastName'] ?? '',
       email: user.email,
-      photoURL: user.photoURL,
+      photoURL: data?['photo_URL'] ?? '',
       isEmailVerified: user.isEmailVerified,
-      phoneNumber: user.phoneNumber,
-      hasCompletedSetup: doc.data()?['hasCompletedSetup'] ?? false,
-      description: doc.data()?['description'] ?? false,
-      dark_mode: doc.data()?['dark_mode'] ?? false,
-      is_teacher: doc.data()?['is_teacher'] ?? false,
-      lang: doc.data()?['lang'] ?? false,
-      logoPref: doc.data()?['password'] ?? false,
-      country_code: doc.data()?['country_code'] ?? false,
-      userName: doc.data()?['userName'] ?? false,
-      password: doc.data()?['password'],
-      school: doc.data()?['school'] ?? "",
+      phoneNumber: data?['phone_number'] ?? '',
+      hasCompletedSetup: data?['hasCompletedSetup'] ?? false,
+      description: data?['description'] ?? false,
+      dark_mode: data?['dark_mode'] ?? false,
+      is_teacher: data?['is_teacher'] ?? false,
+      lang: data?['lang'] ?? false,
+      logoPref: data?['password'] ?? false,
+      country_code: data?['country_code'] ?? false,
+      userName: data?['userName'] ?? false,
+      password: data?['password'],
+      school: data?['school'] ?? "",
     );
 
+    ref.read(authProvider.notifier).updateUser(updatedUser);
+
+    return updatedUser;
     //USE COPYWITH INSTEAD OF RETURN HERE!
   }
 
@@ -82,29 +90,56 @@ class UserRepository {
     final doc = await docRef.get();
 
     if(doc.exists){
-      await docRef.set({
-        "dark_mode": dark_mode,
-        "isEmailVerified": isEmailVerified,
-        "hasCompletedSetup": hasCompletedSetup,
-        "is_teacher": is_teacher,
-        "lang": lang,
-        "logo_preference": logoPref,
-        "password": password,
+      final updateData = <String, dynamic>{
+        if(dark_mode != null) 'dark_mode': dark_mode,
+        if(isEmailVerified != null) 'isEmailVerified': isEmailVerified,
+        if (hasCompletedSetup != null) "hasCompletedSetup": hasCompletedSetup,
+        if(is_teacher != null) "is_teacher": is_teacher,
+        if(lang != null) "lang": lang,
+        if(logoPref != null) "logo_preference": logoPref,
+        if(password != null) "password": password,
         "public profile": {
           "contact_info": {
-            "country_code": country_code,
-            "email_address": email,
-            "phone_number": phoneNumber,
+            if(country_code != null) "country_code": country_code,
+            if(email != null) "email_address": email,
+            if(phoneNumber != null) "phone_number": phoneNumber,
           },
-          "description": description,
-          "firstName": displayFirstName,
-          "lastName": displayLastName,
-          "photo_URL": user.photoURL,
+          if(description != null) "description": description,
+          if(displayFirstName != null) "firstName": displayFirstName,
+          if(displayLastName != null) "lastName": displayLastName,
+          if(photoURL != null) "photo_URL": user.photoURL,
         },
         'uid': user.uid,
-        'username': userName,
-        'school': school,
-      });
+        if(userName != null) 'username': userName,
+        if(school != null) 'school': school,
+      };
+
+      await docRef.set(updateData, SetOptions(merge: true));
+
+
+      // await docRef.set({
+      //   "dark_mode": dark_mode,
+      //   "isEmailVerified": isEmailVerified,
+      //   "hasCompletedSetup": hasCompletedSetup,
+      //   "is_teacher": is_teacher,
+      //   "lang": lang,
+      //   "logo_preference": logoPref,
+      //   "password": password,
+      //   "public profile": {
+      //     "contact_info": {
+      //       "country_code": country_code,
+      //       "email_address": email,
+      //       "phone_number": phoneNumber,
+      //     },
+      //     "description": description,
+      //     "firstName": displayFirstName,
+      //     "lastName": displayLastName,
+      //     "photo_URL": user.photoURL,
+      //   },
+      //   'uid': user.uid,
+      //   'username': userName,
+      //   'school': school,
+      // });
     }
   }
 

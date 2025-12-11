@@ -7,6 +7,7 @@ import 'package:flutter_app/pages/signupStudent.dart';
 import 'package:flutter_app/pages/signupTeacher.dart';
 import 'package:flutter_app/pages/home.dart';
 import 'package:flutter_app/providers/auth_provider.dart';
+import 'package:flutter_app/utilities/userRepository.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/get_navigation.dart';
@@ -30,6 +31,14 @@ class _ProfileState extends ConsumerState<Profile> {
 
   bool _isEmailEnabled = false;
 
+  bool _firstNameChanged = false;
+  bool _lastNameChanged = false;
+  bool _usernameChanged = false;
+  //add a profile picture changed option here
+  bool _emailChanged = false;
+  bool _phoneChanged = false;
+  bool _descriptionChanged = false;
+
   @override
   void initState() {
     super.initState();
@@ -38,10 +47,47 @@ class _ProfileState extends ConsumerState<Profile> {
         _isEmailEnabled = !isGoogle;
       });
     });
+    populate();
   }
 
   File? _pickedImage;
   bool _isProfileEditEnabled = false;
+
+    populate() async{
+      final curUser = UserRepository(ref).currentAppUser;
+
+      setState(() {
+        String storedEmail = curUser?.email ?? '';
+        String storedFirstName = curUser?.displayFirstName ?? '';
+        String storedLastName = curUser?.displayLastName ?? '';
+        String storedUsername = curUser?.userName ?? '';
+        String storedPhone = curUser?.phoneNumber ?? '';
+        String storedDescription = curUser?.description ?? '';
+        if(storedEmail != ''){
+          email.text = storedEmail;
+        }
+
+        if(storedFirstName != ''){
+          firstName.text = storedFirstName;
+        }
+
+        if(storedLastName != ''){
+          lastName.text = storedLastName;
+        }
+
+        if(storedUsername != ''){
+          username.text = storedUsername;
+        }
+
+        if(storedPhone != ''){
+          phone.text = storedPhone;
+        }
+
+        if(storedDescription != ''){
+          description.text = storedDescription;
+        }
+      });
+  }
 
   bool checkEmail(profileEdit, emailEnabled){
     if(profileEdit){
@@ -74,8 +120,42 @@ class _ProfileState extends ConsumerState<Profile> {
     }
   }
 
+  Future<void> _saveProfile() async{
+    final currentUser = UserRepository(ref);
+    final userDoc = currentUser.currentUserDocument;
+    setState(() {
+      if(_isProfileEditEnabled == false){
+        if(_firstNameChanged == true){
+          currentUser.updateAppUser(displayFirstName: firstName.text);
+        }
+        if(_lastNameChanged == true){
+          currentUser.updateAppUser(displayLastName: lastName.text);
+        }
+        if(_usernameChanged == true){
+          currentUser.updateAppUser(userName: username.text);
+        }
+        if(_emailChanged == true){
+          currentUser.updateAppUser(email: email.text);
+        }
+        if(_phoneChanged == true){
+          currentUser.updateAppUser(phoneNumber: phone.text);
+        }
+        if(_descriptionChanged == true){
+          currentUser.updateAppUser(description: description.text);
+        }
+        _firstNameChanged = false;
+        _lastNameChanged = false;
+        _usernameChanged = false;
+        _emailChanged = false;
+        _phoneChanged = false;
+        _descriptionChanged = false;
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(130),
@@ -251,6 +331,11 @@ class _ProfileState extends ConsumerState<Profile> {
                           ),
                         ),
                         enabled: _isProfileEditEnabled,
+                        onChanged: (_){
+                          setState(() {
+                             _firstNameChanged = true;
+                          });
+                        },
                       ),
                     ],
                   ),
@@ -286,6 +371,11 @@ class _ProfileState extends ConsumerState<Profile> {
                           ),
                         ),
                         enabled: _isProfileEditEnabled,
+                        onChanged: (_){
+                          setState(() {
+                             _lastNameChanged = true;
+                          });
+                        },
                       ),
                     ],
                   ),
@@ -321,6 +411,11 @@ class _ProfileState extends ConsumerState<Profile> {
                           ),
                         ),
                         enabled: _isProfileEditEnabled,
+                        onChanged: (_){
+                          setState(() {
+                             _usernameChanged = true;
+                          });
+                        },
                       ),
                     ],
                   ),
@@ -382,6 +477,11 @@ class _ProfileState extends ConsumerState<Profile> {
                           ),
                         ),
                         enabled: checkEmail(_isProfileEditEnabled, _isEmailEnabled),
+                        onChanged: (_){
+                          setState(() {
+                             _emailChanged = true;
+                          });
+                        },
                       ),
                     ],
                   ),
@@ -417,6 +517,11 @@ class _ProfileState extends ConsumerState<Profile> {
                           ),
                         ),
                         enabled: _isProfileEditEnabled,
+                        onChanged: (_){
+                          setState(() {
+                             _phoneChanged = true;
+                          });
+                        },
                       ),
                     ],
                   ),
@@ -452,6 +557,11 @@ class _ProfileState extends ConsumerState<Profile> {
                           ),
                         ),
                         enabled: _isProfileEditEnabled,
+                        onChanged: (_){
+                          setState(() {
+                             _descriptionChanged = true;
+                          });
+                        },
                       ),
                     ],
                   ),
@@ -459,12 +569,16 @@ class _ProfileState extends ConsumerState<Profile> {
               ),
               const SizedBox(height: 20,),
               ElevatedButton(
-                onPressed: () => {
+                onPressed: () async {
                   setState(() {
                     _isProfileEditEnabled = !_isProfileEditEnabled;
-                  }),
+                  });
+                  if(_isProfileEditEnabled == false){
+                    await _saveProfile();
+                  }
                 }, //Should allow us to edit the fields
-                child: _isProfileEditEnabled ? const Text("Finish Editing Profile") : const Text("Edit Profile"),
+                child: _isProfileEditEnabled ? const Text("Save Changes") : const Text("Edit Profile"),
+                //Add a discard changes button.
               ),
               Padding(
                 padding: const EdgeInsets.all(20.0),

@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/models/app_user.dart';
 import 'package:flutter_app/pages/login_page.dart';
 import 'package:flutter_app/pages/settings.dart';
 import 'package:flutter_app/pages/signupStudent.dart';
 import 'package:flutter_app/pages/signupTeacher.dart';
+import 'package:flutter_app/providers/auth_provider.dart';
+import 'package:flutter_app/utilities/userRepository.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/get_navigation.dart';
@@ -14,8 +17,34 @@ class Home extends ConsumerStatefulWidget {
 }
 
 class _HomeState extends ConsumerState<Home> {
+
+   Future<bool> checkLoggedIn() async{
+    final authNotifier = ref.read(authProvider);
+    if(authNotifier.asData?.value?.email == ''){
+      return false;
+    }
+    else{
+      return true;
+    }
+   }
+
+
+  Future<AppUser?> initializeUser() async{
+    final user = UserRepository(ref).initializeAppuser();
+    return user;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
+
+    if (checkLoggedIn() == true){
+    initializeUser();
+    }//make this so that this only happens when actually logged in (and not testing).
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(130),

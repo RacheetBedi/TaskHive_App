@@ -1,6 +1,7 @@
 import 'dart:collection';
 import 'dart:developer';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/pages/addTasks.dart';
 import 'package:flutter_app/pages/login_page.dart';
@@ -10,6 +11,7 @@ import 'package:flutter_app/pages/signupTeacher.dart';
 import 'package:flutter_app/pages/home.dart';
 import 'package:flutter_app/providers/auth_provider.dart';
 import 'package:flutter_app/routing/wrapper.dart';
+import 'package:flutter_app/utilities/userRepository.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/get_navigation.dart';
@@ -93,6 +95,30 @@ class _SettingsState extends ConsumerState<Settings> {
         }
       );
       if (result == true){
+        try{
+          final currentUser = UserRepository(ref);
+
+          await currentUser.currentUserDocument.delete();
+
+          await FirebaseAuth.instance.currentUser?.delete();
+        } on FirebaseAuthException catch (e){
+          if(e.code == 'requires-recent-login'){
+            Get.snackbar(
+              'ATTENTION:',
+              'Sign in is stale. Please log out and sign back in again to delete account. Thank you.' 
+            );
+          } else{
+            Get.snackbar(
+              'ATTENTION:',
+              'The following error has occurred: ${e.toString()}'
+            );
+          }
+        } catch (e){
+          Get.snackbar(
+            'ATTENTION:',
+            'An unexpected error occurred: ${e.toString()}' 
+          );
+        }
         Get.to(() => const LoginPage());
       }
   }
