@@ -6,6 +6,7 @@ import 'package:flutter_app/pages/settings.dart';
 import 'package:flutter_app/pages/signupStudent.dart';
 import 'package:flutter_app/pages/signupTeacher.dart';
 import 'package:flutter_app/pages/home.dart';
+import 'package:flutter_app/pages/tracking.dart';
 import 'package:flutter_app/providers/auth_provider.dart';
 import 'package:flutter_app/utilities/userRepository.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -263,7 +264,18 @@ class _ProfileState extends ConsumerState<Profile> {
           if (index == 0) {
             Get.offAll(() => const Home());
           }
-          
+          else if (index == 1) {
+            Get.offAll(() => const Tracking());
+          }
+          else if (index == 2) {
+            //Navigate to Hives Page
+          }
+          else if (index == 3) {
+            //Navigate to Classroom Page
+          }
+          else if (index == 4) {
+            //Navigate to Calendar Page
+          }
         },
         items: const [
           BottomNavigationBarItem(

@@ -9,6 +9,7 @@ import 'package:flutter_app/pages/profile.dart';
 import 'package:flutter_app/pages/signupStudent.dart';
 import 'package:flutter_app/pages/signupTeacher.dart';
 import 'package:flutter_app/pages/home.dart';
+import 'package:flutter_app/pages/tracking.dart';
 import 'package:flutter_app/providers/auth_provider.dart';
 import 'package:flutter_app/routing/wrapper.dart';
 import 'package:flutter_app/utilities/userRepository.dart';
@@ -217,6 +218,18 @@ class _SettingsState extends ConsumerState<Settings> {
         onTap: (index) {
           if (index == 0) {
             Get.offAll(() => const Home());
+          }
+          else if (index == 1) {
+            Get.offAll(() => const Tracking());
+          }
+          else if (index == 2) {
+            //Go to Hives Page
+          }
+          else if (index == 3) {
+            //Go to Classroom Page
+          }
+          else if (index == 4) {
+            //Go to Calendar Page
           }
           
         },

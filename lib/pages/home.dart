@@ -4,9 +4,11 @@ import 'package:flutter_app/pages/login_page.dart';
 import 'package:flutter_app/pages/settings.dart';
 import 'package:flutter_app/pages/signupStudent.dart';
 import 'package:flutter_app/pages/signupTeacher.dart';
+import 'package:flutter_app/pages/tracking.dart';
 import 'package:flutter_app/providers/auth_provider.dart';
 import 'package:flutter_app/utilities/userRepository.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/get_navigation.dart';
 
@@ -133,6 +135,20 @@ class _HomeState extends ConsumerState<Home> {
       ),
 
       bottomNavigationBar: BottomNavigationBar(
+        onTap: (index) {
+          if (index == 1) {
+            Get.offAll(() => const Tracking());
+          }
+          else if (index == 2) {
+            //Navigate to Hives Page
+          }
+          else if (index == 3) {
+            //Navigate to Classroom Page
+          }
+          else if (index == 4) {
+            //Navigate to Calendar Page
+          }
+        },
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.home_filled),
@@ -160,9 +176,69 @@ class _HomeState extends ConsumerState<Home> {
         padding: const EdgeInsets.all(8.0),
         child: Container(
           padding: const EdgeInsets.only(top: 10.0),
-          //child: Column(
-          //
-          //),
+          child: Scrollable(
+            viewportBuilder: (context, position) {
+              return Center(
+                child: Column(
+                  children: [
+                    //Tasks Widget
+                    ElevatedButton(
+                      onPressed: () {
+                        Get.offAll(() => const Tracking());
+                      },
+                      style: ElevatedButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(100000000),
+                        ),
+                      ),
+                      child: const Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.track_changes, size: 30, color: Color(0xFFFF7F6E),),
+                          SizedBox(width: 10),
+                          Text(
+                            "Assignment Progress",
+                            style: TextStyle(
+                              fontFamily: 'Jomhuria',
+                              fontSize: 40,
+                              color: Color(0xFFFF7F6E),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    //Google Classroom Widget
+                    const SizedBox(height: 20),
+                    ElevatedButton(
+                      onPressed: () {}, //Take us to Hives Page
+                      style: ElevatedButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(100000000),
+                        ),
+                      ),
+                      child: const Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.groups, size: 30, color: Color(0xFFFF0000),),
+                          SizedBox(width: 10),
+                          Text(
+                            "My Hives",
+                            style: TextStyle(
+                              fontFamily: 'Jomhuria',
+                              fontSize: 40,
+                              color: Color(0xFFFF0000),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    //Nectar Center Widget
+                    //Recent Updates Widget
+                  ],
+                ),
+              );
+            },
+          ),
         ),
       )
     );

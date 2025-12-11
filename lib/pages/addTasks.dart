@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/pages/settings.dart';
 import 'package:flutter_app/pages/home.dart';
+import 'package:flutter_app/pages/tracking.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/get_navigation.dart';
@@ -162,7 +163,18 @@ class _AddTasksState extends ConsumerState<AddTasks> {
           if (index == 0) {
             Get.offAll(() => const Home());
           }
-          
+          else if (index == 1) {
+            Get.offAll(() => const Tracking());
+          }
+          else if (index == 2) {
+            //Navigate to Hives Page
+          }
+          else if (index == 3) {
+            //Navigate to Classroom Page
+          }
+          else if (index == 4) {
+            //Navigate to Calendar Page
+          }
         },
         items: const [
           BottomNavigationBarItem(
