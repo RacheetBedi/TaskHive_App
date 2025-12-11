@@ -17,6 +17,7 @@ class Home extends ConsumerStatefulWidget {
 }
 
 class _HomeState extends ConsumerState<Home> {
+  bool _isUserInitialized = false;
 
    Future<bool> checkLoggedIn() async{
     final authNotifier = ref.read(authProvider);
@@ -30,8 +31,14 @@ class _HomeState extends ConsumerState<Home> {
 
 
   Future<AppUser?> initializeUser() async{
-    final user = UserRepository(ref).initializeAppuser();
-    return user;
+    //add a try-catch statement here.
+    if(await checkLoggedIn() == true){
+      Get.snackbar("Note", "Initializing User Data...");
+      final user = await UserRepository(ref).initializeAppuser();
+      _isUserInitialized = true;
+      return user;
+    }
+    return null;
   }
 
   @override
@@ -42,9 +49,14 @@ class _HomeState extends ConsumerState<Home> {
   @override
   Widget build(BuildContext context) {
 
-    if (checkLoggedIn() == true){
-    initializeUser();
-    }//make this so that this only happens when actually logged in (and not testing).
+    if (!_isUserInitialized) {
+      return const Scaffold(
+      body: Center(
+        child: CircularProgressIndicator(),
+      ),
+    );
+  }
+
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(130),

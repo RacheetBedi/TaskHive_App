@@ -190,6 +190,11 @@ class _VerifyState extends ConsumerState<Verify> {
                         onPressed: _isResendEnabled ? timeandSend : null,
                         child: Text(_isResendEnabled ? "Resend Email" : '$_countdown s'),
                       ),
+                      const SizedBox(height: 30,),
+                      ElevatedButton(
+                        onPressed: () => Get.offAll(() => const Home()),
+                        child: const Text("Temp Access Bypass"),
+                      ),
                     ],
                   ),
                 )
