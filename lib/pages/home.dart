@@ -24,25 +24,34 @@ class _HomeState extends ConsumerState<Home> {
   bool _isUserInitialized = false;
 
    Future<bool> checkLoggedIn() async{
-    final authNotifier = ref.read(authProvider);
-    if(authNotifier.asData?.value?.email == ''){
-      return false;
-    }
-    else{
-      return true;
-    }
+    final authState = ref.read(authProvider);
+    final user = authState.asData?.value;
+    return user != null && (user.email?.isNotEmpty ?? false);
    }
 
 
   Future<AppUser?> initializeUser() async{
-    //add a try-catch statement here.
+    try{
     if(await checkLoggedIn() == true){
       Get.snackbar("Note", "Initializing User Data...");
-      final user = await UserRepository(ref).initializeAppuser();
-      _isUserInitialized = true;
+      final user = await UserRepository(ref).initializeAppuser()
+      .timeout(const Duration(seconds: 15), onTimeout: () => null);
+      if(user==null){
+        Get.snackbar("Error", "User doc either absent or timeout reached.");
+        return null;
+      }
+      else{
+        ref.read(authProvider.notifier).updateUser(user);
+        _isUserInitialized = true;
+      }
+      _isUserInitialized = true;//Testing purpose
       return user;
     }
     return null;
+    } catch (e){
+      Get.snackbar("Error", "Failed to initialize user data: $e");
+      return null;
+    }
   }
 
   @override

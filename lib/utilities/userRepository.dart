@@ -28,10 +28,13 @@ class UserRepository {
   //USE COPYWITH
 
   Future<AppUser?> initializeAppuser() async{
+    try{
     final user = currentAppUser;
     if(user == null) return null;
+    Get.snackbar('Initializing the App User', 'Please help me');
 
     final doc = await _firestore.collection('users').doc(user.uid).get();
+    if(!doc.exists) return null;
     final data = doc.data();
 
     final updatedUser = AppUser(
@@ -42,23 +45,25 @@ class UserRepository {
       email: user.email,
       photoURL: data?['photo_URL'] ?? '',
       isEmailVerified: user.isEmailVerified,
-      phoneNumber: data?['phone_number'] ?? '',
+      phoneNumber: data?['phone_number'] ?? 0,
       hasCompletedSetup: data?['hasCompletedSetup'] ?? false,
-      description: data?['description'] ?? false,
+      description: data?['description'] ?? '',
       dark_mode: data?['dark_mode'] ?? false,
       is_teacher: data?['is_teacher'] ?? false,
-      lang: data?['lang'] ?? false,
-      logoPref: data?['password'] ?? false,
-      country_code: data?['country_code'] ?? false,
-      userName: data?['userName'] ?? false,
-      password: data?['password'],
-      school: data?['school'] ?? "",
+      lang: data?['lang'] ?? '',
+      logoPref: data?['logo_preference'] ?? 0,
+      country_code: data?['country_code'] ?? 0,
+      userName: data?['userName'] ?? '',
+      password: data?['password'] ?? '',
+      school: data?['school'] ?? " ",
     );
-
-    ref.read(authProvider.notifier).updateUser(updatedUser);
 
     return updatedUser;
     //USE COPYWITH INSTEAD OF RETURN HERE!
+    } catch (e){
+      Get.snackbar("Error", "Failed to initialize in user repository: $e");
+      return null;
+    }
   }
 
   
