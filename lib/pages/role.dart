@@ -178,7 +178,7 @@ class _RoleState extends ConsumerState<Role> {
                     
                     //Remove After we can actually get to the home page by logging in.
                     ElevatedButton(
-                      onPressed: ()=> Get.to(() => const Home()), 
+                      onPressed: ()=> Get.to(() => Home(userInitialized: true)), 
                       child: const Text("Temp: To Home"),
                     )
                   ]

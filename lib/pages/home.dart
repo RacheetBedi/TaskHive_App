@@ -13,7 +13,8 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/get_navigation.dart';
 
 class Home extends ConsumerStatefulWidget {
-  const Home({super.key});
+  final bool userInitialized;
+  const Home({super.key, this.userInitialized = false});
   @override
   ConsumerState<Home> createState() => _HomeState();
 }
@@ -46,11 +47,18 @@ class _HomeState extends ConsumerState<Home> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      if (widget.userInitialized) {
+        _isUserInitialized = true;
+      } else {
+        await initializeUser();
+      }
+      setState(() {});
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-
     if (!_isUserInitialized) {
       return const Scaffold(
       body: Center(
