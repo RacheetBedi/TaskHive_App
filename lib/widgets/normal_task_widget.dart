@@ -18,6 +18,7 @@ class NormalTaskWidget extends StatelessWidget {
       onTap: () => _showAllTasksDialog(context),
       child: Card(
         elevation: 4,
+        color: const Color.fromARGB(255, 255, 183, 68),
         margin: const EdgeInsets.all(8),
         child: Padding(
           padding: const EdgeInsets.all(16),
@@ -36,7 +37,7 @@ class NormalTaskWidget extends StatelessWidget {
                 'Total tasks due: $totalTasksDue',
                 style: const TextStyle(
                   fontSize: 16,
-                  color: Colors.grey,
+                  color: Color.fromARGB(255, 41, 159, 255),
                 ),
               ),
               const SizedBox(height: 16),
@@ -48,7 +49,7 @@ class NormalTaskWidget extends StatelessWidget {
                     'Tap to see all tasks',
                     style: TextStyle(
                       fontSize: 14,
-                      color: Colors.blue,
+                      color: Color.fromARGB(255, 41, 159, 255),
                       fontStyle: FontStyle.italic,
                     ),
                   ),
@@ -65,16 +66,14 @@ class NormalTaskWidget extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 8),
       padding: const EdgeInsets.all(8),
       decoration: BoxDecoration(
-        border: Border.all(color: Colors.grey.shade300),
+        color: const Color(0xFFFFB743),
+        border: Border.all(color: const Color.fromARGB(255, 0, 0, 0)),
         borderRadius: BorderRadius.circular(8),
       ),
       child: Row(
         children: [
-          // Task icon or checkbox
-          const Icon(Icons.task, size: 20, color: Colors.blue),
+          const Icon(Icons.check_box_outline_blank, size: 20, color: Color.fromARGB(255, 0, 0, 0)),
           const SizedBox(width: 8),
-
-          // Task name
           Expanded(
             child: Text(
               task['name'] ?? task['taskname'] ?? 'Unnamed Task',
@@ -84,8 +83,6 @@ class NormalTaskWidget extends StatelessWidget {
               ),
             ),
           ),
-
-          // Task description preview
           if (task['description'] != null || task['taskdescription'] != null)
             Expanded(
               child: Text(
@@ -94,7 +91,7 @@ class NormalTaskWidget extends StatelessWidget {
                 overflow: TextOverflow.ellipsis,
                 style: const TextStyle(
                   fontSize: 14,
-                  color: Colors.grey,
+                  color: Color.fromARGB(255, 61, 61, 61),
                 ),
               ),
             ),
@@ -127,13 +124,19 @@ class NormalTaskWidget extends StatelessWidget {
                     itemCount: tasks.length,
                     itemBuilder: (context, index) {
                       final task = tasks[index];
-                      return Card(
+                      return Container(
+                        decoration: BoxDecoration(
+                          border: Border.all(color: const Color.fromARGB(255, 0, 0, 0)),
+                          borderRadius: BorderRadius.circular(8),
+                          color: const Color(0xFFFFB743),
+                        ),
                         margin: const EdgeInsets.only(bottom: 8),
                         child: ListTile(
-                          leading: const Icon(Icons.task),
+                          leading: const Icon(Icons.check_box_outline_blank, size: 20, color: Color.fromARGB(255, 0, 0, 0)),
                           title: Text(task['name'] ?? task['taskname'] ?? 'Unnamed Task'),
                           subtitle: Text(
                             task['description'] ?? task['taskdescription'] ?? 'No description',
+                            style: const TextStyle(color: Color.fromARGB(255, 61, 61, 61))
                           ),
                         ),
                       );
