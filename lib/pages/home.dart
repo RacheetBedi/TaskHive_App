@@ -7,6 +7,7 @@ import 'package:flutter_app/pages/signupTeacher.dart';
 import 'package:flutter_app/pages/tracking.dart';
 import 'package:flutter_app/providers/auth_provider.dart';
 import 'package:flutter_app/utilities/userRepository.dart';
+import 'package:flutter_app/widgets/normal_task_widget.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:get/get_core/src/get_main.dart';
@@ -193,7 +194,27 @@ class _HomeState extends ConsumerState<Home> {
               return Center(
                 child: Column(
                   children: [
-                    //Tasks Widget
+                    const NormalTaskWidget(
+                      title: "My Tasks",
+                      tasks: [
+                        {
+                          'name': 'Complete Math Homework',
+                          'description': 'Finish chapter 5 exercises',
+                        },
+                        {
+                          'name': 'Read Science Chapter',
+                          'description': 'Read pages 45-67',
+                        },
+                        {
+                          'name': 'Write Essay',
+                          'description': '500-word essay on climate change',
+                        },
+                        {
+                          'name': 'Study for Test',
+                          'description': 'Review biology notes',
+                        },
+                      ],
+                    ),
                     ElevatedButton(
                       onPressed: () {
                         Get.offAll(() => const Tracking());
