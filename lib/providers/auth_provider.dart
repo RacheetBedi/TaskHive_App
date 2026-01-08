@@ -10,6 +10,7 @@ import 'package:flutter_app/pages/login_page.dart';
 import 'package:flutter_app/providers/google_auth_service_provider.dart';
 import 'package:flutter_app/utilities/theme.dart';
 import 'package:flutter_app/routing/wrapper.dart';
+import 'package:flutter_app/utilities/userRepository.dart';
 import 'package:flutter_riverpod/legacy.dart';
 import 'package:get/get_navigation/get_navigation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -133,7 +134,7 @@ class AuthNotifier extends StateNotifier<AsyncValue<AppUser?>> {
 
       if (credential.user != null) {
         isNativeSignIn = true;
-        docExists = await (checkDocExists(credentialUser.user!.uid));
+        docExists = await (checkDocExists(credential.user!.uid));
         state = AsyncValue.data(AppUser.fromFirebaseUser(credential.user!, hasCompletedSetup: docExists));
       } else {
         state = const AsyncValue.data(null);

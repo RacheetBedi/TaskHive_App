@@ -67,7 +67,7 @@ class _ProfileState extends ConsumerState<Profile> {
         String storedFirstName = curUser?.displayFirstName ?? '';
         String storedLastName = curUser?.displayLastName ?? '';
         String storedUsername = curUser?.userName ?? '';
-        String storedPhone = curUser?.phoneNumber ?? '';
+        int storedPhone = curUser?.phoneNumber ?? 000000000;
         String storedDescription = curUser?.description ?? '';
         if(storedEmail != ''){
           email.text = storedEmail;
@@ -85,8 +85,8 @@ class _ProfileState extends ConsumerState<Profile> {
           username.text = storedUsername;
         }
 
-        if(storedPhone != ''){
-          phone.text = storedPhone;
+        if(storedPhone != 0000000000){
+          phone.text = storedPhone.toString();
         }
 
         if(storedDescription != ''){

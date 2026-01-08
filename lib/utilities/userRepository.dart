@@ -43,7 +43,7 @@ class UserRepository {
       password: data?['password'] ?? '',
       country_code: data?['country_code'] ?? 1,
       email: user.email,
-      phoneNumber: data?['phone_number'] ?? 0,
+      phoneNumber: data?['phone_number'] ?? 000000000,
       description: data?['description'] ?? '',
       displayFirstName: data?['firstName'] ?? '',
       displayLastName: data?['lastName'] ?? '',
