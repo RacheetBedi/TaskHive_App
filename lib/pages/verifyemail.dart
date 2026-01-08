@@ -85,12 +85,7 @@ class _VerifyState extends ConsumerState<Verify> {
       return;
     }
 
-    if(widget.throughSignUp == true){
-      Get.offAll(() => const Home(userInitialized: true,));
-    }
-    else{
       Get.offAll(() => const Home());
-    }
   }
 
   @override
@@ -198,7 +193,7 @@ class _VerifyState extends ConsumerState<Verify> {
                       ),
                       const SizedBox(height: 30,),
                       ElevatedButton(
-                        onPressed: () => Get.offAll(() => const Home(userInitialized: true,)),
+                        onPressed: () => Get.offAll(() => const Home()),
                         child: const Text("Temp Access Bypass"),
                       ),
                     ],

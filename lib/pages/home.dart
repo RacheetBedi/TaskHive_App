@@ -14,8 +14,8 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/get_navigation.dart';
 
 class Home extends ConsumerStatefulWidget {
-  final bool userInitialized;
-  const Home({super.key, this.userInitialized = false});
+  final bool fromSignIn;
+  const Home({super.key, this.fromSignIn = false});
   @override
   ConsumerState<Home> createState() => _HomeState();
 }
@@ -59,10 +59,10 @@ class _HomeState extends ConsumerState<Home> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      if (widget.userInitialized) {
-        _isUserInitialized = true;
-      } else {
+      if (widget.fromSignIn) {
         await initializeUser();
+      } else {
+        _isUserInitialized = true;
       }
       setState(() {});
     });
