@@ -59,11 +59,7 @@ class _HomeState extends ConsumerState<Home> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      if (widget.fromSignIn) {
-        await initializeUser();
-      } else {
-        _isUserInitialized = true;
-      }
+      _isUserInitialized = true;
       setState(() {});
     });
   }

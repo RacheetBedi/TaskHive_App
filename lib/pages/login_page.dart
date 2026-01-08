@@ -10,6 +10,7 @@ import 'package:flutter_app/pages/homepage.dart';
 import 'package:flutter_app/pages/role.dart';
 import 'package:flutter_app/pages/signupStudent.dart';
 import 'package:flutter_app/providers/auth_provider.dart';
+import 'package:flutter_app/utilities/userRepository.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/get_navigation.dart';
@@ -28,13 +29,28 @@ class _LoginPageState extends ConsumerState<LoginPage> {
   final TextEditingController googlePassword = TextEditingController();
 
   Future<void> _signInWithEmail() async {
-    final authState = ref.watch(authProvider);
     final authNotifier = ref.read(authProvider.notifier);
 
     await ref.read(authProvider.notifier).signInWithEmail(
           email.text,
           password.text,
         );
+
+    if(!mounted) return;
+
+    final authState = ref.watch(authProvider);
+    final signedInUser = authState.asData?.value;
+    
+    if(signedInUser != null){
+      final user = await UserRepository(ref).initializeAppUserObject();
+      Get.snackbar('Initializing user data', 'Please wait...');
+      if(user==null){
+        Get.snackbar("Error", "User doc either absent or timeout reached.");
+      }
+      else{
+        ref.read(authProvider.notifier).updateUser(user);
+      }
+    }
 
     if(authState == AsyncValue.data(null)){
       Get.snackbar(
@@ -48,6 +64,22 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     try{
     final authNotifier = ref.read(authProvider.notifier);
     await authNotifier.signInWithGoogle();
+    
+    if(!mounted) return;
+
+    final authState = ref.watch(authProvider);
+    final signedInUer = authState.asData?.value;
+    
+    if(signedInUer != null){
+      final user = await UserRepository(ref).initializeAppUserObject();
+      Get.snackbar('Initializing user data', 'Please wait...');
+      if(user==null){
+        Get.snackbar("Error", "User doc either absent or timeout reached.");
+      }
+      else{
+        ref.read(authProvider.notifier).updateUser(user);
+      }
+    }
 
     } catch(e){
         Get.snackbar(

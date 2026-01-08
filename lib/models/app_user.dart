@@ -14,7 +14,7 @@ class AppUser{
   String? email;
   String? photoURL;
   bool isEmailVerified;
-  String? phoneNumber;
+  int? phoneNumber;
   bool hasCompletedSetup;
   String? description;
   String? school;
