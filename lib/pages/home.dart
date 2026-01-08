@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/models/app_user.dart';
+import 'package:flutter_app/pages/calendar.dart';
+import 'package:flutter_app/pages/google_classroom.dart';
+import 'package:flutter_app/pages/hives.dart';
 import 'package:flutter_app/pages/login_page.dart';
+import 'package:flutter_app/pages/recent_changes.dart';
 import 'package:flutter_app/pages/settings.dart';
 import 'package:flutter_app/pages/signupStudent.dart';
 import 'package:flutter_app/pages/signupTeacher.dart';
+import 'package:flutter_app/pages/summary.dart';
 import 'package:flutter_app/pages/tracking.dart';
 import 'package:flutter_app/providers/auth_provider.dart';
 import 'package:flutter_app/utilities/userRepository.dart';
@@ -114,13 +119,17 @@ class _HomeState extends ConsumerState<Home> {
                                 icon: const Icon(Icons.history_outlined, color: Colors.red),
                                 iconSize: 26,
                                 padding: const EdgeInsets.symmetric(horizontal: 6),
-                                onPressed: () {},
+                                onPressed: () {
+                                  Get.offAll(() => const RecentChanges());
+                                },
                               ),
                               IconButton(
                                 icon: const Icon(Icons.analytics_outlined, color: Colors.red),
                                 iconSize: 26,
                                 padding: const EdgeInsets.symmetric(horizontal: 6),
-                                onPressed: () {},
+                                onPressed: () {
+                                  Get.offAll(() => const Summary());
+                                },
                               ),
                               IconButton(
                                 icon: const Icon(Icons.settings_outlined, color: Colors.red),
@@ -171,13 +180,13 @@ class _HomeState extends ConsumerState<Home> {
             Get.offAll(() => const Tracking());
           }
           else if (index == 2) {
-            //Navigate to Hives Page
+            Get.offAll(() => const Hives());
           }
           else if (index == 3) {
-            //Navigate to Classroom Page
+            Get.offAll(() => const GoogleClassroom());
           }
           else if (index == 4) {
-            //Navigate to Calendar Page
+            Get.offAll(() => const Calendar());
           }
         },
         items: const [
@@ -233,6 +242,34 @@ class _HomeState extends ConsumerState<Home> {
                         },
                       ],
                     ),
+                    const SizedBox(height: 15),
+                    //Google Classroom Widget
+                    ElevatedButton(
+                      onPressed: () {
+                        Get.offAll(() => const Hives());
+                      },
+                      style: ElevatedButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(100000000),
+                        ),
+                      ),
+                      child: const Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.groups, size: 30, color: Color(0xFFFF0000),),
+                          SizedBox(width: 10),
+                          Text(
+                            "My Hives",
+                            style: TextStyle(
+                              fontFamily: 'Jomhuria',
+                              fontSize: 40,
+                              color: Color(0xFFFF0000),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 20),
                     ElevatedButton(
                       onPressed: () {
                         Get.offAll(() => const Tracking());
@@ -253,31 +290,6 @@ class _HomeState extends ConsumerState<Home> {
                               fontFamily: 'Jomhuria',
                               fontSize: 40,
                               color: Color(0xFFFF7F6E),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    //Google Classroom Widget
-                    const SizedBox(height: 20),
-                    ElevatedButton(
-                      onPressed: () {}, //Take us to Hives Page
-                      style: ElevatedButton.styleFrom(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(100000000),
-                        ),
-                      ),
-                      child: const Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(Icons.groups, size: 30, color: Color(0xFFFF0000),),
-                          SizedBox(width: 10),
-                          Text(
-                            "My Hives",
-                            style: TextStyle(
-                              fontFamily: 'Jomhuria',
-                              fontSize: 40,
-                              color: Color(0xFFFF0000),
                             ),
                           ),
                         ],

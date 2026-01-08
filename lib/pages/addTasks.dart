@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/models/hive.dart';
+import 'package:flutter_app/pages/calendar.dart';
+import 'package:flutter_app/pages/google_classroom.dart';
+import 'package:flutter_app/pages/hives.dart';
+import 'package:flutter_app/pages/recent_changes.dart';
 import 'package:flutter_app/pages/settings.dart';
 import 'package:flutter_app/pages/home.dart';
+import 'package:flutter_app/pages/summary.dart';
 import 'package:flutter_app/pages/tracking.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get_core/src/get_main.dart';
@@ -19,7 +25,7 @@ class _AddTasksState extends ConsumerState<AddTasks> {
   TextEditingController taskname = TextEditingController();
   TextEditingController taskdescription = TextEditingController();
   bool _isGoogleTask = false;
-  List<String> Hives = [
+  List<String> hives = [
     'Hive 1',
     'Hive 2',
     'Hive 3',
@@ -109,13 +115,17 @@ class _AddTasksState extends ConsumerState<AddTasks> {
                                 icon: const Icon(Icons.history_outlined, color: Colors.red),
                                 iconSize: 26,
                                 padding: const EdgeInsets.symmetric(horizontal: 6),
-                                onPressed: () {},
+                                onPressed: () {
+                                  Get.offAll(() => const RecentChanges());
+                                },
                               ),
                               IconButton(
                                 icon: const Icon(Icons.analytics_outlined, color: Colors.red),
                                 iconSize: 26,
                                 padding: const EdgeInsets.symmetric(horizontal: 6),
-                                onPressed: () {},
+                                onPressed: () {
+                                  Get.offAll(() => const Summary());
+                                },
                               ),
                               IconButton(
                                 icon: const Icon(Icons.settings_outlined, color: Colors.red),
@@ -167,13 +177,13 @@ class _AddTasksState extends ConsumerState<AddTasks> {
             Get.offAll(() => const Tracking());
           }
           else if (index == 2) {
-            //Navigate to Hives Page
+            Get.offAll(() => const Hives());
           }
           else if (index == 3) {
-            //Navigate to Classroom Page
+            Get.offAll(() => const GoogleClassroom());
           }
           else if (index == 4) {
-            //Navigate to Calendar Page
+            Get.offAll(() => const Calendar());
           }
         },
         items: const [
@@ -223,12 +233,12 @@ class _AddTasksState extends ConsumerState<AddTasks> {
                     clearable: true,
                     value: ChoiceSingle.value(hiveValue),
                     onChanged: ChoiceSingle.onChanged(setHiveValue),
-                    itemCount: Hives.length,
+                    itemCount: hives.length,
                     itemBuilder: (state, i) {
                       return ChoiceChip(
-                        selected: state.selected(Hives[i]),
-                        onSelected: state.onSelected(Hives[i]),
-                        label: Text(Hives[i]),
+                        selected: state.selected(hives[i]),
+                        onSelected: state.onSelected(hives[i]),
+                        label: Text(hives[i]),
                       );
                     },
                     listBuilder: ChoiceList.createScrollable(
@@ -292,53 +302,60 @@ class _AddTasksState extends ConsumerState<AddTasks> {
                     width: 300,
                     child: Card(
                       color:const Color(0xFFFFDD97),
-                      child: PromptedChoice<ChoiceData<String>>.multiple(
-                        title: 'Users',
-                        clearable: true,
-                        error: snapshot.hasError,
-                        errorBuilder: ChoiceListError.create(
-                          message: snapshot.error.toString(),
+                      child: Theme(
+                        data: Theme.of(context).copyWith(
+                          appBarTheme: Theme.of(context).appBarTheme.copyWith(
+                            iconTheme: const IconThemeData(color: Color.fromARGB(255, 0, 0, 0)),
+                          ),
                         ),
-                        loading: snapshot.connectionState == ConnectionState.waiting,
-                        value: ownerValue,
-                        onChanged: setOwnerValue,
-                        itemCount: snapshot.data?.length ?? 0,
-                        itemBuilder: (state, i) {
-                          final choice = snapshot.data?.elementAt(i);
-                          return CheckboxListTile(
-                            value: state.selected(choice!),
-                            onChanged: state.onSelected(choice),
-                            title: Text(choice.title),
-                            subtitle: choice.subtitle != null
+                        child: PromptedChoice<ChoiceData<String>>.multiple(
+                          title: 'Users',
+                          clearable: true,
+                          error: snapshot.hasError,
+                          errorBuilder: ChoiceListError.create(
+                            message: snapshot.error.toString(),
+                          ),
+                          loading: snapshot.connectionState == ConnectionState.waiting,
+                          value: ownerValue,
+                          onChanged: setOwnerValue,
+                          itemCount: snapshot.data?.length ?? 0,
+                          itemBuilder: (state, i) {
+                            final choice = snapshot.data?.elementAt(i);
+                            return CheckboxListTile(
+                              value: state.selected(choice!),
+                              onChanged: state.onSelected(choice),
+                              title: Text(choice.title),
+                              subtitle: choice.subtitle != null
                                 ? Text(
                                     choice.subtitle!,
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
                                   )
                                 : null,
-                            secondary: choice.image != null
+                              secondary: choice.image != null
                                 ? CircleAvatar(
                                     backgroundImage: NetworkImage(choice.image!),
                                   )
                                 : null,
-                          );
-                        },
-                        modalHeaderBuilder: ChoiceModal.createHeader(
-                          title: const Text('Select Users'),
-                          actionsBuilder: [
-                            (state) {
-                              final values = snapshot.data!;
-                              return Checkbox(
-                                value: state.selectedMany(values),
-                                onChanged: state.onSelectedMany(values),
-                                tristate: true,
-                              );
-                            },
-                            ChoiceModal.createSpacer(width: 25),
-                          ],
+                            );
+                          },
+                          modalHeaderBuilder: ChoiceModal.createHeader(
+                            title: const Text('Select Users', style: TextStyle(fontSize: 50, fontWeight: FontWeight.normal),),
+                            actionsBuilder: [
+                              (state) {
+                                final values = snapshot.data!;
+                                return Checkbox(
+                                  value: state.selectedMany(values),
+                                  onChanged: state.onSelectedMany(values),
+                                  tristate: true,
+                                );
+                              },
+                              ChoiceModal.createSpacer(width: 25),
+                            ],
+                          ),
+                          promptDelegate: ChoicePrompt.delegateBottomSheet(),
+                          anchorBuilder: ChoiceAnchor.create(valueTruncate: 1),
                         ),
-                        promptDelegate: ChoicePrompt.delegateBottomSheet(),
-                        anchorBuilder: ChoiceAnchor.create(valueTruncate: 1),
                       ),
                     ),
                   );

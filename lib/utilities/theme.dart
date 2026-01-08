@@ -101,6 +101,14 @@ final ThemeData appTheme = ThemeData(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(40)),
     ),
 
+    bottomSheetTheme: const BottomSheetThemeData(
+      backgroundColor: Color(0xFFFFB743),
+      elevation: 12,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+      ),
+    ),
+
     badgeTheme: const BadgeThemeData(
       backgroundColor: Color(0xFFFF6A00),
       textColor: Color.fromARGB(255, 0, 0, 0),

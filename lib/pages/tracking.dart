@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/models/app_user.dart';
+import 'package:flutter_app/pages/calendar.dart';
+import 'package:flutter_app/pages/google_classroom.dart';
+import 'package:flutter_app/pages/hives.dart';
 import 'package:flutter_app/pages/home.dart';
 import 'package:flutter_app/pages/login_page.dart';
+import 'package:flutter_app/pages/recent_changes.dart';
 import 'package:flutter_app/pages/settings.dart';
 import 'package:flutter_app/pages/signupStudent.dart';
 import 'package:flutter_app/pages/signupTeacher.dart';
+import 'package:flutter_app/pages/summary.dart';
 import 'package:flutter_app/providers/auth_provider.dart';
 import 'package:flutter_app/utilities/userRepository.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -63,13 +68,17 @@ class _TrackingState extends ConsumerState<Tracking> {
                                 icon: const Icon(Icons.history_outlined, color: Colors.red),
                                 iconSize: 26,
                                 padding: const EdgeInsets.symmetric(horizontal: 6),
-                                onPressed: () {},
+                                onPressed: () {
+                                  Get.offAll(() => const RecentChanges());
+                                },
                               ),
                               IconButton(
                                 icon: const Icon(Icons.analytics_outlined, color: Colors.red),
                                 iconSize: 26,
                                 padding: const EdgeInsets.symmetric(horizontal: 6),
-                                onPressed: () {},
+                                onPressed: () {
+                                  Get.offAll(() => const Summary());
+                                },
                               ),
                               IconButton(
                                 icon: const Icon(Icons.settings_outlined, color: Colors.red),
@@ -120,13 +129,13 @@ class _TrackingState extends ConsumerState<Tracking> {
             Get.offAll(() => const Home());
           }
           else if (index == 2) {
-            //Navigate to Hives Page
+            Get.offAll(() => const Hives());
           }
           else if (index == 3) {
-            //Navigate to Classroom Page
+            Get.offAll(() => const GoogleClassroom());
           }
           else if (index == 4) {
-            //Navigate to Calendar Page
+            Get.offAll(() => const Calendar());
           }
         },
         items: const [
