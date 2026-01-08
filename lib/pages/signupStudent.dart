@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_app/pages/login_page.dart';
 import 'package:flutter_app/pages/role.dart';
+import 'package:flutter_app/pages/verifyemail.dart';
 import 'package:flutter_app/providers/auth_provider.dart';
 import 'package:flutter_app/routing/wrapper.dart';
 import 'package:flutter_app/utilities/userRepository.dart';
@@ -131,8 +132,8 @@ class _SignupStudentState extends ConsumerState<SignupStudent> {
     final currentUser = UserRepository(ref);
 
     await currentUser.createUserDocIfNeeded(email.text, username.text, first_name.text, last_name.text, password.text);
-    dispose(); //Add a non-goole version later.
-    Get.offAll(() => const Wrapper());
+    dispose();
+    Get.offAll(() => const Verify(throughSignUp: true,));
     } on FirebaseAuthException catch(e){
         Get.snackbar(
           "Error",

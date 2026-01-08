@@ -127,22 +127,22 @@ class _ProfileState extends ConsumerState<Profile> {
     setState(() {
       if(_isProfileEditEnabled == false){
         if(_firstNameChanged == true){
-          currentUser.updateAppUser(displayFirstName: firstName.text);
+          currentUser.updateDocumentData(displayFirstName: firstName.text);
         }
         if(_lastNameChanged == true){
-          currentUser.updateAppUser(displayLastName: lastName.text);
+          currentUser.updateDocumentData(displayLastName: lastName.text);
         }
         if(_usernameChanged == true){
-          currentUser.updateAppUser(userName: username.text);
+          currentUser.updateDocumentData(userName: username.text);
         }
         if(_emailChanged == true){
-          currentUser.updateAppUser(email: email.text);
+          currentUser.updateDocumentData(email: email.text);
         }
         if(_phoneChanged == true){
-          currentUser.updateAppUser(phoneNumber: phone.text);
+          currentUser.updateDocumentData(phoneNumber: phone.text);
         }
         if(_descriptionChanged == true){
-          currentUser.updateAppUser(description: description.text);
+          currentUser.updateDocumentData(description: description.text);
         }
         _firstNameChanged = false;
         _lastNameChanged = false;

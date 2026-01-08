@@ -23,11 +23,7 @@ class UserRepository {
 
   FirebaseFirestore get _firestore => FirebaseFirestore.instance;
 
-
-
-  //USE COPYWITH
-
-  Future<AppUser?> initializeAppuser() async{
+  Future<AppUser?> initializeAppUserObject() async{
     try{
     final user = currentAppUser;
     if(user == null) return null;
@@ -38,37 +34,34 @@ class UserRepository {
     final data = doc.data();
 
     final updatedUser = AppUser(
-      //FIX THESE WITH FIREBASE REFERENCES!
-      uid: user.uid, 
-      displayFirstName: data?['firstName'] ?? '',
-      displayLastName: data?['lastName'] ?? '',
-      email: user.email,
-      photoURL: data?['photo_URL'] ?? '',
-      isEmailVerified: user.isEmailVerified,
-      phoneNumber: data?['phone_number'] ?? 0,
-      hasCompletedSetup: data?['hasCompletedSetup'] ?? false,
-      description: data?['description'] ?? '',
       dark_mode: data?['dark_mode'] ?? false,
+      hasCompletedSetup: data?['hasCompletedSetup'] ?? false,
+      isEmailVerified: user.isEmailVerified,
       is_teacher: data?['is_teacher'] ?? false,
       lang: data?['lang'] ?? '',
-      logoPref: data?['logo_preference'] ?? 0,
-      country_code: data?['country_code'] ?? 0,
-      userName: data?['userName'] ?? '',
+      logoPref: data?['logo_preference'] ?? 1,
       password: data?['password'] ?? '',
+      country_code: data?['country_code'] ?? 1,
+      email: user.email,
+      phoneNumber: data?['phone_number'] ?? 0,
+      description: data?['description'] ?? '',
+      displayFirstName: data?['firstName'] ?? '',
+      displayLastName: data?['lastName'] ?? '',
+      photoURL: data?['photo_URL'] ?? '',
       school: data?['school'] ?? " ",
+      uid: user.uid,
+      userName: data?['userName'] ?? '',
     );
 
     return updatedUser;
-    //USE COPYWITH INSTEAD OF RETURN HERE!
     } catch (e){
       Get.snackbar("Error", "Failed to initialize in user repository: $e");
       return null;
     }
   }
-
   
 
-  Future<void> updateAppUser({
+  Future<void> updateDocumentData({
     String? uid,
     String? displayFirstName,
     String? displayLastName,
@@ -120,34 +113,8 @@ class UserRepository {
       };
 
       await docRef.set(updateData, SetOptions(merge: true));
-
-
-      // await docRef.set({
-      //   "dark_mode": dark_mode,
-      //   "isEmailVerified": isEmailVerified,
-      //   "hasCompletedSetup": hasCompletedSetup,
-      //   "is_teacher": is_teacher,
-      //   "lang": lang,
-      //   "logo_preference": logoPref,
-      //   "password": password,
-      //   "public profile": {
-      //     "contact_info": {
-      //       "country_code": country_code,
-      //       "email_address": email,
-      //       "phone_number": phoneNumber,
-      //     },
-      //     "description": description,
-      //     "firstName": displayFirstName,
-      //     "lastName": displayLastName,
-      //     "photo_URL": user.photoURL,
-      //   },
-      //   'uid': user.uid,
-      //   'username': userName,
-      //   'school': school,
-      // });
     }
   }
-
 
   Future<void> createUserDocIfNeeded(String email, String userName, String firstName, String lastName, String password, {bool isNewUser = true}) async {
     try{
@@ -162,7 +129,6 @@ class UserRepository {
     user.displayFirstName = firstName;
     user.displayLastName = lastName;
     user.password = password;
-    //user!.hasCompletedSetup = !isNewUser;
 
 
     final docRef = _firestore.collection('users').doc(user?.uid);
@@ -217,7 +183,6 @@ class UserRepository {
     user!.password = password;
     user!.is_teacher = isTeacher;
     user!.school = school;
-    //user!.hasCompletedSetup = !isNewUser;
 
 
     final docRef = _firestore.collection('teacher_users').doc(user?.uid);
@@ -258,8 +223,6 @@ class UserRepository {
     }
   }
 
-  //CODE UPDATE USER DATA!
-
   Future<bool> hasCompletedSetup() async {
     final user = currentAppUser;
     if(user == null) return false;
@@ -267,33 +230,4 @@ class UserRepository {
     final doc = await _firestore.collection('users').doc(user.uid).get();
     return doc.exists && (doc.data()?['hasCompletedSetup'] == true);
   }
-
-  // Future<void> completeSetup(String username) async {
-  //   final user = currentAppUser;
-  //   if(user == null) return;
-
-  //   await _firestore.collection('users').doc(user.uid).set({
-  //     'username': username,
-  //     'hasCompletedSetup': true,
-  //     'updatedAt': FieldValue.serverTimestamp(),
-  //   }, SetOptions(merge: true));
-  // }
-
-
-    // final authState = ref.read(authProvider);
-    // return authState.when(
-    //   data: (user) => user,
-    //   loading: (){
-    //     const Center(
-    //       child: CircularProgressIndicator(),
-    //     );
-    //   },
-    //   error: (error, st){
-    //     Get.snackbar(
-    //       "Error",
-    //       "User repository connection error: ${error.toString()}",
-    //       duration: const Duration(seconds: 10),
-    //     );
-    //   },
-    // );
 }

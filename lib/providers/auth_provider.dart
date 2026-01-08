@@ -50,15 +50,6 @@ class AuthNotifier extends StateNotifier<AsyncValue<AppUser?>> {
     state = AsyncValue.data(user);
   }
 
-  // Future<void> _loadCurrentUser() async {
-  //   final firebaseUser = FirebaseAuth.instance.currentUser;
-  //   if (firebaseUser != null) {
-  //     state = AsyncValue.data(AppUser.fromFirebaseUser(firebaseUser, hasCompletedSetup: docExists));
-  //   } else {
-  //     state = const AsyncValue.data(null);
-  //   }
-  // }
-
   Future<bool> checkDocExists(String uid) async{
     final docSnapshot = await FirebaseFirestore.instance.collection('users').doc(uid).get();
 
@@ -94,11 +85,6 @@ class AuthNotifier extends StateNotifier<AsyncValue<AppUser?>> {
       }
     } catch (error, st) {
       state = AsyncValue.error(error, st);
-      // Get.snackbar(
-      //   "Error",
-      //   "Unexpected Google Sign-In Error: ${error.toString()}",
-      //   duration: const Duration(seconds: 10),
-      // );
     }
   }
 

@@ -15,7 +15,8 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/get_navigation.dart';
 
 class Verify extends ConsumerStatefulWidget {
-  const Verify({super.key});
+  final bool throughSignUp;
+  const Verify({super.key, this.throughSignUp = false});
 
   @override
   ConsumerState<Verify> createState() => _VerifyState();
@@ -84,7 +85,12 @@ class _VerifyState extends ConsumerState<Verify> {
       return;
     }
 
-    Get.offAll(() => const Home());
+    if(widget.throughSignUp == true){
+      Get.offAll(() => const Home(userInitialized: true,));
+    }
+    else{
+      Get.offAll(() => const Home());
+    }
   }
 
   @override
@@ -192,7 +198,7 @@ class _VerifyState extends ConsumerState<Verify> {
                       ),
                       const SizedBox(height: 30,),
                       ElevatedButton(
-                        onPressed: () => Get.offAll(() => const Home()),
+                        onPressed: () => Get.offAll(() => const Home(userInitialized: true,)),
                         child: const Text("Temp Access Bypass"),
                       ),
                     ],

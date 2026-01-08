@@ -26,33 +26,34 @@ class _WrapperState extends ConsumerState<Wrapper> {
   final authState = ref.watch(authProvider);
 
     return Scaffold(
-    body: authState.when(
-      data: (appUser){
-        if(appUser == null){
-          return const LoginPage();
-        } else if(!appUser.isEmailVerified){
-          return const Verify();
-          // Switch hasCompletedSetup
-        } else{
-          if(appUser.hasCompletedSetup == false){
-            return const Role();
+      body: authState.when(
+        data: (appUser){
+          if(appUser == null){
+            return const LoginPage();
+          } else if(!appUser.isEmailVerified){
+            return const Verify();
+            // Switch hasCompletedSetup
+          } else{
+            if(appUser.hasCompletedSetup == false){
+              return const Role();
+            }
+            if(appUser.userName == null )
+            return const Home();
           }
-          return const Home();
-        }
-      },
-      loading: () => const Scaffold(
-        body: Center(child: CircularProgressIndicator()),
-      ),
-      error: (error, stackTrace){
-        Get.snackbar(
-          "Error",
-          "Unexpected Google Sign-In Error: ${error.toString()}",
-          duration: const Duration(seconds: 10),
-        );
+        },
+        loading: () => const Scaffold(
+          body: Center(child: CircularProgressIndicator()),
+        ),
+        error: (error, stackTrace){
+          Get.snackbar(
+            "Error",
+            "Unexpected Google Sign-In Error: ${error.toString()}",
+            duration: const Duration(seconds: 10),
+          );
 
-        return const LoginPage();
-      }
-    ),
+          return const LoginPage();
+        }
+      ),
   );
 
     // return Scaffold(

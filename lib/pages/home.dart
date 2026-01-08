@@ -34,8 +34,7 @@ class _HomeState extends ConsumerState<Home> {
     try{
     if(await checkLoggedIn() == true){
       Get.snackbar("Note", "Initializing User Data...");
-      final user = await UserRepository(ref).initializeAppuser()
-      .timeout(const Duration(seconds: 15), onTimeout: () => null);
+      final user = await UserRepository(ref).initializeAppUserObject();
       if(user==null){
         Get.snackbar("Error", "User doc either absent or timeout reached.");
         return null;
@@ -49,10 +48,12 @@ class _HomeState extends ConsumerState<Home> {
     }
     return null;
     } catch (e){
-      Get.snackbar("Error", "Failed to initialize user data: $e");
+      Get.snackbar("Error", "MAIN Failed to initialize user data: $e");
       return null;
     }
   }
+
+  //Make the initializeUser code better, and maybe add it directly to build instead of addPostFrameCallBack
 
   @override
   void initState() {
