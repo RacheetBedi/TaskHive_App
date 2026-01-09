@@ -127,120 +127,116 @@ class _VerifyPhoneState extends ConsumerState<VerifyPhone> {
     else{
       await checkCode(code);
     }
-
-    // await FirebaseAuth.instance.currentUser!.reload().then((value)=> {
-    //   Get.offAll(() => const Home()),
-    // });
   }
 
   @override
   Widget build(BuildContext context) {
     final appUser = ref.watch(authProvider);
 
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        _startTimer();
-        sendverifyMessage();
-      });
-    
-       return Scaffold(
-        body: Container(
-          height: double.infinity,
-          width: double.infinity,
-          decoration: const BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage("assets/images/Hive Background.png"),
-              repeat: ImageRepeat.repeat,
-              fit: BoxFit.none,
-            ),
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _startTimer();
+      sendverifyMessage();
+    });
+  
+      return Scaffold(
+      body: Container(
+        height: double.infinity,
+        width: double.infinity,
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage("assets/images/Hive Background.png"),
+            repeat: ImageRepeat.repeat,
+            fit: BoxFit.none,
           ),
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Stack(
-              children: [
-                Positioned(
-                  top: 0,
-                  left: 0,
-                  child: SafeArea(
-                    child: IconButton(
-                      icon: const Icon(
-                        Icons.arrow_back,
-                        color: Colors.black,
-                      ),
-                      iconSize: 40,
-                      onPressed: () => Get.to(() => const Forgot()),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Stack(
+            children: [
+              Positioned(
+                top: 0,
+                left: 0,
+                child: SafeArea(
+                  child: IconButton(
+                    icon: const Icon(
+                      Icons.arrow_back,
+                      color: Colors.black,
                     ),
+                    iconSize: 40,
+                    onPressed: () => Get.to(() => const Forgot()),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Column(
-                    children: [
-                      const SizedBox(height: 15,),
-                      DecoratedBox(
-                        decoration: BoxDecoration(
-                          color: const Color.fromARGB(0, 255, 255, 255),
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Image.asset(
-                            "assets/images/Oval Logo.png",
-                            height: 125,
-                          ),
-                        ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  children: [
+                    const SizedBox(height: 15,),
+                    DecoratedBox(
+                      decoration: BoxDecoration(
+                        color: const Color.fromARGB(0, 255, 255, 255),
+                        borderRadius: BorderRadius.circular(8),
                       ),
-                      const SizedBox(height: 15),
-                      const Text(
-                        'Verify Your Phone',
-                        style: TextStyle(
-                          fontSize: 50, 
-                          fontFamily: 'Jomhuria'
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Image.asset(
+                          "assets/images/Oval Logo.png",
+                          height: 125,
                         ),
                       ),
-                      const SizedBox(height: 15),
-                      const Text(
-                        'You have been sent a verification message. Please enter your received code.\nNOTE: Standard SMS rates apply.',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 20.0, 
-                          fontFamily: 'Inter',
-                          fontWeight: FontWeight.bold,
-                          color: Color.fromARGB(255, 0, 0, 0)
-                        ),
+                    ),
+                    const SizedBox(height: 15),
+                    const Text(
+                      'Verify Your Phone',
+                      style: TextStyle(
+                        fontSize: 50, 
+                        fontFamily: 'Jomhuria'
                       ),
-                      const SizedBox(height: 10),
-                      TextField(
-                        controller: phoneCode,
-                        decoration: const InputDecoration(
-                          hintText: 'Enter verification code',
-                        ),
+                    ),
+                    const SizedBox(height: 15),
+                    const Text(
+                      'You have been sent a verification message. Please enter your received code.\nNOTE: Standard SMS rates apply.',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 20.0, 
+                        fontFamily: 'Inter',
+                        fontWeight: FontWeight.bold,
+                        color: Color.fromARGB(255, 0, 0, 0)
                       ),
-                      ElevatedButton(
-                        onPressed: () => checkConfirmation(phoneCode.text.trim()),
-                        child: const Text("Check Code"),
+                    ),
+                    const SizedBox(height: 10),
+                    TextField(
+                      controller: phoneCode,
+                      decoration: const InputDecoration(
+                        hintText: 'Enter verification code',
                       ),
-                      const SizedBox(height: 15),
-                      const Text(
-                        'Didn\'t get the message?', 
-                        style: TextStyle(
-                          fontSize: 20.0, 
-                          fontFamily: 'Inter', 
-                          fontWeight: FontWeight.bold,
-                          color: Color.fromARGB(255, 73, 73, 73)
-                        ),
+                    ),
+                    ElevatedButton(
+                      onPressed: () => checkConfirmation(phoneCode.text.trim()),
+                      child: const Text("Check Code"),
+                    ),
+                    const SizedBox(height: 15),
+                    const Text(
+                      'Didn\'t get the message?', 
+                      style: TextStyle(
+                        fontSize: 20.0, 
+                        fontFamily: 'Inter', 
+                        fontWeight: FontWeight.bold,
+                        color: Color.fromARGB(255, 73, 73, 73)
                       ),
-                      const SizedBox(height: 10),
-                      ElevatedButton(
-                        onPressed: _isResendEnabled ? timeandSend : null,
-                        child: Text(_isResendEnabled ? "Resend Message" : '$_countdown s'),
-                      ),
-                    ],
-                  ),
-                )
-              ],
-            ),
+                    ),
+                    const SizedBox(height: 10),
+                    ElevatedButton(
+                      onPressed: _isResendEnabled ? timeandSend : null,
+                      child: Text(_isResendEnabled ? "Resend Message" : '$_countdown s'),
+                    ),
+                  ],
+                ),
+              )
+            ],
           ),
-        )
-       );
+        ),
+      )
+    );
   }
 }
