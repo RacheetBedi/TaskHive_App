@@ -41,17 +41,19 @@ class UserRepository {
       lang: data?['lang'] ?? '',
       logoPref: data?['logo_preference'] ?? 1,
       password: data?['password'] ?? '',
-      country_code: data?['country_code'] ?? 1,
+      country_code: data?['public profile']?['contact_info']?['country_code'] ?? 1,
       email: user.email,
-      phoneNumber: data?['phone_number'] ?? 000000000,
-      description: data?['description'] ?? '',
-      displayFirstName: data?['firstName'] ?? '',
-      displayLastName: data?['lastName'] ?? '',
-      photoURL: data?['photo_URL'] ?? '',
+      phoneNumber: data?['public profile']?['contact_info']?['phone_number'] ?? 000000000,
+      description: data?['public profile']?['description'] ?? '',
+      displayFirstName: data?['public profile']?['firstName'] ?? '',
+      displayLastName: data?['public profile']?['lastName'] ?? '',
+      photoURL: data?['public profile']?['photo_URL'] ?? '',
       school: data?['school'] ?? " ",
       uid: user.uid,
-      userName: data?['userName'] ?? '',
+      userName: data?['username'] ?? '',
     );
+
+    //Get.snackbar('The following is the user data in the doc:', '${updatedUser.displayFirstName}, ${updatedUser.displayLastName}, ${updatedUser.email}, ${updatedUser.uid}');
 
     return updatedUser;
     } catch (e){

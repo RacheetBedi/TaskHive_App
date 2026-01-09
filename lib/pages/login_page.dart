@@ -28,8 +28,11 @@ class _LoginPageState extends ConsumerState<LoginPage> {
   final TextEditingController password = TextEditingController();
   final TextEditingController googlePassword = TextEditingController();
 
+  bool obscurePasswordText = true;
+
   Future<void> _signInWithEmail() async {
     final authNotifier = ref.read(authProvider.notifier);
+    Get.snackbar('Signing In', 'Please wait...');
 
     await ref.read(authProvider.notifier).signInWithEmail(
           email.text,
@@ -37,6 +40,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
         );
 
     if(!mounted) return;
+    //Get.snackbar('HERE', '---');
 
     final authState = ref.watch(authProvider);
     final signedInUser = authState.asData?.value;
@@ -49,6 +53,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
       }
       else{
         ref.read(authProvider.notifier).updateUser(user);
+        //Get.snackbar('The following is the user data contained:', '${user.displayFirstName}, ${user.displayLastName}, ${user.email}, ${user.uid}');
       }
     }
 
@@ -68,9 +73,9 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     if(!mounted) return;
 
     final authState = ref.watch(authProvider);
-    final signedInUer = authState.asData?.value;
+    final signedInUser = authState.asData?.value;
     
-    if(signedInUer != null){
+    if(signedInUser != null){
       final user = await UserRepository(ref).initializeAppUserObject();
       Get.snackbar('Initializing user data', 'Please wait...');
       if(user==null){
@@ -188,10 +193,26 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                 decoration: const InputDecoration(hintText: 'email@domain.com'),
               ),
               const SizedBox(height: 10),
-              TextField(
+              TextFormField(
                 controller: password,
-                obscureText: true,
-                decoration: const InputDecoration(hintText: 'password'),
+                obscureText: obscurePasswordText,
+                decoration:  InputDecoration(
+                  hintText: 'password',
+                  suffixIcon: IconButton(
+                    icon: Icon(
+                        obscurePasswordText ? Icons.visibility_off : Icons.visibility,
+                    ),
+                    onPressed: (){
+                      setState(() {
+                        obscurePasswordText = !obscurePasswordText;
+                      });
+                    },
+                  ),
+                ),
+                onChanged: (value){
+                  setState(() {
+                  });
+                },
               ),
               const SizedBox(height: 10),
               ElevatedButton(
