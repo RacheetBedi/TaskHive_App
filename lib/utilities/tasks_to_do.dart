@@ -22,7 +22,11 @@
 // Encrypt the password
 //Finish sign-in-flow with adding the phone number, phone number verification, and fixing the forgot password with phone number code!
 // Refresh every 30 seconds to check on verify email page if they have actually verified instead of an i have verified button.
+
+
 // Tasks for Jeevanth:
-// Make all the pages and navigation
+
 // Fix the dark mode
 // Start making some widgets for each page
+//Fix Profile Page: The Description Tile, Profile Picture Popup
+//Work on Settings Page: Dark Mode, Language Localization
