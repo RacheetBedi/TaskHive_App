@@ -191,7 +191,7 @@ final ThemeData appTheme = ThemeData(
       headerForegroundColor: const Color(0xFF000000),
       dividerColor: const Color(0xFF000000),
       dayForegroundColor: WidgetStateProperty.all(const Color(0xFF000000)),
-      todayForegroundColor: WidgetStateProperty.all(const Color(0xFFFF6A00)),
+      todayForegroundColor: WidgetStateProperty.all(const Color.fromARGB(255, 0, 0, 0)),
       cancelButtonStyle: TextButton.styleFrom(
         backgroundColor: const Color(0xFF000000),
         foregroundColor: const Color.fromARGB(255, 255, 0, 0),
@@ -210,6 +210,9 @@ final ThemeData appTheme = ThemeData(
       dayPeriodTextColor: const Color(0xFF000000),
       dialBackgroundColor: const Color(0xFFEA9610),
       dialHandColor: const Color(0xFFFF6A00),
+      dialTextColor: Colors.black,
+      hourMinuteColor: const Color(0xFFFF8800),
+      dayPeriodColor: const Color(0xFFFF8800),
       entryModeIconColor: const Color(0xFF000000),
       hourMinuteShape: const CircleBorder(
         side: BorderSide(color: Color(0xFF000000), width: 2),
@@ -217,6 +220,14 @@ final ThemeData appTheme = ThemeData(
       dayPeriodShape: RoundedRectangleBorder(
         side: const BorderSide(color: Color(0xFF000000), width: 2),
         borderRadius: BorderRadius.circular(8),
+      ),
+      cancelButtonStyle: TextButton.styleFrom(
+        backgroundColor: const Color(0xFF000000),
+        foregroundColor: const Color.fromARGB(255, 255, 0, 0),
+      ),
+      confirmButtonStyle: TextButton.styleFrom(
+        backgroundColor: const Color(0xFF000000),
+        foregroundColor: const Color.fromARGB(255, 0, 255, 13),
       ),
       elevation: 15,
     ),

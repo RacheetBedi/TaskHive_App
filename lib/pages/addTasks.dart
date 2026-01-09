@@ -22,6 +22,8 @@ class AddTasks extends ConsumerStatefulWidget {
 }
 
 class _AddTasksState extends ConsumerState<AddTasks> {
+  GlobalKey<FormState> date = GlobalKey<FormState>();
+  GlobalKey<FormState> time = GlobalKey<FormState>();
   TextEditingController taskname = TextEditingController();
   TextEditingController taskdescription = TextEditingController();
   bool _isGoogleTask = false;
@@ -209,11 +211,12 @@ class _AddTasksState extends ConsumerState<AddTasks> {
           ),
         ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
             Container(
               width: double.infinity,
               decoration: const BoxDecoration(
@@ -393,6 +396,38 @@ class _AddTasksState extends ConsumerState<AddTasks> {
             ),
             const SizedBox(height: 15,),
             ElevatedButton(
+              onPressed: () {
+                showDialog(context: context, builder: (BuildContext context) {
+                  return DatePickerDialog(firstDate: DateTime(2000), lastDate: DateTime(2100), initialDate: DateTime.now(), initialEntryMode: DatePickerEntryMode.input, key: date);
+                });
+              },
+              child: const Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.date_range),
+                  SizedBox(width: 5,),
+                  Text("Select Date"),
+                ],
+              )
+            ),
+            const SizedBox(height: 15,),
+            ElevatedButton(
+              onPressed: () {
+                showDialog(context: context, builder: (BuildContext context) {
+                  return TimePickerDialog(initialTime: TimeOfDay.now(), initialEntryMode: TimePickerEntryMode.input, key: time);
+                });
+              },
+              child: const Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.av_timer),
+                  SizedBox(width: 5,),
+                  Text("Select Time"),
+                ],
+              )
+            ),
+            const SizedBox(height: 15,),
+            ElevatedButton(
               onPressed: () {}, //Need to Add Adding Functionality
               child: const Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -404,6 +439,7 @@ class _AddTasksState extends ConsumerState<AddTasks> {
               )
             ),
           ],
+        ),
         ),
       ),
     );
