@@ -12,6 +12,7 @@ import 'package:flutter_app/pages/summary.dart';
 import 'package:flutter_app/pages/tracking.dart';
 import 'package:flutter_app/providers/auth_provider.dart';
 import 'package:flutter_app/utilities/userRepository.dart';
+import 'package:flutter_app/widgets/nectar_center_widget.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:get/get_core/src/get_main.dart';
@@ -167,10 +168,62 @@ class _HivesState extends ConsumerState<Hives> {
           padding: const EdgeInsets.only(top: 10.0),
           child: Scrollable(
             viewportBuilder: (context, position) {
-              return const Center(
+              return Center(
                 child: Column(
-                  children: [
-                    //Future Widgets will go here
+                  children: [ 
+                    NectarCenterWidget(),
+                    const SizedBox(height: 10,),
+                    ElevatedButton(
+                      onPressed: () {
+                        //join hive functionality here
+                      },
+                      style: ElevatedButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(100000000),
+                        ),
+                      ),
+                      child: const Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.search, size: 30, color: Color(0xFFFF0000),),
+                          SizedBox(width: 10),
+                          Text(
+                            "Join Hive",
+                            style: TextStyle(
+                              fontFamily: 'Jomhuria',
+                              fontSize: 40,
+                              color: Color(0xFFFF0000),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 10,),
+                    ElevatedButton(
+                      onPressed: () {
+                        //Create Hive functionality here
+                      },
+                      style: ElevatedButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(100000000),
+                        ),
+                      ),
+                      child: const Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.group_add_outlined, size: 30, color: Color(0xFFFF0000),),
+                          SizedBox(width: 10),
+                          Text(
+                            "Create Hive",
+                            style: TextStyle(
+                              fontFamily: 'Jomhuria',
+                              fontSize: 40,
+                              color: Color(0xFFFF0000),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   ],
                 ),
               );

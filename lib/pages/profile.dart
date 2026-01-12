@@ -15,10 +15,13 @@ import 'package:flutter_app/pages/tracking.dart';
 import 'package:flutter_app/providers/auth_provider.dart';
 import 'package:flutter_app/utilities/userRepository.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/get_navigation.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
+
+import 'package:riverpod_annotation/experimental/json_persist.dart';
 
 class Profile extends ConsumerStatefulWidget {
   const Profile({super.key});
@@ -558,7 +561,7 @@ class _ProfileState extends ConsumerState<Profile> {
                 ),
                 child: Padding(
                   padding: const EdgeInsets.all(10),
-                  child: Row(
+                  child: Column(
                     mainAxisSize: MainAxisSize.min,
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -568,13 +571,18 @@ class _ProfileState extends ConsumerState<Profile> {
                       ),
                       TextField(
                         controller: description,
+                        expands: true,
+                        minLines: null,
+                        maxLines: null,
+                        textAlign: TextAlign.start,
+                        textAlignVertical: TextAlignVertical.top,
                         decoration: const InputDecoration(
                           hintText: 'description',
                           constraints: BoxConstraints(
-                            maxWidth: 225,
+                            maxWidth: 350,
                             minWidth: 50,
                             minHeight: 50,
-                            maxHeight: 50,
+                            maxHeight: 200,
                           ),
                         ),
                         enabled: _isProfileEditEnabled,
