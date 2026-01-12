@@ -10,7 +10,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_app/models/app_user.dart';
-import 'package:flutter_app/pages/login_page.dart';
+import 'package:flutter_app/pages/Setup_Pages/login_page.dart';
 import 'package:flutter_app/providers/google_auth_service_provider.dart';
 import 'package:flutter_app/utilities/theme.dart';
 import 'package:flutter_app/routing/wrapper.dart';

@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_app/pages/home.dart';
 import 'package:flutter_app/pages/homepage.dart';
-import 'package:flutter_app/pages/login_page.dart';
-import 'package:flutter_app/pages/role.dart';
-import 'package:flutter_app/pages/verifyemail.dart';
+import 'package:flutter_app/pages/Setup_Pages/login_page.dart';
+import 'package:flutter_app/pages/Setup_Pages/role.dart';
+import 'package:flutter_app/pages/Setup_Pages/verifyemail.dart';
 import 'package:flutter_app/providers/auth_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get_navigation/get_navigation.dart';
@@ -37,7 +37,6 @@ class _WrapperState extends ConsumerState<Wrapper> {
             if(appUser.hasCompletedSetup == false){
               return const Role();
             }
-            if(appUser.userName == null )
             return const Home();
           }
         },
