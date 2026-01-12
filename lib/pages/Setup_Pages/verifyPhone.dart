@@ -6,8 +6,8 @@ import 'package:flutter_app/models/app_user.dart';
 import 'package:flutter_app/pages/Forgot_Pages/forgot.dart';
 import 'package:flutter_app/pages/home.dart';
 import 'package:flutter_app/pages/homepage.dart';
-import 'package:flutter_app/pages/login_page.dart';
-import 'package:flutter_app/pages/signupStudent.dart';
+import 'package:flutter_app/pages/Setup_Pages/login_page.dart';
+import 'package:flutter_app/pages/Setup_Pages/signupStudent.dart';
 import 'package:flutter_app/providers/auth_provider.dart';
 import 'package:flutter_app/routing/wrapper.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -138,7 +138,7 @@ class _VerifyPhoneState extends ConsumerState<VerifyPhone> {
       sendverifyMessage();
     });
   
-      return Scaffold(
+    return Scaffold(
       body: Container(
         height: double.infinity,
         width: double.infinity,

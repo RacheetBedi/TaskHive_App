@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/pages/home.dart';
-import 'package:flutter_app/pages/login_page.dart';
-import 'package:flutter_app/pages/signupStudent.dart';
-import 'package:flutter_app/pages/signupTeacher.dart';
+import 'package:flutter_app/pages/Setup_Pages/login_page.dart';
+import 'package:flutter_app/pages/Setup_Pages/signupStudent.dart';
+import 'package:flutter_app/pages/Setup_Pages/signupTeacher.dart';
 import 'package:flutter_app/providers/auth_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get_core/src/get_main.dart';

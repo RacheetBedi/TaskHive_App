@@ -2,9 +2,9 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutter_app/pages/login_page.dart';
-import 'package:flutter_app/pages/role.dart';
-import 'package:flutter_app/pages/verifyemail.dart';
+import 'package:flutter_app/pages/Setup_Pages/login_page.dart';
+import 'package:flutter_app/pages/Setup_Pages/role.dart';
+import 'package:flutter_app/pages/Setup_Pages/verifyemail.dart';
 import 'package:flutter_app/providers/auth_provider.dart';
 import 'package:flutter_app/routing/wrapper.dart';
 import 'package:flutter_app/utilities/userRepository.dart';

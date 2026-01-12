@@ -3,10 +3,11 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_app/pages/Forgot_Pages/forgot.dart';
+import 'package:flutter_app/pages/Setup_Pages/final_steps_question.dart';
 import 'package:flutter_app/pages/home.dart';
 import 'package:flutter_app/pages/homepage.dart';
-import 'package:flutter_app/pages/login_page.dart';
-import 'package:flutter_app/pages/signupStudent.dart';
+import 'package:flutter_app/pages/Setup_Pages/login_page.dart';
+import 'package:flutter_app/pages/Setup_Pages/signupStudent.dart';
 import 'package:flutter_app/providers/auth_provider.dart';
 import 'package:flutter_app/providers/current_user_provider.dart';
 import 'package:flutter_app/routing/wrapper.dart';
@@ -85,7 +86,7 @@ class _VerifyState extends ConsumerState<Verify> {
       return;
     }
 
-      Get.offAll(() => const Home());
+    Get.offAll(() => FinalStepsQuestion());
   }
 
   @override
@@ -193,7 +194,7 @@ class _VerifyState extends ConsumerState<Verify> {
                       ),
                       const SizedBox(height: 30,),
                       ElevatedButton(
-                        onPressed: () => Get.offAll(() => const Home()),
+                        onPressed: () => Get.offAll(() => FinalStepsQuestion()),
                         child: const Text("Temp Access Bypass"),
                       ),
                     ],
