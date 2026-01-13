@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_app/models/app_user.dart';
 import 'package:flutter_app/pages/Forgot_Pages/forgot.dart';
+import 'package:flutter_app/pages/Setup_Pages/enterPhoneNumber.dart';
 import 'package:flutter_app/pages/Setup_Pages/verifyPhone.dart';
 import 'package:flutter_app/pages/home.dart';
 import 'package:flutter_app/pages/homepage.dart';
@@ -53,7 +54,7 @@ class _FinalStepsQuestionState extends ConsumerState<FinalStepsQuestion> {
                       ),
                       iconSize: 40,
                       //Login warning here
-                      onPressed: () => Get.to(() => const Forgot()),
+                      onPressed: () => Get.back(),
                     ),
                   ),
                 ),
@@ -113,7 +114,7 @@ class _FinalStepsQuestionState extends ConsumerState<FinalStepsQuestion> {
                           children: [
                             ElevatedButton(
                               onPressed: () {
-                                Get.to(() => VerifyPhone(''));
+                                Get.to(() => const Enterphonenumber());
                               },
                               child: const Text('Yes'),
                             ),

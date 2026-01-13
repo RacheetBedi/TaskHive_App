@@ -10,14 +10,17 @@ import 'package:flutter_app/pages/Setup_Pages/login_page.dart';
 import 'package:flutter_app/pages/Setup_Pages/signupStudent.dart';
 import 'package:flutter_app/providers/auth_provider.dart';
 import 'package:flutter_app/routing/wrapper.dart';
+import 'package:flutter_app/utilities/userRepository.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/get_navigation.dart';
 
-class VerifyPhone extends ConsumerStatefulWidget {
-  VerifyPhone(this.number, {super.key});
+//enum Origin{forgot, setup} (use this if routing stops working)
 
+class VerifyPhone extends ConsumerStatefulWidget {
+  //final Origin from;
   final String number;
+  VerifyPhone(this.number, {super.key});
 
   @override
   ConsumerState<VerifyPhone> createState() => _VerifyPhoneState(number);
@@ -30,6 +33,7 @@ class _VerifyPhoneState extends ConsumerState<VerifyPhone> {
   bool _isResendEnabled = false;
   final String number;
   ConfirmationResult? _confirmationResult;
+  bool _hasSent = false;
 
   TextEditingController phoneCode = TextEditingController();
   bool isCodeEnabled = false;
@@ -70,24 +74,53 @@ class _VerifyPhoneState extends ConsumerState<VerifyPhone> {
     super.dispose();
   }
 
-  sendverifyMessage() async{
+  Future<void> verifyNumber(String phoneNumber) async{
+    await FirebaseAuth.instance.verifyPhoneNumber(
+      phoneNumber: phoneNumber,
+      verificationCompleted: (PhoneAuthCredential credential) async {
+        final userCredential = await FirebaseAuth.instance.signInWithCredential(credential);
+        if(userCredential.user != null){
+          AppUser appUser = AppUser.fromFirebaseUser(userCredential.user! , hasCompletedSetup: true);
+          final authState = ref.read(authProvider);
+          // Add a set appUser to the current user for riverpod method in authProvider.
+          Get.offAll(() => const Home());
+        }
+      },
+      verificationFailed: (FirebaseAuthException e) {
+        Get.snackbar(
+          "ERROR",
+          "Phone number verification failed: ${e.message}",
+          duration: const Duration(seconds: 10),
+        );
+      },
+      codeSent: (String verificationId, int? resendToken) {
+        // Code sent, prompt user to enter the code
+        Get.snackbar('Message Sent', 'If you possess an account, a message has been sent to your provided number. It may take up to 5 minutes.');
+      },
+      codeAutoRetrievalTimeout: (String verificationId) {
+        // Auto-retrieval timeout
+      },
+    );
+  }
+
+  timeandSend() {
+    verifyNumber(widget.number);
+    _startTimer();
+  }
+
+  /*sendverifyMessage() async{
     //FIX FOR MOBILE( USE KISWEB!!!)!!!
-    final appUser = FirebaseAuth.instance.currentUser;
+    final appUser = UserRepository(ref).currentAppUser;
+
+    //Going from forgot password flow
+    if(appUser == null){
+
+    }
 
     _confirmationResult = await FirebaseAuth.instance.signInWithPhoneNumber(number);
     
     return Get.snackbar('Message Sent', 'If you possess an account, a message has been sent to your provided number. It may take up to 5 minutes.');
-
-    // await appUser?.sendEmailVerification().then((value)=>{
-    //   Get.snackbar('Link sent', 'A link has been sent to your email.', margin: EdgeInsets.all(30), snackPosition: SnackPosition.BOTTOM)
-    // });
   }
-
-  timeandSend() {
-    sendverifyMessage();
-    _startTimer();
-  }
-
   checkCode(String code) async{
     try{
     final userCredential = await(_confirmationResult)?.confirm(code);
@@ -112,8 +145,6 @@ class _VerifyPhoneState extends ConsumerState<VerifyPhone> {
       );
     }
   }
-  
-
   checkConfirmation(String code) async{
     //FIX FOR MOBILE!!!
     if(_confirmationResult == null){
@@ -127,15 +158,17 @@ class _VerifyPhoneState extends ConsumerState<VerifyPhone> {
     else{
       await checkCode(code);
     }
-  }
+  }*/
 
   @override
   Widget build(BuildContext context) {
     final appUser = ref.watch(authProvider);
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _startTimer();
-      sendverifyMessage();
+      if(!_hasSent){
+        verifyNumber(widget.number);
+        _hasSent = true;
+      }
     });
   
     return Scaffold(
@@ -163,7 +196,7 @@ class _VerifyPhoneState extends ConsumerState<VerifyPhone> {
                       color: Colors.black,
                     ),
                     iconSize: 40,
-                    onPressed: () => Get.to(() => const Forgot()),
+                    onPressed: () => Get.back(),
                   ),
                 ),
               ),
@@ -193,7 +226,7 @@ class _VerifyPhoneState extends ConsumerState<VerifyPhone> {
                         fontFamily: 'Jomhuria'
                       ),
                     ),
-                    const SizedBox(height: 15),
+                    const SizedBox(height: 10),
                     const Text(
                       'You have been sent a verification message. Please enter your received code.\nNOTE: Standard SMS rates apply.',
                       textAlign: TextAlign.center,
@@ -204,15 +237,18 @@ class _VerifyPhoneState extends ConsumerState<VerifyPhone> {
                         color: Color.fromARGB(255, 0, 0, 0)
                       ),
                     ),
-                    const SizedBox(height: 10),
+                    const SizedBox(height: 20),
                     TextField(
                       controller: phoneCode,
                       decoration: const InputDecoration(
                         hintText: 'Enter verification code',
                       ),
                     ),
+                    const SizedBox(height: 15),
                     ElevatedButton(
-                      onPressed: () => checkConfirmation(phoneCode.text.trim()),
+                      onPressed: (){
+                        
+                      },//checkConfirmation(phoneCode.text.trim()),
                       child: const Text("Check Code"),
                     ),
                     const SizedBox(height: 15),
@@ -225,7 +261,7 @@ class _VerifyPhoneState extends ConsumerState<VerifyPhone> {
                         color: Color.fromARGB(255, 73, 73, 73)
                       ),
                     ),
-                    const SizedBox(height: 10),
+                    const SizedBox(height: 15),
                     ElevatedButton(
                       onPressed: _isResendEnabled ? timeandSend : null,
                       child: Text(_isResendEnabled ? "Resend Message" : '$_countdown s'),

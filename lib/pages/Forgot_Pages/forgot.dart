@@ -146,7 +146,7 @@ class _ForgotState extends ConsumerState<Forgot> {
                     const SizedBox(height: 15),
                     TextField(
                       controller: email,
-                      decoration: const InputDecoration(hintText: 'Enter email'),
+                      decoration: const InputDecoration(hintText: 'Enter email to reset password'),
                     ),
                     const SizedBox(height: 15,),
                     const Text(
@@ -169,7 +169,7 @@ class _ForgotState extends ConsumerState<Forgot> {
                         FilteringTextInputFormatter.digitsOnly,
                       ],
                       controller: phone,
-                      decoration: const InputDecoration(hintText: 'Enter phone number'),
+                      decoration: const InputDecoration(hintText: 'Sign in with phone number'),
                     ),
                     const SizedBox(height: 10,),
                     const Text(
