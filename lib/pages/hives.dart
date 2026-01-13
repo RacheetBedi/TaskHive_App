@@ -8,11 +8,13 @@ import 'package:flutter_app/pages/recent_changes.dart';
 import 'package:flutter_app/pages/settings.dart';
 import 'package:flutter_app/pages/Setup_Pages/signupStudent.dart';
 import 'package:flutter_app/pages/Setup_Pages/signupTeacher.dart';
+import 'package:flutter_app/pages/specificHive.dart';
 import 'package:flutter_app/pages/summary.dart';
 import 'package:flutter_app/pages/tracking.dart';
 import 'package:flutter_app/providers/auth_provider.dart';
 import 'package:flutter_app/utilities/userRepository.dart';
-import 'package:flutter_app/widgets/nectar_center_widget.dart';
+import 'package:flutter_app/widgets/hive_widget.dart';
+import 'package:flutter_app/widgets/nectar_center_points_widget.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:get/get_core/src/get_main.dart';
@@ -26,6 +28,12 @@ class Hives extends ConsumerStatefulWidget {
 
 class _HivesState extends ConsumerState<Hives> {
 
+  List<HiveWidget> userHives = [
+    const HiveWidget(hiveColor: Colors.blue, hiveIcon: Icon(Icons.travel_explore), hiveName: "Hive 1", hivePage: SpecificHive(hiveColor: Colors.blue, hiveIcon: Icon(Icons.travel_explore), hiveName: "Hive 1")),
+    const HiveWidget(hiveColor: Colors.green, hiveIcon: Icon(Icons.access_alarm), hiveName: "Hive 2", hivePage: SpecificHive(hiveColor: Colors.green, hiveIcon: Icon(Icons.access_alarm), hiveName: "Hive 2")),
+    const HiveWidget(hiveColor: Colors.pink, hiveIcon: Icon(Icons.engineering), hiveName: "Hive 3", hivePage: SpecificHive(hiveColor: Colors.pink, hiveIcon: Icon(Icons.engineering), hiveName: "Hive 3")),
+    const HiveWidget(hiveColor: Colors.orange, hiveIcon: Icon(Icons.bike_scooter), hiveName: "Hive 4", hivePage: SpecificHive(hiveColor: Colors.orange, hiveIcon: Icon(Icons.bike_scooter), hiveName: "Hive 4")),
+  ];
   @override
   void initState() {
     super.initState();
@@ -171,15 +179,17 @@ class _HivesState extends ConsumerState<Hives> {
               return Center(
                 child: Column(
                   children: [ 
-                    NectarCenterWidget(),
+                    const NectarCenterPointsWidget(),
                     const SizedBox(height: 10,),
                     ElevatedButton(
                       onPressed: () {
                         //join hive functionality here
                       },
                       style: ElevatedButton.styleFrom(
+                        minimumSize: const Size(180, 70),
+                        maximumSize: const Size(250, 75),
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(100000000),
+                          borderRadius: BorderRadius.circular(18),
                         ),
                       ),
                       child: const Row(
@@ -204,8 +214,10 @@ class _HivesState extends ConsumerState<Hives> {
                         //Create Hive functionality here
                       },
                       style: ElevatedButton.styleFrom(
+                        minimumSize: const Size(180, 70),
+                        maximumSize: const Size(250, 75),
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(100000000),
+                          borderRadius: BorderRadius.circular(18),
                         ),
                       ),
                       child: const Row(
@@ -224,6 +236,16 @@ class _HivesState extends ConsumerState<Hives> {
                         ],
                       ),
                     ),
+                    const SizedBox(height: 15,),
+                    const Text(
+                      "My Hives",
+                      style: TextStyle(
+                        fontFamily: 'Jomhuria',
+                        fontSize: 50,
+                        color: Colors.black,
+                      ),
+                    ),
+                    ...userHives.expand((widget) => [widget, const SizedBox(height: 5)]).toList()..removeLast(),
                   ],
                 ),
               );
