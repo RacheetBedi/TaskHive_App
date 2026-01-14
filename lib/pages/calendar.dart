@@ -124,6 +124,7 @@ class _CalendarState extends ConsumerState<Calendar> {
       ),
 
       bottomNavigationBar: BottomNavigationBar(
+        currentIndex: 4,
         onTap: (index) {
           if (index == 0) {
             Get.offAll(() => const Home());

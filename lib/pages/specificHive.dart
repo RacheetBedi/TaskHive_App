@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_app/models/app_user.dart';
 import 'package:flutter_app/pages/calendar.dart';
@@ -106,19 +108,31 @@ class _SpecificHiveState extends ConsumerState<SpecificHive> {
                   left: 0,
                   right: 0,
                   child: Center(
-                    child: Text(
-                      widget.hiveName,
-                      textHeightBehavior: const TextHeightBehavior(
-                        applyHeightToFirstAscent: false,
-                        applyHeightToLastDescent: false,
-                        leadingDistribution: TextLeadingDistribution.proportional,
-                      ),
-                      style: TextStyle(
-                        color: widget.hiveColor,
-                        fontSize: 80,
-                        height: 0.65,
-                        fontFamily: 'Jomhuria',
-                      ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Icon(
+                          widget.hiveIcon.icon,
+                          color: widget.hiveColor,
+                          size: 40,
+                        ),
+                        const SizedBox(width: 10),
+                        Text(
+                          widget.hiveName,
+                          textHeightBehavior: const TextHeightBehavior(
+                            applyHeightToFirstAscent: false,
+                            applyHeightToLastDescent: true,
+                            leadingDistribution: TextLeadingDistribution.proportional,
+                          ),
+                          style: const TextStyle(
+                            color: Colors.black,
+                            fontSize: 80,
+                            height: 0.65,
+                            fontFamily: 'Jomhuria',
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
@@ -156,7 +170,7 @@ class _SpecificHiveState extends ConsumerState<SpecificHive> {
             label: 'Tracking',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.groups),
+            icon: Icon(Icons.groups_outlined),
             label: 'Hives',
           ),
           BottomNavigationBarItem(

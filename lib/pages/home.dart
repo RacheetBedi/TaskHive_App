@@ -171,6 +171,7 @@ class _HomeState extends ConsumerState<Home> {
       ),
 
       bottomNavigationBar: BottomNavigationBar(
+        currentIndex: 0,
         onTap: (index) {
           if (index == 1) {
             Get.offAll(() => const Tracking());

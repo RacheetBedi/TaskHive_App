@@ -48,7 +48,7 @@ final ThemeData appTheme = ThemeData(
       unselectedItemColor: Color(0xFF000000),
       elevation: 10,
       selectedIconTheme: IconThemeData(
-        color: Color(0xFF000000),
+        color: Color.fromARGB(255, 0, 0, 0),
         size: 30,
       ),
       unselectedIconTheme: IconThemeData(
