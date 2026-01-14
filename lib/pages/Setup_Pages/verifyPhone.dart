@@ -1,9 +1,11 @@
 import 'dart:async';
 
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_app/models/app_user.dart';
 import 'package:flutter_app/pages/Forgot_Pages/forgot.dart';
+import 'package:flutter_app/pages/Setup_Pages/enterFinalDetails.dart';
 import 'package:flutter_app/pages/home.dart';
 import 'package:flutter_app/pages/homepage.dart';
 import 'package:flutter_app/pages/Setup_Pages/login_page.dart';
@@ -34,11 +36,14 @@ class _VerifyPhoneState extends ConsumerState<VerifyPhone> {
   final String number;
   ConfirmationResult? _confirmationResult;
   bool _hasSent = false;
+  bool resendCode = true;
 
   TextEditingController phoneCode = TextEditingController();
   bool isCodeEnabled = false;
 
   _VerifyPhoneState(this.number);
+
+  String? _verificationID;
   
 
   @override
@@ -74,16 +79,111 @@ class _VerifyPhoneState extends ConsumerState<VerifyPhone> {
     super.dispose();
   }
 
-  Future<void> verifyNumber(String phoneNumber) async{
+  Future<void> signInWithPhone(PhoneAuthCredential phoneAuthCredential) async {
+    try {
+      final userCredential = await FirebaseAuth.instance.signInWithCredential(phoneAuthCredential);
+      if(userCredential.user != null){
+        AppUser appUser = AppUser.fromFirebaseUser(userCredential.user! , hasCompletedSetup: true);
+        final authState = ref.read(authProvider);
+        // Add a set appUser to the current user for riverpod method in authProvider.
+        Get.offAll(() => const Home());
+      }
+    } on FirebaseAuthException catch (e) {
+      Get.snackbar(
+        "ERROR",
+        "Phone number sign-in error: ${e.message}",
+        duration: const Duration(seconds: 10),
+      );
+    }
+  }
+
+  successPopup() async {
+    final authNotifier = ref.read(authProvider.notifier);
+    final result = await showDialog<bool>(
+      context: context, 
+      builder: (context) => AlertDialog(
+        title: const Text("PHONE NUMBER ADDED"),
+        content: const Text("Do you wish to continue in the setup process?"),
+        actions: [
+          ElevatedButton(
+            onPressed: (){
+              Navigator.pop(context, true);
+            },
+            child: const Text("YES"),
+          ),
+          const SizedBox(height: 10,),
+          ElevatedButton(
+            onPressed: (){
+              Navigator.pop(context, false);
+            }, 
+            child: const Text("NO"),
+          ),
+        ]
+      ),
+    );
+
+    if(result == true){
+      Get.to(() => const EnterfinalDetails());
+    }
+    else{
+      Get.to(() => const Home());
+    }
+  }
+
+  Future<bool> verifySMSCode(String smsCode) async{
+    if(_verificationID == null){
+      Get.snackbar(
+        "ERROR",
+        "No verification ID. Please request a new code.",
+        duration: const Duration(seconds: 10),
+      );
+      return false;
+    }
+
+    final credential = PhoneAuthProvider.credential(
+      verificationId: _verificationID!,
+      smsCode: smsCode,
+    );
+
+    final user = FirebaseAuth.instance.currentUser;
+
+    if(user == null){
+      Get.snackbar('Error', 'You are not signed in. Cannot add phone number. Please sign in first.');
+      return false;
+    }
+
+    try{
+      await user.linkWithCredential(credential);
+      setState(() {
+        successPopup();
+      });
+      Get.snackbar('Success', 'Phone number added successfully.');
+      return true;
+    } on FirebaseAuthException catch (e) {
+      Get.snackbar(
+        "ERROR",
+        "SMS Code Verification Error: ${e.message}",
+        duration: const Duration(seconds: 10),
+      );  
+    }
+    return false;
+  }
+
+  Future<void> linkPhoneNumber(String phoneNumber) async{
+    final user = FirebaseAuth.instance.currentUser;
     await FirebaseAuth.instance.verifyPhoneNumber(
       phoneNumber: phoneNumber,
       verificationCompleted: (PhoneAuthCredential credential) async {
-        final userCredential = await FirebaseAuth.instance.signInWithCredential(credential);
-        if(userCredential.user != null){
-          AppUser appUser = AppUser.fromFirebaseUser(userCredential.user! , hasCompletedSetup: true);
-          final authState = ref.read(authProvider);
-          // Add a set appUser to the current user for riverpod method in authProvider.
+        if (user == null) throw Exception ('No user is currently signed in.');
+        try{
+          await user.linkWithCredential(credential);
           Get.offAll(() => const Home());
+        } on FirebaseAuthException catch (e) {
+          Get.snackbar(
+            "ERROR",
+            "Phone number linking error: ${e.message}",
+            duration: const Duration(seconds: 10),
+          );  
         }
       },
       verificationFailed: (FirebaseAuthException e) {
@@ -94,17 +194,23 @@ class _VerifyPhoneState extends ConsumerState<VerifyPhone> {
         );
       },
       codeSent: (String verificationId, int? resendToken) {
-        // Code sent, prompt user to enter the code
-        Get.snackbar('Message Sent', 'If you possess an account, a message has been sent to your provided number. It may take up to 5 minutes.');
+        Get.snackbar('Message Sent', 
+        'A message has been sent to your provided number. It may take up to 5 minutes to arrive.');
+         setState(() {
+           _verificationID = verificationId;
+         });
       },
       codeAutoRetrievalTimeout: (String verificationId) {
-        // Auto-retrieval timeout
+        Get.snackbar('Timeout', 'Automatic code retrieval timed out. Please enter the code manually');
+        setState(() {
+           _verificationID = verificationId;
+         });
       },
     );
   }
 
   timeandSend() {
-    verifyNumber(widget.number);
+    linkPhoneNumber(widget.number);
     _startTimer();
   }
 
@@ -166,7 +272,8 @@ class _VerifyPhoneState extends ConsumerState<VerifyPhone> {
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if(!_hasSent){
-        verifyNumber(widget.number);
+        Get.snackbar('Phone number provided:', widget.number);
+        linkPhoneNumber('+1${widget.number}');
         _hasSent = true;
       }
     });
@@ -247,7 +354,7 @@ class _VerifyPhoneState extends ConsumerState<VerifyPhone> {
                     const SizedBox(height: 15),
                     ElevatedButton(
                       onPressed: (){
-                        
+                        verifySMSCode(phoneCode.text.trim());
                       },//checkConfirmation(phoneCode.text.trim()),
                       child: const Text("Check Code"),
                     ),
