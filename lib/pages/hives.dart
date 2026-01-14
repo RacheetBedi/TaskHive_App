@@ -133,6 +133,7 @@ class _HivesState extends ConsumerState<Hives> {
       ),
 
       bottomNavigationBar: BottomNavigationBar(
+        currentIndex: 2,
         onTap: (index) {
           if (index == 0) {
             Get.offAll(() => const Home());

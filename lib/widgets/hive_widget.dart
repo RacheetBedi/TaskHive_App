@@ -33,6 +33,7 @@ class _HiveWidgetState extends State<HiveWidget> {
           ),
         ),
         child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(widget.hiveIcon.icon, color: widget.hiveColor, size: 30),
             const SizedBox(width: 10),

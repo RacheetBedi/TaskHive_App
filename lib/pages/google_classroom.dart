@@ -124,6 +124,7 @@ class _GoogleClassroomState extends ConsumerState<GoogleClassroom> {
       ),
 
       bottomNavigationBar: BottomNavigationBar(
+        currentIndex: 3,
         onTap: (index) {
           if (index == 0) {
             Get.offAll(() => const Home());
