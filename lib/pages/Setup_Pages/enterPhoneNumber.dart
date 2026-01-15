@@ -22,6 +22,8 @@ class Enterphonenumber extends ConsumerStatefulWidget {
 
 class _EnterphonenumberState extends ConsumerState<Enterphonenumber> {
 
+  String _code = '1';
+
   TextEditingController phone = TextEditingController();
 
   @override
@@ -93,6 +95,24 @@ class _EnterphonenumberState extends ConsumerState<Enterphonenumber> {
                       textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: 25),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Transform.scale(
+                          scale: 1,
+                          child: DropdownMenu<CountryCodeLabel>(
+                            initialSelection: CountryCodeLabel.america,
+                            onSelected: (CountryCodeLabel? countryCode) {
+                              setState(() {
+                                _code = countryCode?.label ?? "+1";
+                              });
+                            },
+                            dropdownMenuEntries: CountryCodeLabel.entries
+                          ),
+                        ),
+                        const SizedBox(width: 10,),
+                      ],
+                    ),
                     TextField(
                       keyboardType: TextInputType.number,
                       inputFormatters: [
@@ -120,4 +140,28 @@ class _EnterphonenumberState extends ConsumerState<Enterphonenumber> {
       )
     );
   }
+}
+
+typedef CountryCodeEntry = DropdownMenuEntry<CountryCodeLabel>;
+
+enum CountryCodeLabel{
+  america('+1'),
+  canada('+1'),
+  unitedKingdom('+44'),
+  australia('+61'),
+  germany('+49'),
+  france('+33'),
+  italy('+39'),
+  netherlands('+31'),
+
+  const CountryCodeLabel(this.label);
+  final String label;
+
+  static final List<DropdownMenuEntry<CountryCodeLabel>> entries =
+      CountryCodeLabel.values.map((countryCode) {
+    return DropdownMenuEntry<CountryCodeLabel>(
+      value: countryCode,
+      label: countryCode.label,
+    );
+  }).toList();
 }

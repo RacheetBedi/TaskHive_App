@@ -85,7 +85,7 @@ class _FinalStepsQuestionState extends ConsumerState<FinalStepsQuestion> {
                       ),
                       iconSize: 40,
                       //Login warning here
-                      onPressed: () => backButtonPopup,
+                      onPressed: () => backButtonPopup(),
                     ),
                   ),
                 ),
@@ -111,7 +111,7 @@ class _FinalStepsQuestionState extends ConsumerState<FinalStepsQuestion> {
                   decoration: BoxDecoration(
                     color: const Color(0xFFFFB743),
                     borderRadius: BorderRadius.circular(32.0),
-                    boxShadow: [
+                    boxShadow: const [
                       BoxShadow(
                         blurRadius: 10,
                         color: Colors.black26,
