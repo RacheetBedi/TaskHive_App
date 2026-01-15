@@ -66,6 +66,7 @@ class _HomeState extends ConsumerState<Home> {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       _isUserInitialized = true;
       setState(() {});
+      initializeUser();
     });
   }
 

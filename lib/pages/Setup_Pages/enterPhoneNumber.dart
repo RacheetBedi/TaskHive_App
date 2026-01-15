@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_app/pages/Setup_Pages/enterFinalDetails.dart';
 import 'package:flutter_app/pages/Setup_Pages/final_steps_question.dart';
 import 'package:flutter_app/pages/Setup_Pages/verifyPhone.dart';
 import 'package:flutter_app/pages/Setup_Pages/login_page.dart';
@@ -107,7 +108,7 @@ class _EnterphonenumberState extends ConsumerState<Enterphonenumber> {
                     ),
                     const SizedBox(height: 15,),
                     ElevatedButton(
-                      onPressed: () => Get.to(()=> FinalStepsQuestion()),//Go to the enterFinalDetails.dart page, not this one.
+                      onPressed: () => Get.to(()=> const EnterfinalDetails()),//Go to the enterFinalDetails.dart page, not this one.
                       child: const Text('Enter Number Later'),
                     ),
                   ]

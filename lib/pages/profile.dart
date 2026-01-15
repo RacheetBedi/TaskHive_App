@@ -147,7 +147,7 @@ class _ProfileState extends ConsumerState<Profile> {
           currentUser.updateDocumentData(email: email.text);
         }
         if(_phoneChanged == true){
-          currentUser.updateDocumentData(phoneNumber: phone.text);
+          currentUser.updateDocumentData(phoneNumber: phone.text as int?);
         }
         if(_descriptionChanged == true){
           currentUser.updateDocumentData(description: description.text);

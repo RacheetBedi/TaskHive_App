@@ -45,7 +45,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     final authState = ref.watch(authProvider);
     final signedInUser = authState.asData?.value;
     
-    if(signedInUser != null){
+    /*if(signedInUser != null){
       final user = await UserRepository(ref).initializeAppUserObject();
       Get.snackbar('Initializing user data', 'Please wait...');
       if(user==null){
@@ -55,7 +55,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
         ref.read(authProvider.notifier).updateUser(user);
         //Get.snackbar('The following is the user data contained:', '${user.displayFirstName}, ${user.displayLastName}, ${user.email}, ${user.uid}');
       }
-    }
+    }*/
 
     if(authState == AsyncValue.data(null)){
       Get.snackbar(
@@ -75,7 +75,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     final authState = ref.watch(authProvider);
     final signedInUser = authState.asData?.value;
     
-    if(signedInUser != null){
+    /*if(signedInUser != null){
       final user = await UserRepository(ref).initializeAppUserObject();
       Get.snackbar('Initializing user data', 'Please wait...');
       if(user==null){
@@ -84,7 +84,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
       else{
         ref.read(authProvider.notifier).updateUser(user);
       }
-    }
+    }*/
 
     } catch(e){
         Get.snackbar(

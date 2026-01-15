@@ -97,7 +97,7 @@ class _VerifyPhoneState extends ConsumerState<VerifyPhone> {
     }
   }
 
-  successPopup() async {
+  linkSuccessPopup() async {
     final authNotifier = ref.read(authProvider.notifier);
     final result = await showDialog<bool>(
       context: context, 
@@ -130,14 +130,38 @@ class _VerifyPhoneState extends ConsumerState<VerifyPhone> {
     }
   }
 
-  Future<bool> verifySMSCode(String smsCode) async{
+  loginSuccessPopup() async {
+    final authNotifier = ref.read(authProvider.notifier);
+    final result = await showDialog<bool>(
+      context: context, 
+      builder: (context) => AlertDialog(
+        title: const Text("SUCCESSFULLY SIGNED IN!"),
+        content: const Text("You have signed in with your phone number. Please click the button below to proceed."),
+        actions: [
+          ElevatedButton(
+            onPressed: (){
+              Navigator.pop(context, true);
+            },
+            child: const Text("Go to Home"),
+          ),
+          const SizedBox(height: 10,),
+        ]
+      ),
+    );
+
+    if(result == true){
+      Get.to(() => const Home());
+    }
+  }
+
+  Future<void> verifySMSCode(String smsCode) async{
     if(_verificationID == null){
       Get.snackbar(
         "ERROR",
         "No verification ID. Please request a new code.",
         duration: const Duration(seconds: 10),
       );
-      return false;
+      return;
     }
 
     final credential = PhoneAuthProvider.credential(
@@ -148,31 +172,44 @@ class _VerifyPhoneState extends ConsumerState<VerifyPhone> {
     final user = FirebaseAuth.instance.currentUser;
 
     if(user == null){
-      Get.snackbar('Error', 'You are not signed in. Cannot add phone number. Please sign in first.');
-      return false;
+      try{
+        Get.snackbar('Here', 'yea');
+        final result = await FirebaseAuth.instance.signInWithCredential(credential);
+        await loginSuccessPopup();
+      
+      } on FirebaseAuthException catch (e) {
+        Get.snackbar(
+          "ERROR",
+          "SMS Code Verification Error: ${e.message}",
+          duration: const Duration(seconds: 10),
+        );  
+        return;
+      }
     }
-
-    try{
-      await user.linkWithCredential(credential);
-      setState(() {
-        successPopup();
-      });
-      Get.snackbar('Success', 'Phone number added successfully.');
-      return true;
-    } on FirebaseAuthException catch (e) {
-      Get.snackbar(
-        "ERROR",
-        "SMS Code Verification Error: ${e.message}",
-        duration: const Duration(seconds: 10),
-      );  
+    else{
+      try{
+        final authState = ref.read(authProvider);
+        await user.linkWithCredential(credential);
+        //authState.asData?.value?.phoneNumber = widget.number as int?;
+        //await UserRepository(ref).updateDocumentData(phoneNumber: widget.number as int?);
+        //Figure out proper formatting later (with country code and everything)
+        await linkSuccessPopup();
+        Get.snackbar('Success', 'Phone number added successfully.');
+      } on FirebaseAuthException catch (e) {
+        Get.snackbar(
+          "ERROR",
+          "SMS Code Verification Error: ${e.message}",
+          duration: const Duration(seconds: 10),
+        );  
+      }
     }
-    return false;
   }
 
   Future<void> linkPhoneNumber(String phoneNumber) async{
     final user = FirebaseAuth.instance.currentUser;
     await FirebaseAuth.instance.verifyPhoneNumber(
       phoneNumber: phoneNumber,
+      timeout: const Duration(seconds: 120),
       verificationCompleted: (PhoneAuthCredential credential) async {
         if (user == null) throw Exception ('No user is currently signed in.');
         try{
@@ -181,7 +218,7 @@ class _VerifyPhoneState extends ConsumerState<VerifyPhone> {
         } on FirebaseAuthException catch (e) {
           Get.snackbar(
             "ERROR",
-            "Phone number linking error: ${e.message}",
+            "Phone number linking error: ${e.code} and ${e.message}",
             duration: const Duration(seconds: 10),
           );  
         }
@@ -189,7 +226,7 @@ class _VerifyPhoneState extends ConsumerState<VerifyPhone> {
       verificationFailed: (FirebaseAuthException e) {
         Get.snackbar(
           "ERROR",
-          "Phone number verification failed: ${e.message}",
+          "Phone number verification failed: ${e.code} and ${e.message}",
           duration: const Duration(seconds: 10),
         );
       },
@@ -210,7 +247,7 @@ class _VerifyPhoneState extends ConsumerState<VerifyPhone> {
   }
 
   timeandSend() {
-    linkPhoneNumber(widget.number);
+    linkPhoneNumber('+1${widget.number}');
     _startTimer();
   }
 

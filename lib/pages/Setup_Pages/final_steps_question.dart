@@ -26,6 +26,37 @@ class FinalStepsQuestion extends ConsumerStatefulWidget {
 
 class _FinalStepsQuestionState extends ConsumerState<FinalStepsQuestion> {
 
+  backButtonPopup() async {
+    final authNotifier = ref.read(authProvider.notifier);
+    final result = await showDialog<bool>(
+      context: context, 
+      builder: (context) => AlertDialog(
+        title: const Text("NOTE: You are about to sign out."),
+        content: const Text("Do you wish to continue?"),
+        actions: [
+          ElevatedButton(
+            onPressed: (){
+              Navigator.pop(context, true);
+            },
+            child: const Text("YES"),
+          ),
+          const SizedBox(height: 10,),
+          ElevatedButton(
+            onPressed: (){
+              Navigator.pop(context, false);
+            }, 
+            child: const Text("NO"),
+          ),
+        ]
+      ),
+    );
+
+    if (result == true){
+      authNotifier.signOut();
+      Get.offAll(() => const LoginPage());
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -54,7 +85,7 @@ class _FinalStepsQuestionState extends ConsumerState<FinalStepsQuestion> {
                       ),
                       iconSize: 40,
                       //Login warning here
-                      onPressed: () => Get.back(),
+                      onPressed: () => backButtonPopup,
                     ),
                   ),
                 ),
