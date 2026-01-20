@@ -101,6 +101,7 @@ class _EnterphonenumberState extends ConsumerState<Enterphonenumber> {
                         Transform.scale(
                           scale: 1,
                           child: DropdownMenu<CountryCodeLabel>(
+                            width: MediaQuery.of(context).size.width * 0.25,
                             initialSelection: CountryCodeLabel.america,
                             onSelected: (CountryCodeLabel? countryCode) {
                               setState(() {
@@ -111,20 +112,23 @@ class _EnterphonenumberState extends ConsumerState<Enterphonenumber> {
                           ),
                         ),
                         const SizedBox(width: 10,),
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width * 0.6,
+                          child: TextField(
+                            keyboardType: TextInputType.number,
+                            inputFormatters: [
+                              FilteringTextInputFormatter.digitsOnly,
+                            ],
+                            controller: phone,
+                            decoration: const InputDecoration(hintText: 'Phone number'),
+                          ),
+                        ),
                       ],
-                    ),
-                    TextField(
-                      keyboardType: TextInputType.number,
-                      inputFormatters: [
-                        FilteringTextInputFormatter.digitsOnly,
-                      ],
-                      controller: phone,
-                      decoration: const InputDecoration(hintText: 'Phone number'),
                     ),
                     const SizedBox(height: 15,),
                     ElevatedButton(
-                      onPressed: () => Get.to(() => VerifyPhone(phone.text)),
-                      child: const Text("Send Message")
+                      onPressed: () => Get.to(() => VerifyPhone('$_code${phone.text}')),
+                      child: const Text("Send Message"),
                     ),
                     const SizedBox(height: 15,),
                     ElevatedButton(
@@ -146,13 +150,12 @@ typedef CountryCodeEntry = DropdownMenuEntry<CountryCodeLabel>;
 
 enum CountryCodeLabel{
   america('+1'),
-  canada('+1'),
   unitedKingdom('+44'),
   australia('+61'),
   germany('+49'),
   france('+33'),
   italy('+39'),
-  netherlands('+31'),
+  netherlands('+31');
 
   const CountryCodeLabel(this.label);
   final String label;

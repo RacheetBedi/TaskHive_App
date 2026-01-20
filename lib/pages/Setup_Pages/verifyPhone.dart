@@ -247,7 +247,7 @@ class _VerifyPhoneState extends ConsumerState<VerifyPhone> {
   }
 
   timeandSend() {
-    linkPhoneNumber('+1${widget.number}');
+    linkPhoneNumber('+${widget.number}');
     _startTimer();
   }
 
@@ -309,8 +309,8 @@ class _VerifyPhoneState extends ConsumerState<VerifyPhone> {
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if(!_hasSent){
-        Get.snackbar('Phone number provided:', widget.number);
-        linkPhoneNumber('+1${widget.number}');
+        Get.snackbar('Phone number provided:', '+${widget.number}');
+        linkPhoneNumber('+${widget.number}');
         _hasSent = true;
       }
     });
