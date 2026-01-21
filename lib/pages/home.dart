@@ -12,7 +12,9 @@ import 'package:flutter_app/pages/summary.dart';
 import 'package:flutter_app/pages/tracking.dart';
 import 'package:flutter_app/providers/auth_provider.dart';
 import 'package:flutter_app/utilities/userRepository.dart';
+import 'package:flutter_app/widgets/nectar_center_recent_comments_widget.dart';
 import 'package:flutter_app/widgets/normal_task_widget.dart';
+import 'package:flutter_app/widgets/recent_updates_widget.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:get/get_core/src/get_main.dart';
@@ -212,94 +214,89 @@ class _HomeState extends ConsumerState<Home> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: Container(
+        child: ListView(
           padding: const EdgeInsets.only(top: 10.0),
-          child: Scrollable(
-            viewportBuilder: (context, position) {
-              return Center(
-                child: Column(
-                  children: [
-                    const NormalTaskWidget(
-                      title: "My Tasks",
-                      tasks: [
-                        {
-                          'name': 'Complete Math Homework',
-                          'description': 'Finish chapter 5 exercises',
-                        },
-                        {
-                          'name': 'Read Science Chapter',
-                          'description': 'Read pages 45-67',
-                        },
-                        {
-                          'name': 'Write Essay',
-                          'description': '500-word essay on climate change',
-                        },
-                        {
-                          'name': 'Study for Test',
-                          'description': 'Review biology notes',
-                        },
-                      ],
-                    ),
-                    const SizedBox(height: 15),
-                    //Google Classroom Widget
-                    ElevatedButton(
-                      onPressed: () {
-                        Get.offAll(() => const Hives());
-                      },
-                      style: ElevatedButton.styleFrom(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(100000000),
-                        ),
-                      ),
-                      child: const Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(Icons.groups, size: 30, color: Color(0xFFFF0000),),
-                          SizedBox(width: 10),
-                          Text(
-                            "My Hives",
-                            style: TextStyle(
-                              fontFamily: 'Jomhuria',
-                              fontSize: 40,
-                              color: Color(0xFFFF0000),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                    ElevatedButton(
-                      onPressed: () {
-                        Get.offAll(() => const Tracking());
-                      },
-                      style: ElevatedButton.styleFrom(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(100000000),
-                        ),
-                      ),
-                      child: const Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(Icons.track_changes, size: 30, color: Color(0xFFFF7F6E),),
-                          SizedBox(width: 10),
-                          Text(
-                            "Assignment Progress",
-                            style: TextStyle(
-                              fontFamily: 'Jomhuria',
-                              fontSize: 40,
-                              color: Color(0xFFFF7F6E),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    //Nectar Center Widget
-                    //Recent Updates Widget
-                  ],
+          shrinkWrap: true,
+          children: [
+            const NormalTaskWidget(
+              title: "My Tasks",
+              tasks: [
+                {
+                  'name': 'Complete Math Homework',
+                  'description': 'Finish chapter 5 exercises',
+                },
+                {
+                  'name': 'Read Science Chapter',
+                  'description': 'Read pages 45-67',
+                },
+                {
+                  'name': 'Write Essay',
+                  'description': '500-word essay on climate change',
+                },
+                {
+                  'name': 'Study for Test',
+                  'description': 'Review biology notes',
+                },
+              ],
+            ),
+            const SizedBox(height: 15),
+            //Google Classroom Widget
+            ElevatedButton(
+              onPressed: () {
+                Get.offAll(() => const Hives());
+              },
+              style: ElevatedButton.styleFrom(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(100000000),
                 ),
-              );
-            },
-          ),
+              ),
+              child: const Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.groups, size: 30, color: Color(0xFFFF0000),),
+                  SizedBox(width: 10),
+                  Text(
+                    "My Hives",
+                    style: TextStyle(
+                      fontFamily: 'Jomhuria',
+                      fontSize: 40,
+                      color: Color(0xFFFF0000),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () {
+                Get.offAll(() => const Tracking());
+              },
+              style: ElevatedButton.styleFrom(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(100000000),
+                ),
+              ),
+              child: const Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.track_changes, size: 30, color: Color(0xFFFF7F6E),),
+                  SizedBox(width: 10),
+                  Text(
+                    "Assignment Progress",
+                    style: TextStyle(
+                      fontFamily: 'Jomhuria',
+                      fontSize: 40,
+                      color: Color(0xFFFF7F6E),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 20),
+            const NectarCenterCommentsWidget(),
+            const SizedBox(height: 20),
+            const RecentUpdatesWidget(),
+          ],
         ),
       )
     );
