@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/models/app_user.dart';
 import 'package:flutter_app/pages/calendar.dart';
+import 'package:flutter_app/pages/create_hive.dart';
 import 'package:flutter_app/pages/google_classroom.dart';
 import 'package:flutter_app/pages/home.dart';
 import 'package:flutter_app/pages/Setup_Pages/login_page.dart';
@@ -212,7 +213,7 @@ class _HivesState extends ConsumerState<Hives> {
                     const SizedBox(height: 10,),
                     ElevatedButton(
                       onPressed: () {
-                        //Create Hive functionality here
+                        Get.offAll(() => const CreateHive());
                       },
                       style: ElevatedButton.styleFrom(
                         minimumSize: const Size(180, 70),

@@ -12,6 +12,7 @@ import 'package:flutter_app/pages/summary.dart';
 import 'package:flutter_app/pages/tracking.dart';
 import 'package:flutter_app/providers/auth_provider.dart';
 import 'package:flutter_app/utilities/userRepository.dart';
+import 'package:flutter_app/widgets/google_classroom_widget.dart';
 import 'package:flutter_app/widgets/nectar_center_recent_comments_widget.dart';
 import 'package:flutter_app/widgets/normal_task_widget.dart';
 import 'package:flutter_app/widgets/recent_updates_widget.dart';
@@ -240,7 +241,8 @@ class _HomeState extends ConsumerState<Home> {
               ],
             ),
             const SizedBox(height: 15),
-            //Google Classroom Widget
+            const GoogleClassroomWidget(),
+            const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
                 Get.offAll(() => const Hives());
