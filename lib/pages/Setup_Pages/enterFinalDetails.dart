@@ -4,6 +4,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_app/pages/Setup_Pages/final_steps_question.dart';
 import 'package:flutter_app/pages/Setup_Pages/verifyPhone.dart';
 import 'package:flutter_app/pages/Setup_Pages/login_page.dart';
+import 'package:flutter_app/pages/home.dart';
+import 'package:flutter_app/pages/settings.dart';
 import 'package:flutter_app/providers/auth_provider.dart';
 import 'package:flutter_app/routing/wrapper.dart';
 import 'package:flutter_app/utilities/userRepository.dart';
@@ -21,7 +23,20 @@ class EnterfinalDetails extends ConsumerStatefulWidget {
 
 class _EnterfinalDetailsState extends ConsumerState<EnterfinalDetails> {
 
-  TextEditingController phone = TextEditingController();
+  TextEditingController description = TextEditingController();
+
+  Future<bool> saveDescription() async {
+    String descrip = description.text.trim();
+    final currentUser = UserRepository(ref).currentAppUser;
+
+    if (currentUser != null) {
+      await UserRepository(ref).updateDocumentData(description: descrip);
+      return true;
+    }
+    else{
+      return false;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -55,10 +70,10 @@ class _EnterfinalDetailsState extends ConsumerState<EnterfinalDetails> {
                   ),
               ),
               Container(
-                padding: const EdgeInsets.only(top: 20.0),
+                padding: const EdgeInsets.only(top: 10.0),
                 child: Column(
                   children: [
-                    const SizedBox(height: 15,),
+                    const SizedBox(height: 5,),
                     DecoratedBox(
                       decoration: BoxDecoration(
                         color: const Color.fromARGB(0, 255, 255, 255),
@@ -72,17 +87,17 @@ class _EnterfinalDetailsState extends ConsumerState<EnterfinalDetails> {
                         ),
                       ),
                     ),
-                    const SizedBox(height: 15),
-                    /*const Text(
-                      'Enter Your Phone Number',
+                    const SizedBox(height: 10),
+                    const Text(
+                      'Enter Your Description',
                       style: TextStyle(
                         fontSize: 50, 
                         fontFamily: 'Jomhuria'
                       ),
                     ),
-                    const SizedBox(height: 10),
+                    const SizedBox(height: 5),
                     const Text(
-                      'Please enter your phone number for your account.\nAfter clicking enter, you will receive a verification message. \nNOTE: Standard SMS rates may apply.',
+                      'Please enter a description for your account. This will help others understand more about you, and it is visible to everyone.\nNOTE: Do not include any personal or confidential information which you would not like to disclose to the general public.',
                       style: TextStyle(
                         fontSize: 20.0, 
                         fontFamily: 'Inter',
@@ -91,25 +106,48 @@ class _EnterfinalDetailsState extends ConsumerState<EnterfinalDetails> {
                       ),
                       textAlign: TextAlign.center,
                     ),
-                    const SizedBox(height: 25),
+                    const SizedBox(height: 10),
                     TextField(
-                      keyboardType: TextInputType.number,
-                      inputFormatters: [
-                        FilteringTextInputFormatter.digitsOnly,
-                      ],
-                      controller: phone,
-                      decoration: const InputDecoration(hintText: 'Phone number'),
+                      controller: description,
+                      expands: true,
+                      minLines: null,
+                      maxLines: null,
+                      textAlign: TextAlign.start,
+                      textAlignVertical: TextAlignVertical.top,
+                      decoration: const InputDecoration(
+                        hintText: 'Enter description here...',
+                        constraints: BoxConstraints(
+                          maxWidth: 350,
+                          minWidth: 50,
+                          minHeight: 50,
+                          maxHeight: 200,
+                        ),
+                      ),
                     ),
                     const SizedBox(height: 15,),
                     ElevatedButton(
-                      onPressed: () => Get.to(() => VerifyPhone(phone.text)),
-                      child: const Text("Send Message")
+                      onPressed: () async{
+                        bool result = await saveDescription();
+                        if(result){
+                          Get.to(() => const Settings());
+                        } else{
+                          Get.snackbar("Error", "Failed to save description. Please try again.");
+                        }
+                      },
+                      child: const Text("Save and Configure More Settings")
                     ),
                     const SizedBox(height: 15,),
                     ElevatedButton(
-                      onPressed: () => Get.to(()=> FinalStepsQuestion()),//Go to the enterFinalDetails.dart page, not this one.
-                      child: const Text('Enter Number Later'),
-                    ),*/
+                      onPressed: () async{
+                        bool result = await saveDescription();
+                        if(result){
+                          Get.to(() => const Home());
+                        } else{
+                          Get.snackbar("Error", "Failed to save description. Please try again.");
+                        }
+                      },
+                      child: const Text('Done with Setup'),
+                    ),
                   ]
                 ),
               ),
