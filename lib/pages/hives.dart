@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/models/app_user.dart';
+import 'package:flutter_app/models/user_models/app_user.dart';
 import 'package:flutter_app/pages/calendar.dart';
 import 'package:flutter_app/pages/create_hive.dart';
 import 'package:flutter_app/pages/google_classroom.dart';

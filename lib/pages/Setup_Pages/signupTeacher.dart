@@ -3,7 +3,7 @@
 import 'package:fancy_password_field/fancy_password_field.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_app/models/app_user.dart';
+import 'package:flutter_app/models/user_models/app_user.dart';
 import 'package:flutter_app/pages/Setup_Pages/login_page.dart';
 import 'package:flutter_app/pages/Setup_Pages/role.dart';
 import 'package:flutter_app/providers/auth_provider.dart';
