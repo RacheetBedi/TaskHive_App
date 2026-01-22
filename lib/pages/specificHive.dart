@@ -1,7 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_app/models/app_user.dart';
+import 'package:flutter_app/models/user_models/app_user.dart';
 import 'package:flutter_app/pages/calendar.dart';
 import 'package:flutter_app/pages/google_classroom.dart';
 import 'package:flutter_app/pages/hives.dart';

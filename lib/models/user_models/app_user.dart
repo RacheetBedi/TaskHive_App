@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 
 class AppUser{
   String uid;
@@ -18,6 +19,7 @@ class AppUser{
   bool hasCompletedSetup;
   String? description;
   String? school;
+  List<Map<String, dynamic>>? possessions;
 
   AppUser({
     required this.uid,
@@ -37,6 +39,7 @@ class AppUser{
     this.country_code,
     this.userName,
     this.school,
+    this.possessions
   });
 
   factory AppUser.fromFirebaseUser(User user,{
@@ -52,6 +55,7 @@ class AppUser{
     String firstName = "",
     String lastName = "",
     String school = "",
+    List<Map<String, dynamic>>? possessions,
     }){
     return AppUser(
       uid: user.uid,
@@ -70,6 +74,7 @@ class AppUser{
       userName: userName,
       description: description,
       school: school,
+      possessions: possessions,
     );
   }
 
