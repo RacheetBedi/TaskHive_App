@@ -1,3 +1,4 @@
+import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/models/user_models/app_user.dart';
 import 'package:flutter_app/pages/calendar.dart';
@@ -30,6 +31,7 @@ class Home extends ConsumerStatefulWidget {
 
 class _HomeState extends ConsumerState<Home> {
   bool _isUserInitialized = false;
+  GlobalKey<CurvedNavigationBarState> _bottomNavigationKey = GlobalKey();
 
    Future<bool> checkLoggedIn() async{
     final authState = ref.read(authProvider);
@@ -62,6 +64,7 @@ class _HomeState extends ConsumerState<Home> {
   }
 
   //Make the initializeUser code better, and maybe add it directly to build instead of addPostFrameCallBack
+
 
   @override
   void initState() {
@@ -174,7 +177,37 @@ class _HomeState extends ConsumerState<Home> {
         ),
       ),
 
-      bottomNavigationBar: BottomNavigationBar(
+      bottomNavigationBar: CurvedNavigationBar(
+          key: _bottomNavigationKey,
+          index: 0,
+          items: const <Widget>[
+            Icon(Icons.home_outlined, size: 30),
+            Icon(Icons.screen_search_desktop_outlined, size: 30),
+            Icon(Icons.groups_outlined, size: 30),
+            Icon(Icons.co_present_outlined, size: 30),
+            Icon(Icons.calendar_month_outlined, size: 30),
+          ],
+          color: const Color.fromARGB(255, 243, 139, 21),
+          buttonBackgroundColor: const Color.fromARGB(255, 230, 123, 96),
+          backgroundColor: const Color.fromARGB(186, 255, 201, 92),
+          animationCurve: Curves.easeInOut,
+          animationDuration: const Duration(milliseconds: 600),
+          onTap: (index) {
+            if (index == 1) {
+              Get.offAll(() => const Tracking());
+            }
+            else if (index == 2) {
+              Get.offAll(() => const Hives());
+            }
+            else if (index == 3) {
+              Get.offAll(() => const GoogleClassroom());
+            }
+            else if (index == 4) {
+              Get.offAll(() => const Calendar());
+            }
+          },
+          letIndexChange: (index) => true,
+        ),/*BottomNavigationBar(
         currentIndex: 0,
         onTap: (index) {
           if (index == 1) {
@@ -212,7 +245,7 @@ class _HomeState extends ConsumerState<Home> {
             label: 'Calendar',
           ),
         ],
-      ),
+      ),*/
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: ListView(

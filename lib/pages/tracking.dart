@@ -1,3 +1,4 @@
+import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/models/user_models/app_user.dart';
 import 'package:flutter_app/pages/calendar.dart';
@@ -24,10 +25,12 @@ class Tracking extends ConsumerStatefulWidget {
 }
 
 class _TrackingState extends ConsumerState<Tracking> {
+  late GlobalKey<CurvedNavigationBarState> _bottomNavigationKey;
 
   @override
   void initState() {
     super.initState();
+    _bottomNavigationKey = GlobalKey<CurvedNavigationBarState>();
   }
 
   @override
@@ -123,7 +126,53 @@ class _TrackingState extends ConsumerState<Tracking> {
         ),
       ),
 
-      bottomNavigationBar: BottomNavigationBar(
+      bottomNavigationBar: CurvedNavigationBar(
+          key: _bottomNavigationKey,
+          index: 1,
+          items: const <Widget>[
+            Icon(Icons.home_outlined, size: 30),
+            Icon(Icons.screen_search_desktop_outlined, size: 30),
+            Icon(Icons.groups_outlined, size: 30),
+            Icon(Icons.co_present_outlined, size: 30),
+            Icon(Icons.calendar_month_outlined, size: 30),
+          ],
+          color: const Color.fromARGB(255, 243, 139, 21),
+          buttonBackgroundColor: const Color.fromARGB(255, 230, 123, 96),
+          backgroundColor: const Color.fromARGB(186, 255, 201, 92),
+          animationCurve: Curves.easeInOut,
+          animationDuration: const Duration(milliseconds: 600),
+          onTap: (index) {
+            if (index == 0) {
+              Get.offAll(
+                () => const Home(),
+                duration: const Duration(milliseconds: 600),
+                transition: Transition.leftToRightWithFade
+              );
+            }
+            else if (index == 2) {
+              Get.offAll(
+                () => const Hives(),
+                duration: const Duration(milliseconds: 600),
+                transition: Transition.rightToLeftWithFade
+              );
+            }
+            else if (index == 3) {
+              Get.offAll(
+                () => const GoogleClassroom(),
+                duration: const Duration(milliseconds: 600),
+                transition: Transition.rightToLeftWithFade
+              );
+            }
+            else if (index == 4) {
+              Get.offAll(
+                () => const Calendar(),
+                duration: const Duration(milliseconds: 600),
+                transition: Transition.rightToLeftWithFade
+              );
+            }
+          },
+          letIndexChange: (index) => true,
+        ),/*BottomNavigationBar(
         currentIndex: 1,
         onTap: (index) {
           if (index == 0) {
@@ -161,7 +210,7 @@ class _TrackingState extends ConsumerState<Tracking> {
             label: 'Calendar',
           ),
         ],
-      ),
+      ),*/
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Container(
