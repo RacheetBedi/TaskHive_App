@@ -22,6 +22,8 @@ class _ForgotState extends ConsumerState<Forgot> {
   TextEditingController email = TextEditingController();
   TextEditingController phone = TextEditingController();
 
+  String _code = '+1';
+
   passwordReset()async{
     if(email.text.isEmpty && phone.text.isEmpty){
       Get.snackbar(
@@ -80,9 +82,7 @@ class _ForgotState extends ConsumerState<Forgot> {
       }
 
       final authNotifier = ref.read(authProvider.notifier);
-
-      //await FirebaseAuth.instance.signInWithPhoneNumber(phone.text.trim());
-      Get.to(() => VerifyPhone(phone.text.trim()));
+      Get.to(() => VerifyPhone('$_code${phone.text}'));
     }
   }
 
@@ -163,13 +163,35 @@ class _ForgotState extends ConsumerState<Forgot> {
                       ),
                     ),
                     const SizedBox(height: 15,),
-                    TextField(
-                      keyboardType: TextInputType.number,
-                      inputFormatters: [
-                        FilteringTextInputFormatter.digitsOnly,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Transform.scale(
+                          scale: 1,
+                          child: DropdownMenu<CountryCodeLabel>(
+                            width: MediaQuery.of(context).size.width * 0.25,
+                            initialSelection: CountryCodeLabel.america,
+                            onSelected: (CountryCodeLabel? countryCode) {
+                              setState(() {
+                                _code = countryCode?.label ?? "+1";
+                              });
+                            },
+                            dropdownMenuEntries: CountryCodeLabel.entries
+                          ),
+                        ),
+                        const SizedBox(width: 10,),
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width * 0.6,
+                          child: TextField(
+                            keyboardType: TextInputType.number,
+                            inputFormatters: [
+                              FilteringTextInputFormatter.digitsOnly,
+                            ],
+                            controller: phone,
+                            decoration: const InputDecoration(hintText: 'Sign in with phone number'),
+                          ),
+                        ),
                       ],
-                      controller: phone,
-                      decoration: const InputDecoration(hintText: 'Sign in with phone number'),
                     ),
                     const SizedBox(height: 10,),
                     const Text(
@@ -189,4 +211,27 @@ class _ForgotState extends ConsumerState<Forgot> {
       )
     );
   }
+}
+
+typedef CountryCodeEntry = DropdownMenuEntry<CountryCodeLabel>;
+
+enum CountryCodeLabel{
+  america('+1'),
+  unitedKingdom('+44'),
+  australia('+61'),
+  germany('+49'),
+  france('+33'),
+  italy('+39'),
+  netherlands('+31');
+
+  const CountryCodeLabel(this.label);
+  final String label;
+
+  static final List<DropdownMenuEntry<CountryCodeLabel>> entries =
+      CountryCodeLabel.values.map((countryCode) {
+    return DropdownMenuEntry<CountryCodeLabel>(
+      value: countryCode,
+      label: countryCode.label,
+    );
+  }).toList();
 }

@@ -22,7 +22,7 @@ class Enterphonenumber extends ConsumerStatefulWidget {
 
 class _EnterphonenumberState extends ConsumerState<Enterphonenumber> {
 
-  String _code = '1';
+  String _code = '+1';
 
   TextEditingController phone = TextEditingController();
 
