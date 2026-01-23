@@ -98,23 +98,19 @@ class UserRepository {
         if(lang != null) "lang": lang,
         if(logoPref != null) "logo_preference": logoPref,
         if(password != null) "password": password,
-        "public profile": {
-          "contact_info": {
-            if(country_code != null) "country_code": country_code,
-            if(email != null) "email_address": email,
-            if(phoneNumber != null) "phone_number": phoneNumber,
-          },
-          if(description != null) "description": description,
-          if(displayFirstName != null) "firstName": displayFirstName,
-          if(displayLastName != null) "lastName": displayLastName,
-          if(photoURL != null) "photo_URL": user.photoURL,
-        },
-        'uid': user.uid,
+        if(country_code != null) "public profile.contact_info.country_code": country_code,
+        if(email != null) "public profile.contact_info.email_address": email,
+        if(phoneNumber != null) "public profile.contact_info.phone_number": phoneNumber,
+        if(description != null) "public profile.description": description,
+        if(displayFirstName != null) "public profile.firstName": displayFirstName,
+        if(displayLastName != null) "public profile.lastName": displayLastName,
+        if(photoURL != null) "public profile.photo_URL": user.photoURL,
+        if(uid != null) 'uid': user.uid,
         if(userName != null) 'username': userName,
         if(school != null) 'school': school,
       };
 
-      await docRef.set(updateData, SetOptions(merge: true));
+      await docRef.update(updateData);
     }
   }
 

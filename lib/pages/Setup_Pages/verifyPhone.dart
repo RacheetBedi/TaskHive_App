@@ -83,10 +83,7 @@ class _VerifyPhoneState extends ConsumerState<VerifyPhone> {
     try {
       final userCredential = await FirebaseAuth.instance.signInWithCredential(phoneAuthCredential);
       if(userCredential.user != null){
-        AppUser appUser = AppUser.fromFirebaseUser(userCredential.user! , hasCompletedSetup: true);
-        final authState = ref.read(authProvider);
-        // Add a set appUser to the current user for riverpod method in authProvider.
-        Get.offAll(() => const Home());
+        await loginSuccessPopup();
       }
     } on FirebaseAuthException catch (e) {
       Get.snackbar(
@@ -172,27 +169,13 @@ class _VerifyPhoneState extends ConsumerState<VerifyPhone> {
     final user = FirebaseAuth.instance.currentUser;
 
     if(user == null){
-      try{
-        Get.snackbar('Here', 'yea');
-        final result = await FirebaseAuth.instance.signInWithCredential(credential);
-        await loginSuccessPopup();
-      
-      } on FirebaseAuthException catch (e) {
-        Get.snackbar(
-          "ERROR",
-          "SMS Code Verification Error: ${e.message}",
-          duration: const Duration(seconds: 10),
-        );  
-        return;
-      }
+      signInWithPhone(credential);
     }
     else{
       try{
         final authState = ref.read(authProvider);
         await user.linkWithCredential(credential);
-        //authState.asData?.value?.phoneNumber = widget.number as int?;
-        //await UserRepository(ref).updateDocumentData(phoneNumber: widget.number as int?);
-        //Figure out proper formatting later (with country code and everything)
+        await UserRepository(ref).updateDocumentData(phoneNumber: int.parse(widget.number));
         await linkSuccessPopup();
         Get.snackbar('Success', 'Phone number added successfully.');
       } on FirebaseAuthException catch (e) {
@@ -210,7 +193,7 @@ class _VerifyPhoneState extends ConsumerState<VerifyPhone> {
     await FirebaseAuth.instance.verifyPhoneNumber(
       phoneNumber: phoneNumber,
       timeout: const Duration(seconds: 120),
-      verificationCompleted: (PhoneAuthCredential credential) async {
+      verificationCompleted: (PhoneAuthCredential credential) async { //For android phones only (on the web emulator a code must manually be entered)
         if (user == null) throw Exception ('No user is currently signed in.');
         try{
           await user.linkWithCredential(credential);
@@ -247,7 +230,7 @@ class _VerifyPhoneState extends ConsumerState<VerifyPhone> {
   }
 
   timeandSend() {
-    linkPhoneNumber('+${widget.number}');
+    linkPhoneNumber(widget.number);
     _startTimer();
   }
 
@@ -309,8 +292,8 @@ class _VerifyPhoneState extends ConsumerState<VerifyPhone> {
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if(!_hasSent){
-        Get.snackbar('Phone number provided:', '+${widget.number}');
-        linkPhoneNumber('+${widget.number}');
+        Get.snackbar('Phone number provided:', widget.number);
+        linkPhoneNumber(widget.number);
         _hasSent = true;
       }
     });

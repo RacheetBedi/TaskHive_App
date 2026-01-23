@@ -1,5 +1,6 @@
 import 'dart:collection';
 
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/pages/calendar.dart';
 import 'package:flutter_app/pages/google_classroom.dart';
@@ -38,6 +39,7 @@ class _ProfileState extends ConsumerState<Profile> {
   TextEditingController lastName = TextEditingController();
   TextEditingController description = TextEditingController();
 
+
   bool _isEmailEnabled = false;
 
   bool _firstNameChanged = false;
@@ -60,6 +62,7 @@ class _ProfileState extends ConsumerState<Profile> {
   }
 
   File? _pickedImage;
+  File? _setImage;
   bool _isProfileEditEnabled = false;
 
     populate() async{
@@ -118,6 +121,56 @@ class _ProfileState extends ConsumerState<Profile> {
     return isGoogleSignIn;
   }
 
+  void _showImagePopup(){
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Confirm Profile Image'),
+        content: CircleAvatar(
+          radius: 50,
+          backgroundImage: _pickedImage != null ? FileImage(_pickedImage!) : null,
+          child: _pickedImage == null ? const Icon(Icons.person) : null,
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: (){
+              //_uploadImage
+              Navigator.of(context).pop();
+            }, 
+            child: const Text('Upload'),
+          )
+        ],
+      )
+    );
+  }
+
+  Future<void> _uploadImage() async{
+    if(_pickedImage == null) return;
+    final currentUser = UserRepository(ref).currentAppUser;
+
+    try{
+      String fileName = 'profile/${currentUser?.uid}/${DateTime.now()}.jpg';
+      Reference storageRef = FirebaseStorage.instance.ref().child('profile_images/$fileName');
+      UploadTask uploadTask = storageRef.putFile(_pickedImage!);
+      TaskSnapshot snapshot = await uploadTask;
+      String downloadURL = await snapshot.ref.getDownloadURL();
+
+      UserRepository(ref).updateDocumentData(photoURL: downloadURL);
+
+      setState(() {
+        _setImage = _pickedImage;
+      });
+
+      Get.snackbar('Added image', 'Profile picture updated successfully.');
+    } catch (e){
+      Get.snackbar("Error", "Failed to upload image: $e");
+    } 
+  }
+
   Future<void> _pickImageFromCamera() async {
     final ImagePicker _picker = ImagePicker();
     final XFile? pickedFile = await _picker.pickImage(source: ImageSource.camera);
@@ -126,6 +179,7 @@ class _ProfileState extends ConsumerState<Profile> {
       setState(() {
         _pickedImage = File(pickedFile.path); 
       });
+      _showImagePopup();
     }
   }
 
@@ -465,7 +519,7 @@ class _ProfileState extends ConsumerState<Profile> {
                       ),
                       GestureDetector(
                         onTap: _pickImageFromCamera,
-                        child: _pickedImage == null ? Image.asset("assets/images/TempUserPFP.png") : Image.asset(_pickedImage!.path)
+                        child: _setImage == null ? Image.asset("assets/images/TempUserPFP.png") : Image.file(_setImage!),
                       ),
                     ],
                   ),
