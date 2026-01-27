@@ -1,6 +1,6 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_app/pages/calendar_body.dart';  // You'll create these
+import 'package:flutter_app/pages/calendar_body.dart';
 import 'package:flutter_app/pages/google_classroom_body.dart';
 import 'package:flutter_app/pages/hives_body.dart';
 import 'package:flutter_app/pages/home_body.dart';
@@ -12,14 +12,14 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/get_navigation.dart';
 
 class MainPage extends StatefulWidget {
-  const MainPage({super.key});
-
+  int CurIndex = 0;
+  MainPage({super.key, required int CurIndex});
   @override
   State<MainPage> createState() => _MainPageState();
 }
 
 class _MainPageState extends State<MainPage> {
-  int _currentIndex = 0;
+  late int _currentIndex;
   final PageController _pageController = PageController();
   late GlobalKey<CurvedNavigationBarState> _bottomNavigationKey;
 
@@ -28,6 +28,7 @@ class _MainPageState extends State<MainPage> {
   @override
   void initState() {
     super.initState();
+    _currentIndex = widget.CurIndex;
     _bottomNavigationKey = GlobalKey<CurvedNavigationBarState>();
   }
 
@@ -131,11 +132,7 @@ class _MainPageState extends State<MainPage> {
       ),
       body: PageView(
         controller: _pageController,
-        onPageChanged: (index) {
-          setState(() {
-            _currentIndex = index;
-          });
-        },
+        physics: const NeverScrollableScrollPhysics(),
         children: [
           HomeBody(onNavigate: _onNavigate),
           TrackingBody(onNavigate: _onNavigate),
@@ -156,7 +153,7 @@ class _MainPageState extends State<MainPage> {
         ],
         color: const Color.fromARGB(255, 243, 139, 21),
         buttonBackgroundColor: const Color.fromARGB(255, 230, 123, 96),
-        backgroundColor: const Color.fromARGB(186, 255, 201, 92),
+        backgroundColor: const Color(0xFFFFDD97),
         animationCurve: Curves.easeInOut,
         animationDuration: const Duration(milliseconds: 600),
         onTap: (index) {

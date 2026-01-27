@@ -1,16 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/pages/calendar.dart';
-import 'package:flutter_app/pages/google_classroom.dart';
-import 'package:flutter_app/pages/hives.dart';
-import 'package:flutter_app/pages/home.dart';
 import 'package:flutter_app/pages/Setup_Pages/login_page.dart';
+import 'package:flutter_app/pages/main_page.dart';
 import 'package:flutter_app/pages/recent_changes.dart';
 import 'package:flutter_app/pages/Main_Settings_Pages/settings.dart';
 import 'package:flutter_app/pages/Setup_Pages/signupStudent.dart';
 import 'package:flutter_app/pages/Setup_Pages/signupTeacher.dart';
 import 'package:flutter_app/pages/specificHive.dart';
 import 'package:flutter_app/pages/summary.dart';
-import 'package:flutter_app/pages/tracking.dart';
 import 'package:flutter_app/providers/auth_provider.dart';
 import 'package:flutter_app/utilities/userRepository.dart';
 import 'package:flutter_app/widgets/hive_widget.dart';
@@ -132,19 +128,19 @@ class _CreateHiveState extends ConsumerState<CreateHive> {
         currentIndex: 2,
         onTap: (index) {
           if (index == 0) {
-            Get.offAll(() => const Home());
+            Get.offAll(() => MainPage(CurIndex: 0));
           }
           else if (index == 1) {
-            Get.offAll(() => const Tracking());
+            Get.offAll(() => MainPage(CurIndex: 1));
           }
           else if (index == 2) {
-            Get.offAll(() => const Hives());
+            Get.offAll(() => MainPage(CurIndex: 2));
           }
           else if (index == 3) {
-            Get.offAll(() => const GoogleClassroom());
+            Get.offAll(() => MainPage(CurIndex: 3));
           }
           else if (index == 4) {
-            Get.offAll(() => const Calendar());
+            Get.offAll(() => MainPage(CurIndex: 4));
           }
         },
         items: const [

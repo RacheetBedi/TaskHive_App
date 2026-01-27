@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/pages/google_classroom.dart';
+import 'package:flutter_app/pages/main_page.dart';
 import 'package:get/get.dart';
 import 'package:flutter_app/pages/nectar_center.dart';
 
@@ -15,7 +15,7 @@ class _GoogleClassroomWidgetState extends State<GoogleClassroomWidget> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Get.to(() => const GoogleClassroom());
+        Get.to(() => MainPage(CurIndex: 3));
       },
       child: Container(
         width: 300.0,

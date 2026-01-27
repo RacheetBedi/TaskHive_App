@@ -6,10 +6,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_app/models/user_models/app_user.dart';
 import 'package:flutter_app/pages/Forgot_Pages/forgot.dart';
 import 'package:flutter_app/pages/Setup_Pages/enterFinalDetails.dart';
-import 'package:flutter_app/pages/home.dart';
-import 'package:flutter_app/pages/homepage.dart';
 import 'package:flutter_app/pages/Setup_Pages/login_page.dart';
 import 'package:flutter_app/pages/Setup_Pages/signupStudent.dart';
+import 'package:flutter_app/pages/main_page.dart';
 import 'package:flutter_app/providers/auth_provider.dart';
 import 'package:flutter_app/routing/wrapper.dart';
 import 'package:flutter_app/utilities/userRepository.dart';
@@ -123,7 +122,7 @@ class _VerifyPhoneState extends ConsumerState<VerifyPhone> {
       Get.to(() => const EnterfinalDetails());
     }
     else{
-      Get.to(() => const Home());
+      Get.to(() => MainPage(CurIndex: 0));
     }
   }
 
@@ -147,7 +146,7 @@ class _VerifyPhoneState extends ConsumerState<VerifyPhone> {
     );
 
     if(result == true){
-      Get.to(() => const Home());
+      Get.to(() => MainPage(CurIndex: 0));
     }
   }
 
@@ -197,7 +196,7 @@ class _VerifyPhoneState extends ConsumerState<VerifyPhone> {
         if (user == null) throw Exception ('No user is currently signed in.');
         try{
           await user.linkWithCredential(credential);
-          Get.offAll(() => const Home());
+          Get.offAll(() => MainPage(CurIndex: 0));
         } on FirebaseAuthException catch (e) {
           Get.snackbar(
             "ERROR",

@@ -4,8 +4,9 @@ import 'package:flutter/services.dart';
 import 'package:flutter_app/pages/Setup_Pages/final_steps_question.dart';
 import 'package:flutter_app/pages/Setup_Pages/verifyPhone.dart';
 import 'package:flutter_app/pages/Setup_Pages/login_page.dart';
-import 'package:flutter_app/pages/home.dart';
+import 'package:flutter_app/pages/home_body.dart';
 import 'package:flutter_app/pages/Main_Settings_Pages/settings.dart';
+import 'package:flutter_app/pages/main_page.dart';
 import 'package:flutter_app/providers/auth_provider.dart';
 import 'package:flutter_app/routing/wrapper.dart';
 import 'package:flutter_app/utilities/userRepository.dart';
@@ -141,7 +142,7 @@ class _EnterfinalDetailsState extends ConsumerState<EnterfinalDetails> {
                       onPressed: () async{
                         bool result = await saveDescription();
                         if(result){
-                          Get.to(() => const Home());
+                          Get.to(() => MainPage(CurIndex: 0));
                         } else{
                           Get.snackbar("Error", "Failed to save description. Please try again.");
                         }
