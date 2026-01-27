@@ -5,10 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_app/models/user_models/app_user.dart';
 import 'package:flutter_app/pages/Forgot_Pages/forgot.dart';
-import 'package:flutter_app/pages/home.dart';
-import 'package:flutter_app/pages/homepage.dart';
+import 'package:flutter_app/pages/home_body.dart';
 import 'package:flutter_app/pages/Setup_Pages/role.dart';
 import 'package:flutter_app/pages/Setup_Pages/signupStudent.dart';
+import 'package:flutter_app/pages/main_page.dart';
 import 'package:flutter_app/providers/auth_provider.dart';
 import 'package:flutter_app/utilities/userRepository.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -114,7 +114,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
           if(user.hasCompletedSetup == false){
             return const Role();
           }
-          return const Home(fromSignIn: true,);
+          return MainPage(CurIndex: 0 /*fromSignIn: true,*/);
         }
 
         return _buildLoginScreen();

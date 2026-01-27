@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/pages/calendar.dart';
-import 'package:flutter_app/pages/google_classroom.dart';
-import 'package:flutter_app/pages/hives.dart';
-import 'package:flutter_app/pages/home.dart';
 import 'package:flutter_app/pages/Main_Settings_Pages/settings.dart';
+import 'package:flutter_app/pages/main_page.dart';
 import 'package:flutter_app/pages/summary.dart';
-import 'package:flutter_app/pages/tracking.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/get_navigation.dart';
@@ -117,19 +113,19 @@ class _RecentChangesState extends ConsumerState<RecentChanges> {
       bottomNavigationBar: BottomNavigationBar(
         onTap: (index) {
           if (index == 0) {
-            Get.offAll(() => const Home());
+            Get.offAll(() => MainPage(CurIndex: 0));
           }
           else if (index == 1) {
-            Get.offAll(() => const Tracking());
+            Get.offAll(() => MainPage(CurIndex: 1));
           }
           else if (index == 2) {
-            Get.offAll(() => const Hives());
+            Get.offAll(() => MainPage(CurIndex: 2));
           }
           else if (index == 3) {
-            Get.offAll(() => const GoogleClassroom());
+            Get.offAll(() => MainPage(CurIndex: 3));
           }
           else if (index == 4) {
-            Get.offAll(() => const Calendar());
+            Get.offAll(() => MainPage(CurIndex: 4));
           }
         },
         items: const [

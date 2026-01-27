@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/pages/home.dart';
+import 'package:flutter_app/pages/home_body.dart';
 import 'package:flutter_app/pages/Setup_Pages/login_page.dart';
 import 'package:flutter_app/pages/Setup_Pages/signupStudent.dart';
 import 'package:flutter_app/pages/Setup_Pages/signupTeacher.dart';
+import 'package:flutter_app/pages/main_page.dart';
 import 'package:flutter_app/providers/auth_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get_core/src/get_main.dart';
@@ -178,7 +179,7 @@ class _RoleState extends ConsumerState<Role> {
                     
                     //Remove After we can actually get to the home page by logging in.
                     ElevatedButton(
-                      onPressed: ()=> Get.to(() => Home()),
+                      onPressed: ()=> Get.to(() => MainPage(CurIndex: 0)),
                       child: const Text("Temp: To Home"),
                     )
                   ]

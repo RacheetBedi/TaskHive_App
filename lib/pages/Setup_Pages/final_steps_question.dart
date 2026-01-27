@@ -6,10 +6,10 @@ import 'package:flutter_app/models/user_models/app_user.dart';
 import 'package:flutter_app/pages/Forgot_Pages/forgot.dart';
 import 'package:flutter_app/pages/Setup_Pages/enterPhoneNumber.dart';
 import 'package:flutter_app/pages/Setup_Pages/verifyPhone.dart';
-import 'package:flutter_app/pages/home.dart';
-import 'package:flutter_app/pages/homepage.dart';
+import 'package:flutter_app/pages/home_body.dart';
 import 'package:flutter_app/pages/Setup_Pages/login_page.dart';
 import 'package:flutter_app/pages/Setup_Pages/signupStudent.dart';
+import 'package:flutter_app/pages/main_page.dart';
 import 'package:flutter_app/providers/auth_provider.dart';
 import 'package:flutter_app/routing/wrapper.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -152,7 +152,7 @@ class _FinalStepsQuestionState extends ConsumerState<FinalStepsQuestion> {
                             SizedBox(height: 10),
                             ElevatedButton(
                               onPressed: () {
-                                Get.to(() => Home(fromSignIn: true,));
+                                Get.to(() => MainPage(CurIndex: 0 /*fromSignIn: true,*/));
                               },
                               child: const Text('No'),
                             ),
