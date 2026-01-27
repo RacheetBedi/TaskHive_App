@@ -5,7 +5,7 @@ import 'package:flutter_app/pages/hives.dart';
 import 'package:flutter_app/pages/home.dart';
 import 'package:flutter_app/pages/Setup_Pages/login_page.dart';
 import 'package:flutter_app/pages/recent_changes.dart';
-import 'package:flutter_app/pages/settings.dart';
+import 'package:flutter_app/pages/Main_Settings_Pages/settings.dart';
 import 'package:flutter_app/pages/Setup_Pages/signupStudent.dart';
 import 'package:flutter_app/pages/Setup_Pages/signupTeacher.dart';
 import 'package:flutter_app/pages/summary.dart';

@@ -4,7 +4,7 @@ import 'package:flutter_app/pages/google_classroom.dart';
 import 'package:flutter_app/pages/hives.dart';
 import 'package:flutter_app/pages/home.dart';
 import 'package:flutter_app/pages/recent_changes.dart';
-import 'package:flutter_app/pages/settings.dart';
+import 'package:flutter_app/pages/Main_Settings_Pages/settings.dart';
 import 'package:flutter_app/pages/tracking.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get_core/src/get_main.dart';

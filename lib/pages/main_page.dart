@@ -5,7 +5,7 @@ import 'package:flutter_app/pages/google_classroom_body.dart';
 import 'package:flutter_app/pages/hives_body.dart';
 import 'package:flutter_app/pages/home_body.dart';
 import 'package:flutter_app/pages/recent_changes.dart';
-import 'package:flutter_app/pages/settings.dart';
+import 'package:flutter_app/pages/Main_Settings_Pages/settings.dart';
 import 'package:flutter_app/pages/summary.dart';
 import 'package:flutter_app/pages/tracking_body.dart';
 import 'package:get/get_core/src/get_main.dart';

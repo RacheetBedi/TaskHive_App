@@ -5,7 +5,7 @@ import 'package:flutter_app/pages/Setup_Pages/final_steps_question.dart';
 import 'package:flutter_app/pages/Setup_Pages/verifyPhone.dart';
 import 'package:flutter_app/pages/Setup_Pages/login_page.dart';
 import 'package:flutter_app/pages/home.dart';
-import 'package:flutter_app/pages/settings.dart';
+import 'package:flutter_app/pages/Main_Settings_Pages/settings.dart';
 import 'package:flutter_app/providers/auth_provider.dart';
 import 'package:flutter_app/routing/wrapper.dart';
 import 'package:flutter_app/utilities/userRepository.dart';

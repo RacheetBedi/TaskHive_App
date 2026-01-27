@@ -7,7 +7,7 @@ import 'package:flutter_app/pages/google_classroom.dart';
 import 'package:flutter_app/pages/hives.dart';
 import 'package:flutter_app/pages/Setup_Pages/login_page.dart';
 import 'package:flutter_app/pages/recent_changes.dart';
-import 'package:flutter_app/pages/settings.dart';
+import 'package:flutter_app/pages/Main_Settings_Pages/settings.dart';
 import 'package:flutter_app/pages/Setup_Pages/signupStudent.dart';
 import 'package:flutter_app/pages/Setup_Pages/signupTeacher.dart';
 import 'package:flutter_app/pages/home.dart';
@@ -138,7 +138,7 @@ class _ProfileState extends ConsumerState<Profile> {
           ),
           TextButton(
             onPressed: (){
-              //_uploadImage
+              _uploadImage();
               Navigator.of(context).pop();
             }, 
             child: const Text('Upload'),
@@ -155,7 +155,9 @@ class _ProfileState extends ConsumerState<Profile> {
     try{
       String fileName = 'profile/${currentUser?.uid}/${DateTime.now()}.jpg';
       Reference storageRef = FirebaseStorage.instance.ref().child('profile_images/$fileName');
-      UploadTask uploadTask = storageRef.putFile(_pickedImage!);
+      //UploadTask uploadTask = storageRef.putFile(_pickedImage!);
+      final bytes = await _pickedImage!.readAsBytes();
+      UploadTask uploadTask = storageRef.putData(bytes);
       TaskSnapshot snapshot = await uploadTask;
       String downloadURL = await snapshot.ref.getDownloadURL();
 

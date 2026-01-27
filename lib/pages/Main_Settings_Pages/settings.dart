@@ -8,7 +8,7 @@ import 'package:flutter_app/pages/calendar.dart';
 import 'package:flutter_app/pages/google_classroom.dart';
 import 'package:flutter_app/pages/hives.dart';
 import 'package:flutter_app/pages/Setup_Pages/login_page.dart';
-import 'package:flutter_app/pages/profile.dart';
+import 'package:flutter_app/pages/Main_Settings_Pages/profile.dart';
 import 'package:flutter_app/pages/recent_changes.dart';
 import 'package:flutter_app/pages/Setup_Pages/signupStudent.dart';
 import 'package:flutter_app/pages/Setup_Pages/signupTeacher.dart';
