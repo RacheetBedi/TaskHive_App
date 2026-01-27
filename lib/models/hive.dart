@@ -44,6 +44,4 @@ class Hive {
     required this.theme_color,
     this.hiveImage,
   });
-
-
 }

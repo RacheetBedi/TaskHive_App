@@ -51,6 +51,11 @@ class _HomeBodyState extends ConsumerState<HomeBody> {
   @override
   void initState() {
     super.initState();
+    // WidgetsBinding.instance.addPostFrameCallback((_) async {
+    //   _isUserInitialized = true;
+    //   setState(() {});
+    //   initializeUser();
+    // });
     initializeUser();
   }
 
