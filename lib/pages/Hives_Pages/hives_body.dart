@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/enums/navigation_enum.dart';
 import 'package:flutter_app/pages/Hives_Pages/create_hive.dart';
 import 'package:flutter_app/pages/Hives_Pages/specificHive.dart';
 import 'package:flutter_app/widgets/hive_widget.dart';
@@ -7,7 +8,7 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/get_navigation.dart';
 
 class HivesBody extends StatefulWidget {
-  const HivesBody({super.key, required void Function(int index) onNavigate});
+  const HivesBody({super.key, required void Function(NavigationPage page) onNavigate});
 
   @override
   State<HivesBody> createState() => _HivesBodyState();

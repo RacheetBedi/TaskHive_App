@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/enums/navigation_enum.dart';
 
 class GoogleClassroomBody extends StatelessWidget {
-  const GoogleClassroomBody({super.key, required void Function(int index) onNavigate});
+  const GoogleClassroomBody({super.key, required void Function(NavigationPage page) onNavigate});
 
   @override
   Widget build(BuildContext context) {

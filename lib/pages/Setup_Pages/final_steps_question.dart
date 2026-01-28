@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_app/enums/navigation_enum.dart';
 import 'package:flutter_app/models/user_models/app_user.dart';
 import 'package:flutter_app/pages/Forgot_Pages/forgot.dart';
 import 'package:flutter_app/pages/Setup_Pages/enterPhoneNumber.dart';
@@ -152,7 +153,7 @@ class _FinalStepsQuestionState extends ConsumerState<FinalStepsQuestion> {
                             SizedBox(height: 10),
                             ElevatedButton(
                               onPressed: () {
-                                Get.to(() => MainPage(CurIndex: 0 /*fromSignIn: true,*/));
+                                Get.to(() => MainPage(initialPage: NavigationPage.home, /*fromSignIn: true,*/));
                               },
                               child: const Text('No'),
                             ),

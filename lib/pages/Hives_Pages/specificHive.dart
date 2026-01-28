@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:flutter_app/enums/navigation_enum.dart';
 import 'package:flutter_app/models/user_models/app_user.dart';
 import 'package:flutter_app/pages/Setup_Pages/login_page.dart';
 import 'package:flutter_app/pages/Home_Pages/main_page.dart';
@@ -71,7 +72,7 @@ class _SpecificHiveState extends ConsumerState<SpecificHive> {
                                 iconSize: 26,
                                 padding: const EdgeInsets.symmetric(horizontal: 6),
                                 onPressed: () {
-                                  Get.offAll(() => const RecentChanges());
+                                  Get.offAll(() => MainPage(initialPage: NavigationPage.recentChanges));
                                 },
                               ),
                               IconButton(
@@ -79,7 +80,7 @@ class _SpecificHiveState extends ConsumerState<SpecificHive> {
                                 iconSize: 26,
                                 padding: const EdgeInsets.symmetric(horizontal: 6),
                                 onPressed: () {
-                                  Get.offAll(() => const Summary());
+                                  Get.offAll(() => MainPage(initialPage: NavigationPage.summary));
                                 },
                               ),
                               IconButton(
@@ -87,7 +88,7 @@ class _SpecificHiveState extends ConsumerState<SpecificHive> {
                                 iconSize: 26,
                                 padding: const EdgeInsets.symmetric(horizontal: 6),
                                 onPressed: () {
-                                  Get.offAll(() => const Settings());
+                                  Get.offAll(() => MainPage(initialPage: NavigationPage.settings));
                                 },
                               ),
                             ],
@@ -139,21 +140,14 @@ class _SpecificHiveState extends ConsumerState<SpecificHive> {
 
       bottomNavigationBar: BottomNavigationBar(
         onTap: (index) {
-          if (index == 0) {
-            Get.offAll(() => MainPage(CurIndex: 0));
-          }
-          else if (index == 1) {
-            Get.offAll(() => MainPage(CurIndex: 1));
-          }
-          else if (index == 2) {
-            Get.offAll(() => MainPage(CurIndex: 2));
-          }
-          else if (index == 3) {
-            Get.offAll(() => MainPage(CurIndex: 3));
-          }
-          else if (index == 4) {
-            Get.offAll(() => MainPage(CurIndex: 4));
-          }
+          final pages = [
+            NavigationPage.home,
+            NavigationPage.tracking,
+            NavigationPage.hives,
+            NavigationPage.classroom,
+            NavigationPage.calendar,
+          ];
+          Get.offAll(() => MainPage(initialPage: pages[index]));
         },
         items: const [
           BottomNavigationBarItem(

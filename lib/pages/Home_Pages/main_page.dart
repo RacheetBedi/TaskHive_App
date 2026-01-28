@@ -1,5 +1,6 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_app/enums/navigation_enum.dart';
 import 'package:flutter_app/pages/Calendar_Pages/calendar_body.dart';
 import 'package:flutter_app/pages/Google_Classrom_Pages/google_classroom_body.dart';
 import 'package:flutter_app/pages/Hives_Pages/hives_body.dart';
@@ -12,30 +13,37 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/get_navigation.dart';
 
 class MainPage extends StatefulWidget {
-  int CurIndex = 0;
-  MainPage({super.key, required int CurIndex});
+  final NavigationPage initialPage;
+  MainPage({super.key, this.initialPage = NavigationPage.home});
   @override
   State<MainPage> createState() => _MainPageState();
 }
 
 class _MainPageState extends State<MainPage> {
-  late int _currentIndex;
+  late NavigationPage _currentPage;
   final PageController _pageController = PageController();
   late GlobalKey<CurvedNavigationBarState> _bottomNavigationKey;
-
-  final List<String> _titles = ["Home", "Tracking", "Hives", "Classroom", "Calendar"];
 
   @override
   void initState() {
     super.initState();
-    _currentIndex = widget.CurIndex;
+    _currentPage = widget.initialPage;
     _bottomNavigationKey = GlobalKey<CurvedNavigationBarState>();
+    if (_currentPage.isMainPage) {
+      _pageController.jumpToPage(_currentPage.mainTabIndex);
+    }
   }
 
-  void _onNavigate(int index) {
-    _pageController.animateToPage(index, duration: const Duration(milliseconds: 600), curve: Curves.easeInOut);
+  void _onNavigate(NavigationPage page) {
+    if (page.isMainPage) {
+      _pageController.animateToPage(
+        page.mainTabIndex,
+        duration: const Duration(milliseconds: 600),
+        curve: Curves.easeInOut,
+      );
+    }
     setState(() {
-      _currentIndex = index;
+      _currentPage = page;
     });
   }
 
@@ -74,27 +82,42 @@ class _MainPageState extends State<MainPage> {
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               IconButton(
-                                icon: const Icon(Icons.history_outlined, color: Colors.red),
+                                icon: Icon(
+                                  Icons.history_outlined,
+                                  color: _currentPage == NavigationPage.recentChanges
+                                      ? Colors.black
+                                      : Colors.red,
+                                ),
                                 iconSize: 26,
                                 padding: const EdgeInsets.symmetric(horizontal: 6),
                                 onPressed: () {
-                                  Get.to(() => const RecentChanges());
+                                  Get.to(() => MainPage(initialPage: NavigationPage.recentChanges));
                                 },
                               ),
                               IconButton(
-                                icon: const Icon(Icons.analytics_outlined, color: Colors.red),
+                                icon: Icon(
+                                  Icons.analytics_outlined,
+                                  color: _currentPage == NavigationPage.summary
+                                      ? Colors.black
+                                      : Colors.red,
+                                ),
                                 iconSize: 26,
                                 padding: const EdgeInsets.symmetric(horizontal: 6),
                                 onPressed: () {
-                                  Get.to(() => const Summary());
+                                  Get.to(() => MainPage(initialPage: NavigationPage.summary));
                                 },
                               ),
                               IconButton(
-                                icon: const Icon(Icons.settings_outlined, color: Colors.red),
+                                icon: Icon(
+                                  Icons.settings_outlined,
+                                  color: _currentPage == NavigationPage.settings
+                                      ? Colors.black
+                                      : Colors.red,
+                                ),
                                 iconSize: 26,
                                 padding: const EdgeInsets.symmetric(horizontal: 6),
                                 onPressed: () {
-                                  Get.to(() => const Settings());
+                                  Get.to(() => MainPage(initialPage: NavigationPage.settings));
                                 },
                               ),
                             ],
@@ -110,7 +133,7 @@ class _MainPageState extends State<MainPage> {
                   right: 0,
                   child: Center(
                     child: Text(
-                      _titles[_currentIndex],
+                      _currentPage.title,
                       textHeightBehavior: const TextHeightBehavior(
                         applyHeightToFirstAscent: false,
                         applyHeightToLastDescent: false,
@@ -143,7 +166,7 @@ class _MainPageState extends State<MainPage> {
       ),
       bottomNavigationBar: CurvedNavigationBar(
         key: _bottomNavigationKey,
-        index: _currentIndex,
+        index: _currentPage.mainTabIndex,
         items: const <Widget>[
           Icon(Icons.home_outlined, size: 30),
           Icon(Icons.screen_search_desktop_outlined, size: 30),
@@ -157,10 +180,14 @@ class _MainPageState extends State<MainPage> {
         animationCurve: Curves.easeInOut,
         animationDuration: const Duration(milliseconds: 600),
         onTap: (index) {
-          _pageController.animateToPage(index, duration: const Duration(milliseconds: 600), curve: Curves.easeInOut);
-          setState(() {
-            _currentIndex = index;
-          });
+          final pages = [
+            NavigationPage.home,
+            NavigationPage.tracking,
+            NavigationPage.hives,
+            NavigationPage.classroom,
+            NavigationPage.calendar,
+          ];
+          _onNavigate(pages[index]);
         },
         letIndexChange: (index) => true,
       ),

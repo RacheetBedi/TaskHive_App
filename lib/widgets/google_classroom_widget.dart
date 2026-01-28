@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/enums/navigation_enum.dart';
 import 'package:flutter_app/pages/Home_Pages/main_page.dart';
 import 'package:get/get.dart';
-import 'package:flutter_app/pages/Nectar_Center_Pages/nectar_center.dart';
 
 class GoogleClassroomWidget extends StatefulWidget {
   const GoogleClassroomWidget({super.key});
@@ -15,7 +15,7 @@ class _GoogleClassroomWidgetState extends State<GoogleClassroomWidget> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Get.to(() => MainPage(CurIndex: 3));
+        Get.to(() => MainPage(initialPage: NavigationPage.classroom));
       },
       child: Container(
         width: 300.0,

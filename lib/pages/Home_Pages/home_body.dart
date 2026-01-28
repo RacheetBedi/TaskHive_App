@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/enums/navigation_enum.dart';
 import 'package:flutter_app/models/user_models/app_user.dart';
 import 'package:flutter_app/providers/auth_provider.dart';
 import 'package:flutter_app/utilities/userRepository.dart';
@@ -11,7 +12,7 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/get_navigation.dart';
 
 class HomeBody extends ConsumerStatefulWidget {
-  final Function(int) onNavigate;
+  final Function(NavigationPage) onNavigate;
   const HomeBody({super.key, required this.onNavigate});
 
   @override
@@ -80,13 +81,13 @@ class _HomeBodyState extends ConsumerState<HomeBody> {
           const GoogleClassroomWidget(),
           const SizedBox(height: 20),
           ElevatedButton(
-            onPressed: () => widget.onNavigate(2),
+            onPressed: () => widget.onNavigate(NavigationPage.hives),
             style: ElevatedButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100000000))),
             child: const Row(mainAxisAlignment: MainAxisAlignment.center, children: [Icon(Icons.groups, size: 30, color: Color(0xFFFF0000)), SizedBox(width: 10), Text("My Hives", style: TextStyle(fontFamily: 'Jomhuria', fontSize: 40, color: Color(0xFFFF0000)))]),
           ),
           const SizedBox(height: 20),
           ElevatedButton(
-            onPressed: () => widget.onNavigate(1),
+            onPressed: () => widget.onNavigate(NavigationPage.tracking),
             style: ElevatedButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100000000))),
             child: const Row(mainAxisAlignment: MainAxisAlignment.center, children: [Icon(Icons.track_changes, size: 30, color: Color(0xFFFF7F6E)), SizedBox(width: 10), Text("Assignment Progress", style: TextStyle(fontFamily: 'Jomhuria', fontSize: 40, color: Color(0xFFFF7F6E)))]),
           ),
