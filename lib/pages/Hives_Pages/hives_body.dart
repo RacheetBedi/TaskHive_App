@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/pages/create_hive.dart';
-import 'package:flutter_app/pages/specificHive.dart';
+import 'package:flutter_app/pages/Hives_Pages/create_hive.dart';
+import 'package:flutter_app/pages/Hives_Pages/specificHive.dart';
 import 'package:flutter_app/widgets/hive_widget.dart';
 import 'package:flutter_app/widgets/nectar_center_points_widget.dart';
 import 'package:get/get_core/src/get_main.dart';

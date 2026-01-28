@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:flutter_app/pages/nectar_center.dart';
+import 'package:flutter_app/pages/Nectar_Center_Pages/nectar_center.dart';
 
 class NectarCenterPointsWidget extends StatefulWidget {
   const NectarCenterPointsWidget({super.key});

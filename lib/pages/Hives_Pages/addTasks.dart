@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/models/hive.dart';
-import 'package:flutter_app/pages/main_page.dart';
-import 'package:flutter_app/pages/recent_changes.dart';
+import 'package:flutter_app/models/group_models/hive.dart';
+import 'package:flutter_app/pages/Home_Pages/main_page.dart';
+import 'package:flutter_app/pages/Summaries_Pages/recent_changes.dart';
 import 'package:flutter_app/pages/Main_Settings_Pages/settings.dart';
-import 'package:flutter_app/pages/summary.dart';
+import 'package:flutter_app/pages/Summaries_Pages/summary.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/get_navigation.dart';

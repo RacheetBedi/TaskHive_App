@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/pages/recent_changes.dart';
+import 'package:flutter_app/pages/Summaries_Pages/recent_changes.dart';
 import 'package:get/get.dart';
-import 'package:flutter_app/pages/nectar_center.dart';
+import 'package:flutter_app/pages/Nectar_Center_Pages/nectar_center.dart';
 
 class RecentUpdatesWidget extends StatefulWidget {
   const RecentUpdatesWidget({super.key});

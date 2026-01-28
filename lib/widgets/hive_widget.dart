@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/pages/specificHive.dart';
+import 'package:flutter_app/pages/Hives_Pages/specificHive.dart';
 import 'package:get/get.dart';
-import 'package:flutter_app/pages/nectar_center.dart';
+import 'package:flutter_app/pages/Nectar_Center_Pages/nectar_center.dart';
 
 class HiveWidget extends StatefulWidget {
   final Color hiveColor;

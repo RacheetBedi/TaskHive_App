@@ -1,22 +1,42 @@
+import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_app/pages/Calendar_Pages/calendar_body.dart';
+import 'package:flutter_app/pages/Google_Classrom_Pages/google_classroom_body.dart';
+import 'package:flutter_app/pages/Hives_Pages/hives_body.dart';
+import 'package:flutter_app/pages/Home_Pages/home_body.dart';
+import 'package:flutter_app/pages/Summaries_Pages/recent_changes.dart';
 import 'package:flutter_app/pages/Main_Settings_Pages/settings.dart';
-import 'package:flutter_app/pages/main_page.dart';
-import 'package:flutter_app/pages/summary.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_app/pages/Summaries_Pages/summary.dart';
+import 'package:flutter_app/pages/Summaries_Pages/tracking_body.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/get_navigation.dart';
 
-class RecentChanges extends ConsumerStatefulWidget {
-  const RecentChanges({super.key});
+class MainPage extends StatefulWidget {
+  int CurIndex = 0;
+  MainPage({super.key, required int CurIndex});
   @override
-  ConsumerState<RecentChanges> createState() => _RecentChangesState();
+  State<MainPage> createState() => _MainPageState();
 }
 
-class _RecentChangesState extends ConsumerState<RecentChanges> {
+class _MainPageState extends State<MainPage> {
+  late int _currentIndex;
+  final PageController _pageController = PageController();
+  late GlobalKey<CurvedNavigationBarState> _bottomNavigationKey;
+
+  final List<String> _titles = ["Home", "Tracking", "Hives", "Classroom", "Calendar"];
 
   @override
   void initState() {
     super.initState();
+    _currentIndex = widget.CurIndex;
+    _bottomNavigationKey = GlobalKey<CurvedNavigationBarState>();
+  }
+
+  void _onNavigate(int index) {
+    _pageController.animateToPage(index, duration: const Duration(milliseconds: 600), curve: Curves.easeInOut);
+    setState(() {
+      _currentIndex = index;
+    });
   }
 
   @override
@@ -54,17 +74,19 @@ class _RecentChangesState extends ConsumerState<RecentChanges> {
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               IconButton(
-                                icon: const Icon(Icons.history_outlined, color: Color.fromARGB(255, 0, 0, 0)),
+                                icon: const Icon(Icons.history_outlined, color: Colors.red),
                                 iconSize: 26,
                                 padding: const EdgeInsets.symmetric(horizontal: 6),
-                                onPressed: () {},
+                                onPressed: () {
+                                  Get.to(() => const RecentChanges());
+                                },
                               ),
                               IconButton(
                                 icon: const Icon(Icons.analytics_outlined, color: Colors.red),
                                 iconSize: 26,
                                 padding: const EdgeInsets.symmetric(horizontal: 6),
                                 onPressed: () {
-                                  Get.offAll(() => const Summary());
+                                  Get.to(() => const Summary());
                                 },
                               ),
                               IconButton(
@@ -72,7 +94,7 @@ class _RecentChangesState extends ConsumerState<RecentChanges> {
                                 iconSize: 26,
                                 padding: const EdgeInsets.symmetric(horizontal: 6),
                                 onPressed: () {
-                                  Get.offAll(() => const Settings());
+                                  Get.to(() => const Settings());
                                 },
                               ),
                             ],
@@ -82,20 +104,19 @@ class _RecentChangesState extends ConsumerState<RecentChanges> {
                     ),
                   ),
                 ),
-
-                const Positioned(
+                Positioned(
                   top: 64,
                   left: 0,
                   right: 0,
                   child: Center(
                     child: Text(
-                      "Recent Changes",
-                      textHeightBehavior: TextHeightBehavior(
+                      _titles[_currentIndex],
+                      textHeightBehavior: const TextHeightBehavior(
                         applyHeightToFirstAscent: false,
                         applyHeightToLastDescent: false,
                         leadingDistribution: TextLeadingDistribution.proportional,
                       ),
-                      style: TextStyle(
+                      style: const TextStyle(
                         color: Colors.black,
                         fontSize: 80,
                         height: 0.65,
@@ -109,65 +130,40 @@ class _RecentChangesState extends ConsumerState<RecentChanges> {
           ),
         ),
       ),
-
-      bottomNavigationBar: BottomNavigationBar(
-        onTap: (index) {
-          if (index == 0) {
-            Get.offAll(() => MainPage(CurIndex: 0));
-          }
-          else if (index == 1) {
-            Get.offAll(() => MainPage(CurIndex: 1));
-          }
-          else if (index == 2) {
-            Get.offAll(() => MainPage(CurIndex: 2));
-          }
-          else if (index == 3) {
-            Get.offAll(() => MainPage(CurIndex: 3));
-          }
-          else if (index == 4) {
-            Get.offAll(() => MainPage(CurIndex: 4));
-          }
-        },
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home_outlined),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.screen_search_desktop_outlined),
-            label: 'Tracking',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.groups_outlined),
-            label: 'Hives',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.co_present_outlined),
-            label: 'Classroom',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.calendar_month_outlined),
-            label: 'Calendar',
-          ),
+      body: PageView(
+        controller: _pageController,
+        physics: const NeverScrollableScrollPhysics(),
+        children: [
+          HomeBody(onNavigate: _onNavigate),
+          TrackingBody(onNavigate: _onNavigate),
+          HivesBody(onNavigate: _onNavigate),
+          GoogleClassroomBody(onNavigate: _onNavigate),
+          CalendarBody(onNavigate: _onNavigate),
         ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Container(
-          padding: const EdgeInsets.only(top: 10.0),
-          child: Scrollable(
-            viewportBuilder: (context, position) {
-              return const Center(
-                child: Column(
-                  children: [
-                    //Future Widgets will go here
-                  ],
-                ),
-              );
-            },
-          ),
-        ),
-      )
+      bottomNavigationBar: CurvedNavigationBar(
+        key: _bottomNavigationKey,
+        index: _currentIndex,
+        items: const <Widget>[
+          Icon(Icons.home_outlined, size: 30),
+          Icon(Icons.screen_search_desktop_outlined, size: 30),
+          Icon(Icons.groups_outlined, size: 30),
+          Icon(Icons.co_present_outlined, size: 30),
+          Icon(Icons.calendar_month_outlined, size: 30),
+        ],
+        color: const Color.fromARGB(255, 243, 139, 21),
+        buttonBackgroundColor: const Color.fromARGB(255, 230, 123, 96),
+        backgroundColor: const Color(0xFFFFDD97),
+        animationCurve: Curves.easeInOut,
+        animationDuration: const Duration(milliseconds: 600),
+        onTap: (index) {
+          _pageController.animateToPage(index, duration: const Duration(milliseconds: 600), curve: Curves.easeInOut);
+          setState(() {
+            _currentIndex = index;
+          });
+        },
+        letIndexChange: (index) => true,
+      ),
     );
   }
 }

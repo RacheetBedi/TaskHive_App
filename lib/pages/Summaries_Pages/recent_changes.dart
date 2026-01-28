@@ -1,42 +1,22 @@
-import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_app/pages/calendar_body.dart';
-import 'package:flutter_app/pages/google_classroom_body.dart';
-import 'package:flutter_app/pages/hives_body.dart';
-import 'package:flutter_app/pages/home_body.dart';
-import 'package:flutter_app/pages/recent_changes.dart';
 import 'package:flutter_app/pages/Main_Settings_Pages/settings.dart';
-import 'package:flutter_app/pages/summary.dart';
-import 'package:flutter_app/pages/tracking_body.dart';
+import 'package:flutter_app/pages/Home_Pages/main_page.dart';
+import 'package:flutter_app/pages/Summaries_Pages/summary.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/get_navigation.dart';
 
-class MainPage extends StatefulWidget {
-  int CurIndex = 0;
-  MainPage({super.key, required int CurIndex});
+class RecentChanges extends ConsumerStatefulWidget {
+  const RecentChanges({super.key});
   @override
-  State<MainPage> createState() => _MainPageState();
+  ConsumerState<RecentChanges> createState() => _RecentChangesState();
 }
 
-class _MainPageState extends State<MainPage> {
-  late int _currentIndex;
-  final PageController _pageController = PageController();
-  late GlobalKey<CurvedNavigationBarState> _bottomNavigationKey;
-
-  final List<String> _titles = ["Home", "Tracking", "Hives", "Classroom", "Calendar"];
+class _RecentChangesState extends ConsumerState<RecentChanges> {
 
   @override
   void initState() {
     super.initState();
-    _currentIndex = widget.CurIndex;
-    _bottomNavigationKey = GlobalKey<CurvedNavigationBarState>();
-  }
-
-  void _onNavigate(int index) {
-    _pageController.animateToPage(index, duration: const Duration(milliseconds: 600), curve: Curves.easeInOut);
-    setState(() {
-      _currentIndex = index;
-    });
   }
 
   @override
@@ -74,19 +54,17 @@ class _MainPageState extends State<MainPage> {
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               IconButton(
-                                icon: const Icon(Icons.history_outlined, color: Colors.red),
+                                icon: const Icon(Icons.history_outlined, color: Color.fromARGB(255, 0, 0, 0)),
                                 iconSize: 26,
                                 padding: const EdgeInsets.symmetric(horizontal: 6),
-                                onPressed: () {
-                                  Get.to(() => const RecentChanges());
-                                },
+                                onPressed: () {},
                               ),
                               IconButton(
                                 icon: const Icon(Icons.analytics_outlined, color: Colors.red),
                                 iconSize: 26,
                                 padding: const EdgeInsets.symmetric(horizontal: 6),
                                 onPressed: () {
-                                  Get.to(() => const Summary());
+                                  Get.offAll(() => const Summary());
                                 },
                               ),
                               IconButton(
@@ -94,7 +72,7 @@ class _MainPageState extends State<MainPage> {
                                 iconSize: 26,
                                 padding: const EdgeInsets.symmetric(horizontal: 6),
                                 onPressed: () {
-                                  Get.to(() => const Settings());
+                                  Get.offAll(() => const Settings());
                                 },
                               ),
                             ],
@@ -104,19 +82,20 @@ class _MainPageState extends State<MainPage> {
                     ),
                   ),
                 ),
-                Positioned(
+
+                const Positioned(
                   top: 64,
                   left: 0,
                   right: 0,
                   child: Center(
                     child: Text(
-                      _titles[_currentIndex],
-                      textHeightBehavior: const TextHeightBehavior(
+                      "Recent Changes",
+                      textHeightBehavior: TextHeightBehavior(
                         applyHeightToFirstAscent: false,
                         applyHeightToLastDescent: false,
                         leadingDistribution: TextLeadingDistribution.proportional,
                       ),
-                      style: const TextStyle(
+                      style: TextStyle(
                         color: Colors.black,
                         fontSize: 80,
                         height: 0.65,
@@ -130,40 +109,65 @@ class _MainPageState extends State<MainPage> {
           ),
         ),
       ),
-      body: PageView(
-        controller: _pageController,
-        physics: const NeverScrollableScrollPhysics(),
-        children: [
-          HomeBody(onNavigate: _onNavigate),
-          TrackingBody(onNavigate: _onNavigate),
-          HivesBody(onNavigate: _onNavigate),
-          GoogleClassroomBody(onNavigate: _onNavigate),
-          CalendarBody(onNavigate: _onNavigate),
-        ],
-      ),
-      bottomNavigationBar: CurvedNavigationBar(
-        key: _bottomNavigationKey,
-        index: _currentIndex,
-        items: const <Widget>[
-          Icon(Icons.home_outlined, size: 30),
-          Icon(Icons.screen_search_desktop_outlined, size: 30),
-          Icon(Icons.groups_outlined, size: 30),
-          Icon(Icons.co_present_outlined, size: 30),
-          Icon(Icons.calendar_month_outlined, size: 30),
-        ],
-        color: const Color.fromARGB(255, 243, 139, 21),
-        buttonBackgroundColor: const Color.fromARGB(255, 230, 123, 96),
-        backgroundColor: const Color(0xFFFFDD97),
-        animationCurve: Curves.easeInOut,
-        animationDuration: const Duration(milliseconds: 600),
+
+      bottomNavigationBar: BottomNavigationBar(
         onTap: (index) {
-          _pageController.animateToPage(index, duration: const Duration(milliseconds: 600), curve: Curves.easeInOut);
-          setState(() {
-            _currentIndex = index;
-          });
+          if (index == 0) {
+            Get.offAll(() => MainPage(CurIndex: 0));
+          }
+          else if (index == 1) {
+            Get.offAll(() => MainPage(CurIndex: 1));
+          }
+          else if (index == 2) {
+            Get.offAll(() => MainPage(CurIndex: 2));
+          }
+          else if (index == 3) {
+            Get.offAll(() => MainPage(CurIndex: 3));
+          }
+          else if (index == 4) {
+            Get.offAll(() => MainPage(CurIndex: 4));
+          }
         },
-        letIndexChange: (index) => true,
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home_outlined),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.screen_search_desktop_outlined),
+            label: 'Tracking',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.groups_outlined),
+            label: 'Hives',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.co_present_outlined),
+            label: 'Classroom',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.calendar_month_outlined),
+            label: 'Calendar',
+          ),
+        ],
       ),
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Container(
+          padding: const EdgeInsets.only(top: 10.0),
+          child: Scrollable(
+            viewportBuilder: (context, position) {
+              return const Center(
+                child: Column(
+                  children: [
+                    //Future Widgets will go here
+                  ],
+                ),
+              );
+            },
+          ),
+        ),
+      )
     );
   }
 }

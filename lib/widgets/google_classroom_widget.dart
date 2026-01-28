@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/pages/main_page.dart';
+import 'package:flutter_app/pages/Home_Pages/main_page.dart';
 import 'package:get/get.dart';
-import 'package:flutter_app/pages/nectar_center.dart';
+import 'package:flutter_app/pages/Nectar_Center_Pages/nectar_center.dart';
 
 class GoogleClassroomWidget extends StatefulWidget {
   const GoogleClassroomWidget({super.key});

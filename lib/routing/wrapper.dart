@@ -2,7 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_app/pages/main_page.dart';
+import 'package:flutter_app/pages/Home_Pages/main_page.dart';
 import 'package:flutter_app/pages/Setup_Pages/login_page.dart';
 import 'package:flutter_app/pages/Setup_Pages/role.dart';
 import 'package:flutter_app/pages/Setup_Pages/verifyemail.dart';
