@@ -19,32 +19,46 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 class TaskModel {
   String task_name;
+  String tradeable;
   DateTime date_assigned;
   DateTime date_due;
   String task_description;
   DateTime? date_completed;
   Map<String, String> users_tasked; //Instead of the first string, something indicating the users should be included; uid is a good option.
-  String group_ID;
+  String hive_ID;
   String difficulty;
   bool help_flagged;
   bool gc_task;
   String task_progress;
+  Map<dynamic, String>? images;
 
 
   TaskModel({
     required this.task_name,
+    required this.tradeable,
     required this.date_assigned,
     required this.date_due,
     required this.task_description,
     this.date_completed,
     required this.users_tasked,
-    required this.group_ID,
+    required this.hive_ID,
     required this.difficulty,
     this.help_flagged = false,
     required this.gc_task,
     this.task_progress = 'unstarted',
+    this.images,
   });
 
-
-  
+  List<dynamic> taskSnippet(){
+    return [
+      task_name,
+      date_assigned,
+      date_due,
+      users_tasked,
+      difficulty,
+      help_flagged,
+      gc_task,
+      task_progress,
+    ];
+  }
 }
