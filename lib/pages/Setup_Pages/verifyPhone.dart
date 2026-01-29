@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_app/enums/navigation_enum.dart';
 import 'package:flutter_app/models/user_models/app_user.dart';
 import 'package:flutter_app/pages/Forgot_Pages/forgot.dart';
 import 'package:flutter_app/pages/Setup_Pages/enterFinalDetails.dart';
@@ -122,7 +123,7 @@ class _VerifyPhoneState extends ConsumerState<VerifyPhone> {
       Get.to(() => const EnterfinalDetails());
     }
     else{
-      Get.to(() => MainPage(CurIndex: 0));
+      Get.to(() => MainPage(initialPage: NavigationPage.home));
     }
   }
 
@@ -146,7 +147,7 @@ class _VerifyPhoneState extends ConsumerState<VerifyPhone> {
     );
 
     if(result == true){
-      Get.to(() => MainPage(CurIndex: 0));
+      Get.to(() => MainPage(initialPage: NavigationPage.home));
     }
   }
 
@@ -196,7 +197,7 @@ class _VerifyPhoneState extends ConsumerState<VerifyPhone> {
         if (user == null) throw Exception ('No user is currently signed in.');
         try{
           await user.linkWithCredential(credential);
-          Get.offAll(() => MainPage(CurIndex: 0));
+          Get.offAll(() => MainPage(initialPage: NavigationPage.home,));
         } on FirebaseAuthException catch (e) {
           Get.snackbar(
             "ERROR",

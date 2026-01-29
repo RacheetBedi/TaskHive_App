@@ -3,6 +3,7 @@ import 'dart:core';
 
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_app/enums/navigation_enum.dart';
 import 'package:flutter_app/models/user_models/app_user.dart';
 import 'package:flutter_app/pages/Forgot_Pages/forgot.dart';
 import 'package:flutter_app/pages/Home_Pages/home_body.dart';
@@ -114,7 +115,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
           if(user.hasCompletedSetup == false){
             return const Role();
           }
-          return MainPage(CurIndex: 0 /*fromSignIn: true,*/);
+          return MainPage(initialPage: NavigationPage.home, /*fromSignIn: true,*/);
         }
 
         return _buildLoginScreen();

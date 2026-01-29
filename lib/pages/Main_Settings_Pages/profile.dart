@@ -3,6 +3,7 @@ import 'dart:typed_data';
 
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_app/enums/navigation_enum.dart';
 import 'package:flutter_app/pages/Setup_Pages/login_page.dart';
 import 'package:flutter_app/pages/Home_Pages/main_page.dart';
 import 'package:flutter_app/pages/Summaries_Pages/recent_changes.dart';
@@ -23,13 +24,13 @@ import 'dart:io';
 
 import 'package:riverpod_annotation/experimental/json_persist.dart';
 
-class Profile extends ConsumerStatefulWidget {
-  const Profile({super.key});
+class ProfileBody extends ConsumerStatefulWidget {
+  const ProfileBody({super.key});
   @override
-  ConsumerState<Profile> createState() => _ProfileState();
+  ConsumerState<ProfileBody> createState() => _ProfileBodyState();
 }
 
-class _ProfileState extends ConsumerState<Profile> {
+class _ProfileBodyState extends ConsumerState<ProfileBody> {
 
   TextEditingController email = TextEditingController();
   TextEditingController phone = TextEditingController();
@@ -299,171 +300,23 @@ class _ProfileState extends ConsumerState<Profile> {
 
   @override
   Widget build(BuildContext context) {
-
-    return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(130),
-        child: AppBar(
-          automaticallyImplyLeading: false,
-          flexibleSpace: SafeArea(
-            child: Stack(
-              clipBehavior: Clip.none,
-              children: [
-                Positioned(
-                  top: 0,
-                  left: 0,
-                  right: 0,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Image.asset(
-                          'assets/images/Circle Logo.png',
-                          height: 100,
-                          fit: BoxFit.cover,
-                        ),
-                        Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 3),
-                          decoration: BoxDecoration(
-                            color: const Color.fromARGB(104, 255, 255, 255),
-                            borderRadius: BorderRadius.circular(25),
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              IconButton(
-                                icon: const Icon(Icons.history_outlined, color: Colors.red),
-                                iconSize: 26,
-                                padding: const EdgeInsets.symmetric(horizontal: 6),
-                                onPressed: () {
-                                  Get.offAll(() => const RecentChanges());
-                                },
-                              ),
-                              IconButton(
-                                icon: const Icon(Icons.analytics_outlined, color: Colors.red),
-                                iconSize: 26,
-                                padding: const EdgeInsets.symmetric(horizontal: 6),
-                                onPressed: () {
-                                  Get.offAll(() => const Summary());
-                                },
-                              ),
-                              IconButton(
-                                icon: const Icon(Icons.settings_outlined, color: Color.fromARGB(255, 0, 0, 0)),
-                                iconSize: 26,
-                                padding: const EdgeInsets.symmetric(horizontal: 6),
-                                onPressed: () {
-                                  Get.offAll(() => const Settings());
-                                },
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                Positioned(
-                  top: 0,
-                  left: 0,
-                  child: SafeArea(
-                    child: IconButton(
-                      icon: const Icon(
-                        Icons.arrow_back,
-                        color: Colors.black,
-                      ),
-                      iconSize: 20,
-                      onPressed: () {
-                        Get.to(() => const Settings());
-                      },
-                    ),
-                    ),
-                ),
-                const Positioned(
-                  top: 64,
-                  left: 0,
-                  right: 0,
-                  child: Center(
-                    child: Text(
-                      "Profile",
-                      textHeightBehavior: TextHeightBehavior(
-                        applyHeightToFirstAscent: false,
-                        applyHeightToLastDescent: false,
-                        leadingDistribution: TextLeadingDistribution.proportional,
-                      ),
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 80,
-                        height: 0.65,
-                        fontFamily: 'Jomhuria',
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
+    return Container(
+      height: double.infinity,
+      width: double.infinity,
+      decoration: const BoxDecoration(
+        image: DecorationImage(
+          image: AssetImage("assets/images/Hive Background.png"),
+          repeat: ImageRepeat.repeat,
+          fit: BoxFit.none,
         ),
       ),
-
-      bottomNavigationBar: BottomNavigationBar(
-        onTap: (index) {
-          if (index == 0) {
-            Get.offAll(() => MainPage(CurIndex: 0));
-          }
-          else if (index == 1) {
-            Get.offAll(() => MainPage(CurIndex: 1));
-          }
-          else if (index == 2) {
-            Get.offAll(() => MainPage(CurIndex: 2));
-          }
-          else if (index == 3) {
-            Get.offAll(() => MainPage(CurIndex: 3));
-          }
-          else if (index == 4) {
-            Get.offAll(() => MainPage(CurIndex: 4));
-          }
-        },
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home_outlined),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.screen_search_desktop_outlined),
-            label: 'Tracking',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.groups_outlined),
-            label: 'Hives',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.co_present_outlined),
-            label: 'Classroom',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.calendar_month_outlined),
-            label: 'Calendar',
-          ),
-        ],
-      ),
-      body: Container(
-        height: double.infinity,
-        width: double.infinity,
-        decoration: const BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage("assets/images/Hive Background.png"),
-            repeat: ImageRepeat.repeat,
-            fit: BoxFit.none,
-          ),
-        ),
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              Container(
-                width: double.infinity,
-                decoration: const BoxDecoration(
-                  color:Color.fromARGB(115, 0, 0, 0),
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            Container(
+              width: double.infinity,
+              decoration: const BoxDecoration(
+                color:Color.fromARGB(115, 0, 0, 0),
                   border: Border(
                     bottom: BorderSide(color: Colors.black, width: 6.0),
                   ),
@@ -772,7 +625,6 @@ class _ProfileState extends ConsumerState<Profile> {
             ],
           ),
         ),
-      ),
     );
   }
 }

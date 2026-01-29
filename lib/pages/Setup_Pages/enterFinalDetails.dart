@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_app/enums/navigation_enum.dart';
 import 'package:flutter_app/pages/Setup_Pages/final_steps_question.dart';
 import 'package:flutter_app/pages/Setup_Pages/verifyPhone.dart';
 import 'package:flutter_app/pages/Setup_Pages/login_page.dart';
@@ -130,7 +131,7 @@ class _EnterfinalDetailsState extends ConsumerState<EnterfinalDetails> {
                       onPressed: () async{
                         bool result = await saveDescription();
                         if(result){
-                          Get.to(() => const Settings());
+                          Get.to(() => MainPage(initialPage: NavigationPage.settings));
                         } else{
                           Get.snackbar("Error", "Failed to save description. Please try again.");
                         }
@@ -142,7 +143,7 @@ class _EnterfinalDetailsState extends ConsumerState<EnterfinalDetails> {
                       onPressed: () async{
                         bool result = await saveDescription();
                         if(result){
-                          Get.to(() => MainPage(CurIndex: 0));
+                          Get.to(() => MainPage(initialPage: NavigationPage.home));
                         } else{
                           Get.snackbar("Error", "Failed to save description. Please try again.");
                         }
