@@ -19,15 +19,20 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 class TaskModel {
   String task_name;
-  String tradeable;
+  bool tradeable;
   DateTime date_assigned;
+  //Date assigned is immutable. If you want to change it, create a new task.
   DateTime date_due;
+  String taskType;
   String task_description;
   DateTime? date_completed;
   Map<String, String> users_tasked; //Instead of the first string, something indicating the users should be included; uid is a good option.
+  // Structure is Map<uid, role>, where "role" indicates if the user is "creator", "task/project leader", "contributor", or the rare role of "spectator"
+  // This structure allows for role-based permissions and consistency across tasks and projects.
   String hive_ID;
   String difficulty;
   bool help_flagged;
+  String help_details;
   bool gc_task;
   String task_progress;
   Map<dynamic, String>? images;
@@ -38,12 +43,14 @@ class TaskModel {
     required this.tradeable,
     required this.date_assigned,
     required this.date_due,
+    required this.taskType,
     required this.task_description,
     this.date_completed,
     required this.users_tasked,
     required this.hive_ID,
     required this.difficulty,
     this.help_flagged = false,
+    this.help_details = '',
     required this.gc_task,
     this.task_progress = 'unstarted',
     this.images,
@@ -60,5 +67,57 @@ class TaskModel {
       gc_task,
       task_progress,
     ];
+  }
+
+  void changeName(String newName){
+    task_name = newName;
+  }
+
+  void setTradeable (bool isTradeable){
+    tradeable = isTradeable;
+  }
+
+  void setDueDate (DateTime newDueDate){
+    date_due = newDueDate;
+  }
+
+  void setTaskDescription (String newDescription){
+    task_description = newDescription;
+  }
+
+  void setDateCompleted (DateTime completionDate){
+    date_completed = completionDate;
+  }
+
+  void addUsersTasked (String uid, String role){
+    users_tasked[uid] = role;
+  }
+
+  void removeUsersTasked (String uid){
+    users_tasked.remove(uid);
+  }
+
+  void setDifficulty (String newDifficulty){
+    difficulty = newDifficulty;
+  }
+
+  void setHelpFlagged (bool isHelpFlagged){
+    help_flagged = isHelpFlagged;
+    if(isHelpFlagged){
+      setHelpDetails("");
+    }
+  }
+
+  void setHelpDetails (String newHelpDetails){
+    help_details = newHelpDetails;
+  }
+
+  void isGCTask (bool isGC){
+    gc_task = isGC;
+    //If this is a Google Classroom task, we would want to reference the google classroom api page, which is coded late (not yet implemented)
+  }
+
+  void setTaskProgress (String newProgress){
+    task_progress = newProgress;
   }
 }
