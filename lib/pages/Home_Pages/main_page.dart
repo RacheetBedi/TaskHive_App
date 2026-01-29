@@ -9,8 +9,7 @@ import 'package:flutter_app/pages/Summaries_Pages/recent_changes.dart';
 import 'package:flutter_app/pages/Main_Settings_Pages/settings.dart';
 import 'package:flutter_app/pages/Summaries_Pages/summary.dart';
 import 'package:flutter_app/pages/Summaries_Pages/tracking_body.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_navigation/get_navigation.dart';
+import 'package:flutter_app/pages/Main_Settings_Pages/profile.dart';
 
 class MainPage extends StatefulWidget {
   final NavigationPage initialPage;
@@ -21,7 +20,7 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> {
   late NavigationPage _currentPage;
-  final PageController _pageController = PageController();
+  late PageController _pageController;
   late GlobalKey<CurvedNavigationBarState> _bottomNavigationKey;
 
   @override
@@ -29,22 +28,39 @@ class _MainPageState extends State<MainPage> {
     super.initState();
     _currentPage = widget.initialPage;
     _bottomNavigationKey = GlobalKey<CurvedNavigationBarState>();
-    if (_currentPage.isMainPage) {
-      _pageController.jumpToPage(_currentPage.mainTabIndex);
-    }
+    _pageController = PageController(
+      initialPage: _currentPage.isMainPage ? _currentPage.mainTabIndex : 0,
+    );
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
   }
 
   void _onNavigate(NavigationPage page) {
-    if (page.isMainPage) {
-      _pageController.animateToPage(
-        page.mainTabIndex,
-        duration: const Duration(milliseconds: 600),
-        curve: Curves.easeInOut,
-      );
-    }
     setState(() {
       _currentPage = page;
+      if (page.isMainPage) {
+        _pageController.jumpToPage(page.mainTabIndex);
+      }
     });
+  }
+
+  Widget _buildNonMainPageBody() {
+    switch (_currentPage) {
+      case NavigationPage.recentChanges:
+        return const RecentChangesBody();
+      case NavigationPage.summary:
+        return const SummaryBody();
+      case NavigationPage.settings:
+        return SettingsBody(onNavigate: _onNavigate);
+      case NavigationPage.profile:
+        return const ProfileBody();
+      default:
+        return HomeBody(onNavigate: _onNavigate);
+    }
   }
 
   @override
@@ -91,7 +107,9 @@ class _MainPageState extends State<MainPage> {
                                 iconSize: 26,
                                 padding: const EdgeInsets.symmetric(horizontal: 6),
                                 onPressed: () {
-                                  Get.to(() => MainPage(initialPage: NavigationPage.recentChanges));
+                                  setState(() {
+                                    _currentPage = NavigationPage.recentChanges;
+                                  });
                                 },
                               ),
                               IconButton(
@@ -104,7 +122,9 @@ class _MainPageState extends State<MainPage> {
                                 iconSize: 26,
                                 padding: const EdgeInsets.symmetric(horizontal: 6),
                                 onPressed: () {
-                                  Get.to(() => MainPage(initialPage: NavigationPage.summary));
+                                  setState(() {
+                                    _currentPage = NavigationPage.summary;
+                                  });
                                 },
                               ),
                               IconButton(
@@ -117,7 +137,9 @@ class _MainPageState extends State<MainPage> {
                                 iconSize: 26,
                                 padding: const EdgeInsets.symmetric(horizontal: 6),
                                 onPressed: () {
-                                  Get.to(() => MainPage(initialPage: NavigationPage.settings));
+                                  setState(() {
+                                    _currentPage = NavigationPage.settings;
+                                  });
                                 },
                               ),
                             ],
@@ -153,44 +175,50 @@ class _MainPageState extends State<MainPage> {
           ),
         ),
       ),
-      body: PageView(
-        controller: _pageController,
-        physics: const NeverScrollableScrollPhysics(),
+      body: Stack(
         children: [
-          HomeBody(onNavigate: _onNavigate),
-          TrackingBody(onNavigate: _onNavigate),
-          HivesBody(onNavigate: _onNavigate),
-          GoogleClassroomBody(onNavigate: _onNavigate),
-          CalendarBody(onNavigate: _onNavigate),
+          PageView(
+            controller: _pageController,
+            physics: const NeverScrollableScrollPhysics(),
+            children: [
+              HomeBody(onNavigate: _onNavigate),
+              TrackingBody(onNavigate: _onNavigate),
+              HivesBody(onNavigate: _onNavigate),
+              GoogleClassroomBody(onNavigate: _onNavigate),
+              CalendarBody(onNavigate: _onNavigate),
+            ],
+          ),
+          if (!_currentPage.isMainPage)
+            _buildNonMainPageBody(),
         ],
       ),
       bottomNavigationBar: CurvedNavigationBar(
-        key: _bottomNavigationKey,
-        index: _currentPage.mainTabIndex,
-        items: const <Widget>[
-          Icon(Icons.home_outlined, size: 30),
-          Icon(Icons.screen_search_desktop_outlined, size: 30),
-          Icon(Icons.groups_outlined, size: 30),
-          Icon(Icons.co_present_outlined, size: 30),
-          Icon(Icons.calendar_month_outlined, size: 30),
-        ],
-        color: const Color.fromARGB(255, 243, 139, 21),
-        buttonBackgroundColor: const Color.fromARGB(255, 230, 123, 96),
-        backgroundColor: const Color(0xFFFFDD97),
-        animationCurve: Curves.easeInOut,
-        animationDuration: const Duration(milliseconds: 600),
-        onTap: (index) {
-          final pages = [
-            NavigationPage.home,
-            NavigationPage.tracking,
-            NavigationPage.hives,
-            NavigationPage.classroom,
-            NavigationPage.calendar,
-          ];
-          _onNavigate(pages[index]);
-        },
-        letIndexChange: (index) => true,
-      ),
+              key: _bottomNavigationKey,
+              index: _currentPage.isMainPage ? _currentPage.mainTabIndex : 0,
+              items: const <Widget>[
+                Icon(Icons.home_outlined, size: 30),
+                Icon(Icons.screen_search_desktop_outlined, size: 30),
+                Icon(Icons.groups_outlined, size: 30),
+                Icon(Icons.co_present_outlined, size: 30),
+                Icon(Icons.calendar_month_outlined, size: 30),
+              ],
+              color: const Color.fromARGB(255, 243, 139, 21),
+              buttonBackgroundColor: const Color.fromARGB(255, 230, 123, 96),
+              backgroundColor: const Color(0xFFFFDD97),
+              animationCurve: Curves.easeInOut,
+              animationDuration: const Duration(milliseconds: 600),
+              onTap: (index) {
+                final pages = [
+                  NavigationPage.home,
+                  NavigationPage.tracking,
+                  NavigationPage.hives,
+                  NavigationPage.classroom,
+                  NavigationPage.calendar,
+                ];
+                _onNavigate(pages[index]);
+              },
+              letIndexChange: (index) => true,
+            ),
     );
   }
 }

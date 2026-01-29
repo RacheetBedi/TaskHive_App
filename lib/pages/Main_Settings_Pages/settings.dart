@@ -20,7 +20,8 @@ import 'package:get/get_navigation/get_navigation.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class SettingsBody extends ConsumerStatefulWidget {
-  const SettingsBody({super.key});
+  final Function(NavigationPage)? onNavigate;
+  const SettingsBody({super.key, this.onNavigate});
   @override
   ConsumerState<SettingsBody> createState() => _SettingsBodyState();
 }
@@ -216,7 +217,11 @@ class _SettingsBodyState extends ConsumerState<SettingsBody> {
                 maximumSize: const Size(double.infinity, double.infinity),
               ),
               onPressed: () {
-                Get.to(() => MainPage(initialPage: NavigationPage.profile));
+                if (widget.onNavigate != null) {
+                  widget.onNavigate!(NavigationPage.profile);
+                } else {
+                  Get.to(() => MainPage(initialPage: NavigationPage.profile));
+                }
               }, //Take to edit profile page
               child: Container(
                 width: double.infinity,
