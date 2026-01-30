@@ -8,6 +8,7 @@ enum NavigationPage {
   summary,
   settings,
   profile,
+  addTasks,
 }
 
 extension NavigationPageExtension on NavigationPage {
@@ -31,6 +32,8 @@ extension NavigationPageExtension on NavigationPage {
         return 'Settings';
       case NavigationPage.profile:
         return 'Profile';
+      case NavigationPage.addTasks:
+        return 'Add Tasks';
     }
   }
 

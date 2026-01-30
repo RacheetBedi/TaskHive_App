@@ -24,7 +24,14 @@ class _MainPageState extends State<MainPage> {
   late NavigationPage _currentPage;
   late PageController _pageController;
   late GlobalKey<CurvedNavigationBarState> _bottomNavigationKey;
-  int _lastMainTabIndex = 0;
+  NavigationPage _lastTab = NavigationPage.home;
+  final mainPages = [
+    NavigationPage.home,
+    NavigationPage.tracking,
+    NavigationPage.hives,
+    NavigationPage.classroom,
+    NavigationPage.calendar,
+  ];
 
   @override
   void initState() {
@@ -35,22 +42,21 @@ class _MainPageState extends State<MainPage> {
       initialPage: _currentPage.isMainPage ? _currentPage.mainTabIndex : 0,
     );
     if (_currentPage.isMainPage) {
-      _lastMainTabIndex = _currentPage.mainTabIndex;
+      _lastTab = mainPages[_currentPage.mainTabIndex];
     }
   }
 
   @override
   void dispose() {
-    _pageController.dispose();
     super.dispose();
   }
 
   void _onNavigate(NavigationPage page) {
+    _lastTab = _currentPage;
     setState(() {
       _currentPage = page;
-
       if (page.isMainPage) {
-        _lastMainTabIndex = page.mainTabIndex;
+        _lastTab = mainPages[page.mainTabIndex];
         _pageController.jumpToPage(page.mainTabIndex);
       }
     });
@@ -153,19 +159,30 @@ class _MainPageState extends State<MainPage> {
           ),
         ),
       ),
-      body: _currentPage.mainTabIndex != -1
-      ? PageView(
-          controller: _pageController,
-          physics: NeverScrollableScrollPhysics(),
-          children: [
-            HomeBody(onNavigate: _onNavigate),
-            TrackingBody(onNavigate: _onNavigate),
-            HivesBody(onNavigate: _onNavigate),
-            GoogleClassroomBody(onNavigate: _onNavigate),
-            CalendarBody(onNavigate: _onNavigate),
-          ],
-        )
-      : _buildNonMainPageBody(),
+      body: Stack(
+      children: [
+        Offstage(
+          offstage: !_currentPage.isMainPage,
+          child: PageView(
+            controller: _pageController,
+            physics: const NeverScrollableScrollPhysics(),
+            children: [
+              HomeBody(onNavigate: _onNavigate),
+              TrackingBody(onNavigate: _onNavigate),
+              HivesBody(onNavigate: _onNavigate),
+              GoogleClassroomBody(onNavigate: _onNavigate),
+              CalendarBody(onNavigate: _onNavigate),
+            ],
+          ),
+        ),
+
+        if (!_currentPage.isMainPage)
+          Container(
+            color: const Color.fromARGB(0, 255, 255, 255), // hides the PageView behind it... this should stop the error from lacking a pageview i think
+            child: _buildNonMainPageBody(),
+          ),
+      ],
+    ),
       bottomNavigationBar: _currentPage.isMainPage
           ? CurvedNavigationBar(
               key: _bottomNavigationKey,
@@ -184,22 +201,11 @@ class _MainPageState extends State<MainPage> {
               animationCurve: Curves.easeInOut,
               animationDuration: const Duration(milliseconds: 600),
               onTap: (index) {
-                final pages = [
-                  NavigationPage.home,
-                  NavigationPage.tracking,
-                  NavigationPage.hives,
-                  NavigationPage.classroom,
-                  NavigationPage.calendar,
-                ];
-                _onNavigate(pages[index]);
+                _onNavigate(mainPages[index]);
               },
             )
           : SecondaryNavBar(
-              onBack: () => _onNavigate(
-                NavigationPage.values.firstWhere(
-                  (p) => p.mainTabIndex == _lastMainTabIndex,
-                ),
-              ),
+              onBack: () => _onNavigate(_lastTab),
               onHome: () => _onNavigate(NavigationPage.home),
               onHives: () => _onNavigate(NavigationPage.hives),
             ),

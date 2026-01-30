@@ -217,11 +217,7 @@ class _SettingsBodyState extends ConsumerState<SettingsBody> {
                 maximumSize: const Size(double.infinity, double.infinity),
               ),
               onPressed: () {
-                if (widget.onNavigate != null) {
-                  widget.onNavigate!(NavigationPage.profile);
-                } else {
-                  Get.to(() => MainPage(initialPage: NavigationPage.profile));
-                }
+                widget.onNavigate!(NavigationPage.profile);
               }, //Take to edit profile page
               child: Container(
                 width: double.infinity,
@@ -460,7 +456,7 @@ class _SettingsBodyState extends ConsumerState<SettingsBody> {
             const SizedBox(height: 10.0),
             ElevatedButton(
               onPressed: () {
-                Get.offAll(() => const AddTasks());
+                widget.onNavigate!(NavigationPage.addTasks);
               },
               child: const Text("Temp: To Add Tasks"),
             ),
