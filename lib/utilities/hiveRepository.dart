@@ -10,11 +10,12 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 class HiveRepository{
   final WidgetRef ref;
-  String uid;
+  String uid; 
+  //This is the uid of the hive, automatically assigned by Firestore.
 
   HiveRepository (this.ref, this.uid);
 
-    //currentHive riverpod placerholder
+  //currentHive riverpod placerholder
 
   DocumentReference<Map<String, dynamic>> get hiveDocuments => _firestore.collection('groups').doc(uid);
 
@@ -30,22 +31,12 @@ class HiveRepository{
     if(!doc.exists) return null;
     final data = doc.data();
 
-    //final updatedHive = //Hive object
-
-    //Get.snackbar('The following is the user data in the doc:', '${updatedUser.displayFirstName}, ${updatedUser.displayLastName}, ${updatedUser.email}, ${updatedUser.uid}');
-
-    //Update hte hives here
     } catch (e){
       Get.snackbar("Error", "Failed to initialize in user repository: $e");
       return null;
     }
   }
-  
 
-  // Future<void> updateDocumentData({
-  //   }) async{
-  //   }
-  // } Framework
 
   Future<void> createHiveDocIfNeeded() async {
   }

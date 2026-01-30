@@ -17,7 +17,22 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:riverpod_annotation/experimental/json_persist.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+/*Two scenarios:
+
+1. Hive is created from scratch. In this case, I want to call the following:
+  1. HiveRepository, to make the hive document in Firestore
+*/
+
+/*
+
+can I do this sort of structure for when I want to create my hives? for example, should I
+use a new provider for hives, keeping track of the hive data, and use hiveProvider.createNewFirestoreHive
+or something of the sort, which then references my hiveRepository? Or is this overly complex;
+is riverpod useful for hives (which are my 'groups', similar to canvas classes).
+*/
+
 class Hive {
+  String? hive_uid;
   String hive_name;
   String hive_description;
   String hive_subject;
@@ -32,6 +47,7 @@ class Hive {
   String? hiveImage;
 
   Hive({
+    this.hive_uid,
     required this.hive_name,
     required this.hive_description,
     required this.hive_subject,
