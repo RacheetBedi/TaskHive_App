@@ -10,10 +10,12 @@ import 'package:flutter_app/pages/Main_Settings_Pages/settings.dart';
 import 'package:flutter_app/pages/Summaries_Pages/summary.dart';
 import 'package:flutter_app/pages/Summaries_Pages/tracking_body.dart';
 import 'package:flutter_app/pages/Main_Settings_Pages/profile.dart';
+import 'package:flutter_app/widgets/secondary_navbar.dart';
 
 class MainPage extends StatefulWidget {
   final NavigationPage initialPage;
-  MainPage({super.key, this.initialPage = NavigationPage.home});
+  const MainPage({super.key, this.initialPage = NavigationPage.home});
+
   @override
   State<MainPage> createState() => _MainPageState();
 }
@@ -22,6 +24,7 @@ class _MainPageState extends State<MainPage> {
   late NavigationPage _currentPage;
   late PageController _pageController;
   late GlobalKey<CurvedNavigationBarState> _bottomNavigationKey;
+  int _lastMainTabIndex = 0;
 
   @override
   void initState() {
@@ -31,6 +34,9 @@ class _MainPageState extends State<MainPage> {
     _pageController = PageController(
       initialPage: _currentPage.isMainPage ? _currentPage.mainTabIndex : 0,
     );
+    if (_currentPage.isMainPage) {
+      _lastMainTabIndex = _currentPage.mainTabIndex;
+    }
   }
 
   @override
@@ -42,26 +48,28 @@ class _MainPageState extends State<MainPage> {
   void _onNavigate(NavigationPage page) {
     setState(() {
       _currentPage = page;
+
       if (page.isMainPage) {
+        _lastMainTabIndex = page.mainTabIndex;
         _pageController.jumpToPage(page.mainTabIndex);
       }
     });
   }
 
-  Widget _buildNonMainPageBody() {
-    switch (_currentPage) {
-      case NavigationPage.recentChanges:
-        return const RecentChangesBody();
-      case NavigationPage.summary:
-        return const SummaryBody();
-      case NavigationPage.settings:
-        return SettingsBody(onNavigate: _onNavigate);
-      case NavigationPage.profile:
-        return const ProfileBody();
-      default:
-        return HomeBody(onNavigate: _onNavigate);
-    }
+ Widget _buildNonMainPageBody() {
+  switch (_currentPage) {
+    case NavigationPage.recentChanges:
+      return const RecentChangesBody();
+    case NavigationPage.summary:
+      return const SummaryBody();
+    case NavigationPage.settings:
+      return SettingsBody(onNavigate: _onNavigate);
+    case NavigationPage.profile:
+      return const ProfileBody();
+    default:
+      return const SizedBox.shrink();
   }
+}
 
   @override
   Widget build(BuildContext context) {
@@ -79,7 +87,8 @@ class _MainPageState extends State<MainPage> {
                   left: 0,
                   right: 0,
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -91,56 +100,24 @@ class _MainPageState extends State<MainPage> {
                         Container(
                           padding: const EdgeInsets.symmetric(horizontal: 3),
                           decoration: BoxDecoration(
-                            color: const Color.fromARGB(104, 255, 255, 255),
+                            color:
+                                const Color.fromARGB(104, 255, 255, 255),
                             borderRadius: BorderRadius.circular(25),
                           ),
                           child: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               IconButton(
-                                icon: Icon(
-                                  Icons.history_outlined,
-                                  color: _currentPage == NavigationPage.recentChanges
-                                      ? Colors.black
-                                      : Colors.red,
-                                ),
-                                iconSize: 26,
-                                padding: const EdgeInsets.symmetric(horizontal: 6),
-                                onPressed: () {
-                                  setState(() {
-                                    _currentPage = NavigationPage.recentChanges;
-                                  });
-                                },
+                                icon: const Icon(Icons.history_outlined, color: Colors.red),
+                                onPressed: () => _onNavigate(NavigationPage.recentChanges),
                               ),
                               IconButton(
-                                icon: Icon(
-                                  Icons.analytics_outlined,
-                                  color: _currentPage == NavigationPage.summary
-                                      ? Colors.black
-                                      : Colors.red,
-                                ),
-                                iconSize: 26,
-                                padding: const EdgeInsets.symmetric(horizontal: 6),
-                                onPressed: () {
-                                  setState(() {
-                                    _currentPage = NavigationPage.summary;
-                                  });
-                                },
+                                icon: const Icon(Icons.analytics_outlined, color: Colors.red),
+                                onPressed: () => _onNavigate(NavigationPage.summary),
                               ),
                               IconButton(
-                                icon: Icon(
-                                  Icons.settings_outlined,
-                                  color: _currentPage == NavigationPage.settings
-                                      ? Colors.black
-                                      : Colors.red,
-                                ),
-                                iconSize: 26,
-                                padding: const EdgeInsets.symmetric(horizontal: 6),
-                                onPressed: () {
-                                  setState(() {
-                                    _currentPage = NavigationPage.settings;
-                                  });
-                                },
+                                icon: const Icon(Icons.settings_outlined, color: Colors.red),
+                                onPressed: () => _onNavigate(NavigationPage.settings),
                               ),
                             ],
                           ),
@@ -159,7 +136,8 @@ class _MainPageState extends State<MainPage> {
                       textHeightBehavior: const TextHeightBehavior(
                         applyHeightToFirstAscent: false,
                         applyHeightToLastDescent: false,
-                        leadingDistribution: TextLeadingDistribution.proportional,
+                        leadingDistribution:
+                            TextLeadingDistribution.proportional,
                       ),
                       style: const TextStyle(
                         color: Colors.black,
@@ -175,26 +153,23 @@ class _MainPageState extends State<MainPage> {
           ),
         ),
       ),
-      body: Stack(
-        children: [
-          PageView(
-            controller: _pageController,
-            physics: const NeverScrollableScrollPhysics(),
-            children: [
-              HomeBody(onNavigate: _onNavigate),
-              TrackingBody(onNavigate: _onNavigate),
-              HivesBody(onNavigate: _onNavigate),
-              GoogleClassroomBody(onNavigate: _onNavigate),
-              CalendarBody(onNavigate: _onNavigate),
-            ],
-          ),
-          if (!_currentPage.isMainPage)
-            _buildNonMainPageBody(),
-        ],
-      ),
-      bottomNavigationBar: CurvedNavigationBar(
+      body: _currentPage.mainTabIndex != -1
+      ? PageView(
+          controller: _pageController,
+          physics: NeverScrollableScrollPhysics(),
+          children: [
+            HomeBody(onNavigate: _onNavigate),
+            TrackingBody(onNavigate: _onNavigate),
+            HivesBody(onNavigate: _onNavigate),
+            GoogleClassroomBody(onNavigate: _onNavigate),
+            CalendarBody(onNavigate: _onNavigate),
+          ],
+        )
+      : _buildNonMainPageBody(),
+      bottomNavigationBar: _currentPage.isMainPage
+          ? CurvedNavigationBar(
               key: _bottomNavigationKey,
-              index: _currentPage.isMainPage ? _currentPage.mainTabIndex : 0,
+              index: _currentPage.mainTabIndex,
               items: const <Widget>[
                 Icon(Icons.home_outlined, size: 30),
                 Icon(Icons.screen_search_desktop_outlined, size: 30),
@@ -203,7 +178,8 @@ class _MainPageState extends State<MainPage> {
                 Icon(Icons.calendar_month_outlined, size: 30),
               ],
               color: const Color.fromARGB(255, 243, 139, 21),
-              buttonBackgroundColor: const Color.fromARGB(255, 230, 123, 96),
+              buttonBackgroundColor:
+                  const Color.fromARGB(255, 230, 123, 96),
               backgroundColor: const Color(0xFFFFDD97),
               animationCurve: Curves.easeInOut,
               animationDuration: const Duration(milliseconds: 600),
@@ -217,7 +193,15 @@ class _MainPageState extends State<MainPage> {
                 ];
                 _onNavigate(pages[index]);
               },
-              letIndexChange: (index) => true,
+            )
+          : SecondaryNavBar(
+              onBack: () => _onNavigate(
+                NavigationPage.values.firstWhere(
+                  (p) => p.mainTabIndex == _lastMainTabIndex,
+                ),
+              ),
+              onHome: () => _onNavigate(NavigationPage.home),
+              onHives: () => _onNavigate(NavigationPage.hives),
             ),
     );
   }

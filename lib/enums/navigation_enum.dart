@@ -47,7 +47,7 @@ extension NavigationPageExtension on NavigationPage {
       case NavigationPage.calendar:
         return 4;
       default:
-        return -1; // No index for non-main pages
+        return -1;
     }
   }
 
