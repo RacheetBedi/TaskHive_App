@@ -10,8 +10,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 class HiveTaskRepository{
   final WidgetRef ref;
+  final String uid;
 
-  HiveTaskRepository (this.ref);
-
-  
+  HiveTaskRepository (this.ref, this.uid);
 }
