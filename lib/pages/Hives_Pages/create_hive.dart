@@ -1,3 +1,5 @@
+import 'package:choice/choice.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/enums/navigation_enum.dart';
 import 'package:flutter_app/pages/Setup_Pages/login_page.dart';
@@ -16,6 +18,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/get_navigation.dart';
+import 'package:async/async.dart';
 
 class CreateHive extends ConsumerStatefulWidget {
   const CreateHive({super.key});
@@ -26,7 +29,7 @@ class CreateHive extends ConsumerStatefulWidget {
 class _CreateHiveState extends ConsumerState<CreateHive> {
   TextEditingController hiveName = TextEditingController();
   TextEditingController hiveDesc = TextEditingController();
-
+  String _subject = "Mathematics";
   @override
   void initState() {
     super.initState();
@@ -34,131 +37,28 @@ class _CreateHiveState extends ConsumerState<CreateHive> {
 
   @override
   Widget build(BuildContext context) {
+    final choicesMemoizer = AsyncMemoizer<List<ChoiceData<String>>>();
+
+  Future<List<ChoiceData<String>>> getChoices() async {
+    try {
+      const url =
+          "https://randomuser.me/api/?inc=name,picture,email&results=25";
+      final res = await Dio().get(url);
+      final data = res.data['results'] as List;
+      return Future.value(data.asChoiceData(
+        value: (i, e) => e['email'],
+        title: (i, e) => e['name']['first'] + ' ' + e['name']['last'],
+        image: (i, e) => e['picture']['thumbnail'],
+      ));
+    } on DioException catch (e) {
+      throw ErrorDescription(e.message ?? '');
+    }
+  }
+  List<ChoiceData<String>> ownerValue = [];
+  void setOwnerValue(List<ChoiceData<String>> value) {
+    setState(() => ownerValue = value);
+  }
     return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(130),
-        child: AppBar(
-          automaticallyImplyLeading: false,
-          flexibleSpace: SafeArea(
-            child: Stack(
-              clipBehavior: Clip.none,
-              children: [
-                Positioned(
-                  top: 0,
-                  left: 0,
-                  right: 0,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Image.asset(
-                          'assets/images/Circle Logo.png',
-                          height: 100,
-                          fit: BoxFit.cover,
-                        ),
-                        Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 3),
-                          decoration: BoxDecoration(
-                            color: const Color.fromARGB(104, 255, 255, 255),
-                            borderRadius: BorderRadius.circular(25),
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              IconButton(
-                                icon: const Icon(Icons.history_outlined, color: Colors.red),
-                                iconSize: 26,
-                                padding: const EdgeInsets.symmetric(horizontal: 6),
-                                onPressed: () {
-                                  Get.offAll(() => MainPage(initialPage: NavigationPage.recentChanges));
-                                },
-                              ),
-                              IconButton(
-                                icon: const Icon(Icons.analytics_outlined, color: Colors.red),
-                                iconSize: 26,
-                                padding: const EdgeInsets.symmetric(horizontal: 6),
-                                onPressed: () {
-                                  Get.offAll(() => MainPage(initialPage: NavigationPage.summary));
-                                },
-                              ),
-                              IconButton(
-                                icon: const Icon(Icons.settings_outlined, color: Colors.red),
-                                iconSize: 26,
-                                padding: const EdgeInsets.symmetric(horizontal: 6),
-                                onPressed: () {
-                                  Get.offAll(() => MainPage(initialPage: NavigationPage.settings));
-                                },
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-
-                const Positioned(
-                  top: 64,
-                  left: 0,
-                  right: 0,
-                  child: Center(
-                    child: Text(
-                      "Create a Hive",
-                      textHeightBehavior: TextHeightBehavior(
-                        applyHeightToFirstAscent: false,
-                        applyHeightToLastDescent: false,
-                        leadingDistribution: TextLeadingDistribution.proportional,
-                      ),
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 80,
-                        height: 0.65,
-                        fontFamily: 'Jomhuria',
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-
-      bottomNavigationBar: BottomNavigationBar(
-        onTap: (index) {
-          final pages = [
-            NavigationPage.home,
-            NavigationPage.tracking,
-            NavigationPage.hives,
-            NavigationPage.classroom,
-            NavigationPage.calendar,
-          ];
-          Get.offAll(() => MainPage(initialPage: pages[index]));
-        },
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home_outlined),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.screen_search_desktop_outlined),
-            label: 'Tracking',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.groups_outlined),
-            label: 'Hives',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.co_present_outlined),
-            label: 'Classroom',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.calendar_month_outlined),
-            label: 'Calendar',
-          ),
-        ],
-      ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Container(
@@ -211,35 +111,72 @@ class _CreateHiveState extends ConsumerState<CreateHive> {
                     ),
                   ),
                   const SizedBox(height: 10,),
-                  ElevatedButton(
-                    onPressed: () {
-                      // Popup for Adding Members
-                    },
-                    style: ElevatedButton.styleFrom(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(100000000),
-                        side: const BorderSide(
-                          color: Color(0xFF00FF73),
-                          width: 1,
-                        ),
-                      ),
-                    ),
-                    child: const Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(Icons.person_add_outlined, size: 30, color: Color(0xFF00FF73),),
-                        SizedBox(width: 10),
-                        Text(
-                          "Add Members",
-                          style: TextStyle(
-                            fontFamily: 'Jomhuria',
-                            fontWeight: FontWeight.normal,
-                            fontSize: 40,
-                            color: Color(0xFF00FF73),
+                  FutureBuilder<List<ChoiceData<String>>>(
+                    initialData: const [],
+                    future: choicesMemoizer.runOnce(getChoices),
+                    builder: (context, snapshot) {
+                      return SizedBox(
+                        width: 300,
+                        child: Card(
+                          color:const Color(0xFFFFB743),
+                          child: Theme(
+                            data: Theme.of(context).copyWith(
+                              appBarTheme: Theme.of(context).appBarTheme.copyWith(
+                                iconTheme: const IconThemeData(color: Color.fromARGB(255, 0, 0, 0)),
+                              ),
+                            ),
+                            child: PromptedChoice<ChoiceData<String>>.multiple(
+                              title: 'Hive Members',
+                              clearable: true,
+                              error: snapshot.hasError,
+                              errorBuilder: ChoiceListError.create(
+                                message: snapshot.error.toString(),
+                              ),
+                              loading: snapshot.connectionState == ConnectionState.waiting,
+                              value: ownerValue,
+                              onChanged: setOwnerValue,
+                              itemCount: snapshot.data?.length ?? 0,
+                              itemBuilder: (state, i) {
+                                final choice = snapshot.data?.elementAt(i);
+                                return CheckboxListTile(
+                                  value: state.selected(choice!),
+                                  onChanged: state.onSelected(choice),
+                                  title: Text(choice.title),
+                                  subtitle: choice.subtitle != null
+                                    ? Text(
+                                        choice.subtitle!,
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                      )
+                                    : null,
+                                  secondary: choice.image != null
+                                    ? CircleAvatar(
+                                        backgroundImage: NetworkImage(choice.image!),
+                                      )
+                                    : null,
+                                );
+                              },
+                              modalHeaderBuilder: ChoiceModal.createHeader(
+                                title: const Text('Select Hive Members', style: TextStyle(fontSize: 50, fontWeight: FontWeight.normal),),
+                                actionsBuilder: [
+                                  (state) {
+                                    final values = snapshot.data!;
+                                    return Checkbox(
+                                      value: state.selectedMany(values),
+                                      onChanged: state.onSelectedMany(values),
+                                      tristate: true,
+                                    );
+                                  },
+                                  ChoiceModal.createSpacer(width: 25),
+                                ],
+                              ),
+                              promptDelegate: ChoicePrompt.delegateBottomSheet(),
+                              anchorBuilder: ChoiceAnchor.create(valueTruncate: 1),
+                            ),
                           ),
                         ),
-                      ],
-                    ),
+                      );
+                    },
                   ),
                   const SizedBox(height: 10,),
                   TextField(
@@ -260,7 +197,18 @@ class _CreateHiveState extends ConsumerState<CreateHive> {
                     ),
                   ),
                   const SizedBox(height: 10,),
-                  //Select Subject Dropdown
+                  Transform.scale(
+                      scale: 1,
+                      child: DropdownMenu<SubjectLabel>(
+                        initialSelection: SubjectLabel.mathematics,
+                        onSelected: (SubjectLabel? subject) {
+                          setState(() {
+                            _subject = subject?.label ?? "Mathematics";
+                          });
+                        },
+                        dropdownMenuEntries: SubjectLabel.entries,
+                      ),
+                    ),
                   const SizedBox(height: 10,),
                   ElevatedButton(
                     onPressed: () {
@@ -331,4 +279,31 @@ class _CreateHiveState extends ConsumerState<CreateHive> {
       )
     );
   }
+}
+
+typedef SubjectEntry = DropdownMenuEntry<SubjectLabel>;
+
+enum SubjectLabel {
+  mathematics('Mathematics'),
+  science('Science'),
+  history('History'),
+  english('English'),
+  art('Art'),
+  music('Music'),
+  physicalEducation('Physical Education'),
+  computerScience('Computer Science'),
+  foreignLanguages('Foreign Languages'),
+  economics('Economics'),
+  psychology('Psychology');
+
+  const SubjectLabel(this.label);
+  final String label;
+
+  static final List<DropdownMenuEntry<SubjectLabel>> entries =
+      SubjectLabel.values.map((subject) {
+    return DropdownMenuEntry<SubjectLabel>(
+      value: subject,
+      label: subject.label,
+    );
+  }).toList();
 }

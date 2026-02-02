@@ -218,7 +218,7 @@ class _SettingsBodyState extends ConsumerState<SettingsBody> {
               ),
               onPressed: () {
                 widget.onNavigate!(NavigationPage.profile);
-              }, //Take to edit profile page
+              },
               child: Container(
                 width: double.infinity,
                 decoration: const BoxDecoration(

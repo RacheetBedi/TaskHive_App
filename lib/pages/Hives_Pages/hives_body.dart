@@ -8,7 +8,8 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/get_navigation.dart';
 
 class HivesBody extends StatefulWidget {
-  const HivesBody({super.key, required void Function(NavigationPage page) onNavigate});
+  final Function(NavigationPage)? onNavigate;
+  const HivesBody({super.key, this.onNavigate});
 
   @override
   State<HivesBody> createState() => _HivesBodyState();
@@ -41,7 +42,9 @@ class _HivesBodyState extends State<HivesBody> {
                   ),
                   const SizedBox(height: 10),
                   ElevatedButton(
-                    onPressed: () => Get.to(() => const CreateHive()),
+                    onPressed: () => {
+                      widget.onNavigate!(NavigationPage.createHive),
+                    },
                     style: ElevatedButton.styleFrom(minimumSize: const Size(180, 70), maximumSize: const Size(250, 75), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18))),
                     child: const Row(mainAxisAlignment: MainAxisAlignment.center, children: [Icon(Icons.group_add_outlined, size: 30, color: Color(0xFFFF0000)), SizedBox(width: 10), Text("Create Hive", style: TextStyle(fontFamily: 'Jomhuria', fontSize: 40, color: Color(0xFFFF0000)))]),
                   ),

@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_app/enums/navigation_enum.dart';
 import 'package:flutter_app/pages/Calendar_Pages/calendar_body.dart';
 import 'package:flutter_app/pages/Google_Classrom_Pages/google_classroom_body.dart';
+import 'package:flutter_app/pages/Hives_Pages/addTasks.dart';
+import 'package:flutter_app/pages/Hives_Pages/create_hive.dart';
 import 'package:flutter_app/pages/Hives_Pages/hives_body.dart';
 import 'package:flutter_app/pages/Home_Pages/home_body.dart';
 import 'package:flutter_app/pages/Summaries_Pages/recent_changes.dart';
@@ -72,6 +74,10 @@ class _MainPageState extends State<MainPage> {
       return SettingsBody(onNavigate: _onNavigate);
     case NavigationPage.profile:
       return const ProfileBody();
+    case NavigationPage.addTasks:
+      return const AddTasksBody();
+    case NavigationPage.createHive:
+      return const CreateHive();
     default:
       return const SizedBox.shrink();
   }
