@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_app/models/group_models/hive.dart';
 import 'package:flutter_app/models/user_models/app_user.dart';
 import 'package:flutter_app/providers/auth_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -38,7 +39,7 @@ class HiveRepository{
   }
 
 
-  Future<void> createHiveDocIfNeeded() async {
+  Future<void> createHiveDoc(Hive hive) async {
   }
 
   Future<bool> hasCompletedHiveSetup() async {

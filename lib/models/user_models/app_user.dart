@@ -19,7 +19,10 @@ class AppUser{
   bool hasCompletedSetup;
   String? description;
   String? school;
-  List<Map<String, dynamic>>? possessions;
+  List<Map<String, dynamic>>? activity_log;
+  List<Map<int, String>>? appreciation_points;
+  List<Map<dynamic, dynamic>>? hives_joined;
+
 
   AppUser({
     required this.uid,
@@ -39,7 +42,9 @@ class AppUser{
     this.country_code,
     this.userName,
     this.school,
-    this.possessions
+    this.activity_log,
+    this.appreciation_points,
+    this.hives_joined
   });
 
   factory AppUser.fromFirebaseUser(User user,{
@@ -55,7 +60,9 @@ class AppUser{
     String firstName = "",
     String lastName = "",
     String school = "",
-    List<Map<String, dynamic>>? possessions,
+    List<Map<String, dynamic>>? activity_log,
+    List<Map<int, String>>? appreciation_points,
+    List<Map<dynamic, dynamic>>? hives_joined,
     }){
     return AppUser(
       uid: user.uid,
@@ -74,7 +81,9 @@ class AppUser{
       userName: userName,
       description: description,
       school: school,
-      possessions: possessions,
+      activity_log: activity_log,
+      appreciation_points: appreciation_points,
+      hives_joined: hives_joined,
     );
   }
 
@@ -86,6 +95,9 @@ class AppUser{
     bool? isNewUser,
     String? description,
     String? school,
+    List<Map<String, dynamic>>? activity_log,
+    List<Map<int, String>>? appreciation_points,
+    List<Map<dynamic, dynamic>>? hives_joined,
     //ADD OTHER PROPERTIES LATER HERE!
   }) {
     return AppUser(
@@ -99,6 +111,9 @@ class AppUser{
       hasCompletedSetup: isNewUser ?? this.hasCompletedSetup,
       description: description ?? this.description,
       school: school ?? this.school,
+      activity_log: activity_log ?? this.activity_log,
+      appreciation_points: appreciation_points ?? this.appreciation_points,
+      hives_joined: hives_joined ?? this.hives_joined,
     );
   }
 }

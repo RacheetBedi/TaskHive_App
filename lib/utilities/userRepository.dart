@@ -30,27 +30,36 @@ class UserRepository {
     Get.snackbar('Initializing the App User', 'Please help me');
 
     final doc = await _firestore.collection('users').doc(user.uid).get();
+    final activityLogDoc = await _firestore.collection('users').doc(user.uid).collection('possessions').doc('activity_log').get();
+    final appreciationPointsDoc = await _firestore.collection('users').doc(user.uid).collection('possessions').doc('appreciation_points').get();
+    final hivesJoinedDoc = await _firestore.collection('users').doc(user.uid).collection('possessions').doc('hives_joined').get();
     if(!doc.exists) return null;
-    final data = doc.data();
+    final mainUserData = doc.data();
+    final activityLogData = activityLogDoc.data();
+    final appreciationPointsData = appreciationPointsDoc.data();
+    final hivesJoinedData = hivesJoinedDoc.data();
 
     final updatedUser = AppUser(
-      dark_mode: data?['dark_mode'] ?? false,
-      hasCompletedSetup: data?['hasCompletedSetup'] ?? false,
+      dark_mode: mainUserData?['dark_mode'] ?? false,
+      hasCompletedSetup: mainUserData?['hasCompletedSetup'] ?? false,
       isEmailVerified: user.isEmailVerified,
-      is_teacher: data?['is_teacher'] ?? false,
-      lang: data?['lang'] ?? '',
-      logoPref: data?['logo_preference'] ?? 1,
-      password: data?['password'] ?? '',
-      country_code: data?['public profile']?['contact_info']?['country_code'] ?? 1,
+      is_teacher: mainUserData?['is_teacher'] ?? false,
+      lang: mainUserData?['lang'] ?? '',
+      logoPref: mainUserData?['logo_preference'] ?? 1,
+      password: mainUserData?['password'] ?? '',
+      country_code: mainUserData?['public profile']?['contact_info']?['country_code'] ?? 1,
       email: user.email,
-      phoneNumber: data?['public profile']?['contact_info']?['phone_number'] ?? 000000000,
-      description: data?['public profile']?['description'] ?? '',
-      displayFirstName: data?['public profile']?['firstName'] ?? '',
-      displayLastName: data?['public profile']?['lastName'] ?? '',
-      photoURL: data?['public profile']?['photo_URL'] ?? '',
-      school: data?['school'] ?? " ",
+      phoneNumber: mainUserData?['public profile']?['contact_info']?['phone_number'] ?? 000000000,
+      description: mainUserData?['public profile']?['description'] ?? '',
+      displayFirstName: mainUserData?['public profile']?['firstName'] ?? '',
+      displayLastName: mainUserData?['public profile']?['lastName'] ?? '',
+      photoURL: mainUserData?['public profile']?['photo_URL'] ?? '',
+      school: mainUserData?['school'] ?? " ",
       uid: user.uid,
-      userName: data?['username'] ?? '',
+      userName: mainUserData?['username'] ?? '',
+      activity_log: List<Map<String, dynamic>>.from(activityLogData?.values ?? []),
+      appreciation_points: List<Map<int, String>>.from(appreciationPointsData?.values ?? []),
+      hives_joined: List<Map<dynamic, dynamic>>.from(hivesJoinedData?.values ?? []),
     );
 
     //Get.snackbar('The following is the user data in the doc:', '${updatedUser.displayFirstName}, ${updatedUser.displayLastName}, ${updatedUser.email}, ${updatedUser.uid}');
@@ -62,7 +71,7 @@ class UserRepository {
     }
   }
   
-
+  //add possessions to this
   Future<void> updateDocumentData({
     String? uid,
     String? displayFirstName,
@@ -81,15 +90,108 @@ class UserRepository {
     String? userName,
     String? password,
     String? school,
+    List<Map<String, dynamic>>? activity_log,
+    List<Map<int, String>>? appreciation_points,
+    List<Map<dynamic, dynamic>>? hives_joined,
     }) async{
 
     final user = currentAppUser;
     if(user == null) return null;
 
-    final docRef = _firestore.collection('users').doc(user.uid);
-    final doc = await docRef.get();
+    bool mainUserDocUpdated = false;
 
-    if(doc.exists){
+    final mainDocRef = _firestore.collection('users').doc(user.uid);
+    final mainDoc = await mainDocRef.get();
+
+    final activityLogDocRef = _firestore.collection('users').doc(user.uid).collection('possessions').doc('activity_log');
+    final activityLogDoc = await activityLogDocRef.get();
+
+    final appreciationPointsDocRef = _firestore.collection('users').doc(user.uid).collection('possessions').doc('appreciation_points');
+    final appreciationPointsDoc = await appreciationPointsDocRef.get();
+
+    final hivesJoinedDocRef = _firestore.collection('users').doc(user.uid).collection('possessions').doc('hives_joined');
+    final hivesJoinedDoc = await hivesJoinedDocRef.get();
+
+    if(displayFirstName != null){
+      user.displayFirstName = displayFirstName;
+      mainUserDocUpdated = true;
+    }
+    if(displayLastName != null){
+      user.displayLastName = displayLastName;
+      mainUserDocUpdated = true;
+    }
+    if(email != null){
+      user.email = email;
+      mainUserDocUpdated = true;
+    }
+    if(photoURL != null){
+      user.photoURL = photoURL;
+      mainUserDocUpdated = true;
+    }
+    if(isEmailVerified != null){
+      user.isEmailVerified = isEmailVerified;
+      mainUserDocUpdated = true;
+    }
+    if(phoneNumber != null){
+      user.phoneNumber = phoneNumber;
+      mainUserDocUpdated = true;
+    }
+    if(hasCompletedSetup != null){
+      user.hasCompletedSetup = hasCompletedSetup;
+      mainUserDocUpdated = true;
+    }
+    if(description != null){
+      user.description = description;
+      mainUserDocUpdated = true;
+    }
+    if(dark_mode != null){
+      user.dark_mode = dark_mode;
+      mainUserDocUpdated = true;
+    }
+    if(is_teacher != null){
+      user.is_teacher = is_teacher;
+      mainUserDocUpdated = true;
+    }
+    if(lang != null){ 
+      user.lang = lang;
+      mainUserDocUpdated = true;
+    }
+    if(logoPref != null){
+      user.logoPref = logoPref;
+      mainUserDocUpdated = true;
+    }
+    if(country_code != null){
+      user.country_code = country_code;
+      mainUserDocUpdated = true;
+    }
+    if(userName != null){
+      user.userName = userName;
+      mainUserDocUpdated = true;
+    }
+    if(password != null){
+      user.password = password;
+      mainUserDocUpdated = true;
+    }
+    if(school != null){ 
+      user.school = school;
+      mainUserDocUpdated = true;
+    }
+    if(activity_log != null){
+      user.activity_log = activity_log;
+      mainUserDocUpdated = true;
+    }
+    if(appreciation_points != null){
+      user.appreciation_points = appreciation_points;
+      mainUserDocUpdated = true;
+    }
+    if(hives_joined != null){
+      user.hives_joined = hives_joined;
+      mainUserDocUpdated = true;
+    }
+
+
+
+    if(mainDoc.exists && mainUserDocUpdated){
       final updateData = <String, dynamic>{
         if(dark_mode != null) 'dark_mode': dark_mode,
         if(isEmailVerified != null) 'isEmailVerified': isEmailVerified,
@@ -109,12 +211,32 @@ class UserRepository {
         if(userName != null) 'username': userName,
         if(school != null) 'school': school,
       };
-
-      await docRef.update(updateData);
+      await mainDocRef.update(updateData);
+    }
+    else if(activity_log != null){
+      await activityLogDocRef.update({
+        'activity_log': activity_log,
+      });
+    }
+    else if(appreciation_points != null){
+      await appreciationPointsDocRef.update({
+        'appreciation_points': appreciation_points,
+      });
+    }
+    else if(hives_joined != null){
+      await hivesJoinedDocRef.update({
+        'hives_joined': hives_joined,
+      });
     }
   }
 
-  Future<void> createUserDocIfNeeded(String email, String userName, String firstName, String lastName, String password, {bool isNewUser = true}) async {
+  Future<void> createUserDocIfNeeded(
+    String email, 
+    String userName, 
+    String firstName, 
+    String lastName, 
+    String password, 
+    {bool isNewUser = true}) async {
     try{
     final user = currentAppUser;
     if(user == null){
