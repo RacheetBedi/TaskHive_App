@@ -22,7 +22,6 @@ import 'package:riverpod_annotation/experimental/json_persist.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 class HiveServiceProvider extends StateNotifier<AsyncValue<List<Hive>>>{
-  //final HiveRepository _repo;
   final Ref ref;
 
   HiveServiceProvider(this.ref) : super(const AsyncValue.loading()){
@@ -30,9 +29,12 @@ class HiveServiceProvider extends StateNotifier<AsyncValue<List<Hive>>>{
     //Must code _loadHives first; should this be listenToHiveChanges instead?
   }
 
-  Future<void> createNewFirestoreHive(Hive hive) async{
+  Future<void> addNewFirestoreHive(Hive hive) async{
     try{
-      
+      final myCurrentHives = state.asData?.value ?? [];
+      state = AsyncValue.data([...myCurrentHives, hive]);
+
+      //await HiveRepository(ref).createHiveDocIfNeeded(hive); Hive will be created in the page classes; needs WidgetRef
 
     } catch(e, st){
       state = AsyncValue.error(e, st);
