@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_app/models/group_models/hive.dart';
 
 class AppUser{
   String uid;
@@ -21,7 +22,7 @@ class AppUser{
   String? school;
   List<Map<String, dynamic>>? activity_log;
   List<Map<int, String>>? appreciation_points;
-  List<Map<dynamic, dynamic>>? hives_joined;
+  List<Hive>? hives_joined;
 
 
   AppUser({
@@ -62,7 +63,7 @@ class AppUser{
     String school = "",
     List<Map<String, dynamic>>? activity_log,
     List<Map<int, String>>? appreciation_points,
-    List<Map<dynamic, dynamic>>? hives_joined,
+    List<Hive>? hives_joined,
     }){
     return AppUser(
       uid: user.uid,
@@ -97,7 +98,7 @@ class AppUser{
     String? school,
     List<Map<String, dynamic>>? activity_log,
     List<Map<int, String>>? appreciation_points,
-    List<Map<dynamic, dynamic>>? hives_joined,
+    List<Hive>? hives_joined,
     //ADD OTHER PROPERTIES LATER HERE!
   }) {
     return AppUser(

@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_app/models/group_models/hive.dart';
 import 'package:flutter_app/models/user_models/app_user.dart';
 import 'package:flutter_app/providers/auth_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -59,7 +60,7 @@ class UserRepository {
       userName: mainUserData?['username'] ?? '',
       activity_log: List<Map<String, dynamic>>.from(activityLogData?.values ?? []),
       appreciation_points: List<Map<int, String>>.from(appreciationPointsData?.values ?? []),
-      hives_joined: List<Map<dynamic, dynamic>>.from(hivesJoinedData?.values ?? []),
+      hives_joined: List<Hive>.from(hivesJoinedData?.values ?? []),
     );
 
     //Get.snackbar('The following is the user data in the doc:', '${updatedUser.displayFirstName}, ${updatedUser.displayLastName}, ${updatedUser.email}, ${updatedUser.uid}');
@@ -92,7 +93,7 @@ class UserRepository {
     String? school,
     List<Map<String, dynamic>>? activity_log,
     List<Map<int, String>>? appreciation_points,
-    List<Map<dynamic, dynamic>>? hives_joined,
+    List<Hive>? hives_joined,
     }) async{
 
     final user = currentAppUser;
@@ -213,17 +214,19 @@ class UserRepository {
       };
       await mainDocRef.update(updateData);
     }
-    else if(activity_log != null){
+    
+    if(activity_log != null){
       await activityLogDocRef.update({
         'activity_log': activity_log,
       });
     }
-    else if(appreciation_points != null){
+    
+    if(appreciation_points != null){
       await appreciationPointsDocRef.update({
         'appreciation_points': appreciation_points,
       });
     }
-    else if(hives_joined != null){
+    if(hives_joined != null){
       await hivesJoinedDocRef.update({
         'hives_joined': hives_joined,
       });

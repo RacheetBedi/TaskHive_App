@@ -40,11 +40,14 @@ class Hive {
   String? points_description;
   String? icon_description;
   //Map of tasks can only be coded when the task model object is coded
-  Map<String, bool> default_settings;
+  Map<String, bool> default_settings; //Replace this with a list of defaultSettingModelObjects later when the model is actually coded
   bool teacher_led;
   bool ai_summary;
   String theme_color;
   String? hiveImage;
+  List<Map<String, dynamic>>? appreciation_snippet;
+  List<Map<String, dynamic>>? tasks_snippet; //Replace this with a list of taskModelObjects later when the model is actually coded
+  //Replace this with a list of appreciationSnippetModelObjects later when the model is actually coded
 
   Hive({
     this.hive_uid,
@@ -59,5 +62,6 @@ class Hive {
     required this.ai_summary,
     required this.theme_color,
     this.hiveImage,
+    this.appreciation_snippet,
   });
 }
