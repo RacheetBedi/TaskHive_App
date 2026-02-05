@@ -190,8 +190,6 @@ class UserRepository {
       mainUserDocUpdated = true;
     }
 
-
-
     if(mainDoc.exists && mainUserDocUpdated){
       final updateData = <String, dynamic>{
         if(dark_mode != null) 'dark_mode': dark_mode,

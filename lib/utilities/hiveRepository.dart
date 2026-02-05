@@ -47,12 +47,14 @@ class HiveRepository{
 
       curUser.hives_joined?.add(hive);
 
-      final docRef = _firestore.collection('groups').doc(); //If the hive hasn't been made yet, that means that
+      final mainHiveRef = _firestore.collection('groups').doc(); 
+      
+      //If the hive hasn't been made yet, that means that
         //the hive uid is null; so to prevent a firestore error, we use this dummy uid which will
         //certainly fail to produce a docRef and thus proceed to the creation step below.
-      final doc = await docRef.get();
+      final mainHiveDoc = await mainHiveRef.get();
 
-      await docRef.set({
+      await mainHiveRef.set({
           'hive_name': hive.hive_name,
           'hive_description': hive.hive_description,
           'hive_points_description': hive.points_description,
@@ -65,13 +67,46 @@ class HiveRepository{
           'theme_color': hive.theme_color,
           'ai_summary': hive.ai_summary,
           'hiveImage': hive.hiveImage,
-
       });
 
-      hive.hive_uid = docRef.id;
+      hive.hive_uid = mainHiveRef.id;
+
+      final recentUpdatesDocRef = _firestore.collection('groups').doc(mainHiveRef.id).collection('Recent Updates').doc('set_1');
+      //Change set_1 to set_# based on the number of days elapsed since the creation of the hive, divided by 3.
+      //We will automatically start deleting sets of recent updates when reaching around 50 sets (150 days).
+
+      final hiveUsersDocRef = _firestore.collection('groups').doc(mainHiveRef.id).collection('group_users').doc('user_data');
+      final assignedTasksDocRef = _firestore.collection('groups').doc(mainHiveRef.id).collection('tasks').doc('assigned_task_properties').collection('Assigned Tasks List').doc('tasks_set_1');
+      final completedTasksDocRef = _firestore.collection('groups').doc(mainHiveRef.id).collection('tasks').doc('completed_task_properties').collection('Completed Tasks List').doc('completedTasks_set_1');
+
+      await recentUpdatesDocRef.set({
+        'recent_updates': hive.recent_updates ?? [],
+      });
+
+      await hiveUsersDocRef.set({
+        'hive_users': hive.hive_users ?? [],
+      });
+
+      await assignedTasksDocRef.set({
+        'assigned_tasks': hive.assigned_tasks ?? [],
+      });
+
+      await completedTasksDocRef.set({
+        'completed_tasks': hive.completed_tasks ?? [],
+      });
     } catch(err, st){
       Get.snackbar('Error', 'Failed to create Hive document: $err');
     }
+  }
+
+  Future<void> updateHiveDocData(Hive hive) async {
+
+      final mainHiveRef = _firestore.collection('groups').doc(hive.hive_uid); 
+
+      final recentUpdatesDocRef = _firestore.collection('groups').doc(hive.hive_uid).collection('Recent Updates').doc('set_1');
+      final hiveUsersDocRef = _firestore.collection('groups').doc(hive.hive_uid).collection('group_users').doc('user_data');
+      final assignedTasksDocRef = _firestore.collection('groups').doc(hive.hive_uid).collection('tasks').doc('assigned_task_properties').collection('Assigned Tasks List').doc('tasks_set_1');
+      final completedTasksDocRef = _firestore.collection('groups').doc(hive.hive_uid).collection('tasks').doc('completed_task_properties').collection('Completed Tasks List').doc('completedTasks_set_1');
   }
 
   // Future<bool> hasCompletedHiveSetup() async {
