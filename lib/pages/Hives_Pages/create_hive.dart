@@ -21,7 +21,8 @@ import 'package:get/get_navigation/get_navigation.dart';
 import 'package:async/async.dart';
 
 class CreateHive extends ConsumerStatefulWidget {
-  const CreateHive({super.key});
+  final Function(NavigationPage) onNavigate;
+  const CreateHive({super.key, required this.onNavigate});
   @override
   ConsumerState<CreateHive> createState() => _CreateHiveState();
 }
@@ -198,21 +199,21 @@ class _CreateHiveState extends ConsumerState<CreateHive> {
                   ),
                   const SizedBox(height: 10,),
                   Transform.scale(
-                      scale: 1,
-                      child: DropdownMenu<SubjectLabel>(
-                        initialSelection: SubjectLabel.mathematics,
-                        onSelected: (SubjectLabel? subject) {
-                          setState(() {
-                            _subject = subject?.label ?? "Mathematics";
-                          });
-                        },
-                        dropdownMenuEntries: SubjectLabel.entries,
-                      ),
+                    scale: 1,
+                    child: DropdownMenu<SubjectLabel>(
+                      initialSelection: SubjectLabel.mathematics,
+                      onSelected: (SubjectLabel? subject) {
+                        setState(() {
+                          _subject = subject?.label ?? "Mathematics";
+                        });
+                      },
+                      dropdownMenuEntries: SubjectLabel.entries,
                     ),
+                  ),
                   const SizedBox(height: 10,),
                   ElevatedButton(
                     onPressed: () {
-                      // Takes to Hive Settings Page
+                      widget.onNavigate(NavigationPage.hiveSettings);
                     },
                     style: ElevatedButton.styleFrom(
                       shape: RoundedRectangleBorder(

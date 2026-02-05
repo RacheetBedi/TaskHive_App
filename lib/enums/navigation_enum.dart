@@ -10,6 +10,7 @@ enum NavigationPage {
   profile,
   addTasks,
   createHive,
+  hiveSettings,
 }
 
 extension NavigationPageExtension on NavigationPage {
@@ -37,6 +38,10 @@ extension NavigationPageExtension on NavigationPage {
         return 'Add Tasks';
       case NavigationPage.createHive:
         return 'Create Hive';
+      case NavigationPage.hiveSettings:
+        return 'Hive Settings';
+      //default:
+        //return '';
     }
   }
 
