@@ -26,7 +26,10 @@
 
 // Tasks for Jeevanth:
 
-// Fix the dark mode
-// Start making some widgets for each page
-//Fix Profile Page: The Description Tile, Profile Picture Popup
-//Work on Settings Page: Dark Mode, Language Localization
+//Idea for Next Week:
+// Hive settings page is a step by step (Page View that scrolls horizontally through each page)...
+//Page 1: Hive Name, Description, and Subject (Dropdown Menu)
+//Page 2: Hive Icon, Hive Color, and Add Memebers
+//Page 3: Hive Settings and Creation Button
+
+//Make the back button on secondary pages take you back to previous page multiple times (using a list)
