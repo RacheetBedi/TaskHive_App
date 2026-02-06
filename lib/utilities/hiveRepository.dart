@@ -119,78 +119,128 @@ class HiveRepository{
     bool? ai_summary,
     String? theme_color,
     String? hiveImage,
-    List<Map<String, dynamic>>? appreciation_snippet,
-    List<Map<dynamic, dynamic>>? task_snippet,
+    //Snippets can't be changed, they are set directly through firestore. When a task or something
+    //else hive related is added, the hive document is updated, and the appreciation/task snippets are automatically triggered to update as well.
     List<List<Map<String, String>>>? recent_updates,
     List<Map<dynamic, dynamic>>? hive_users,
     List<Map<String, dynamic>>? assigned_tasks,
     List<Map<String, dynamic>>? completed_tasks,
     }) async {
 
+      final hive = currentHive;
+
       bool mainHiveElementsChanged = false;
 
-      final mainHiveRef = _firestore.collection('groups').doc(hive.hive_uid); 
+      final mainHiveRef = _firestore.collection('groups').doc(hive?.hive_uid); 
       final mainDoc = mainHiveRef.get();
 
-      final recentUpdatesDocRef = _firestore.collection('groups').doc(hive.hive_uid).collection('Recent Updates').doc('set_1');
+      final recentUpdatesDocRef = _firestore.collection('groups').doc(hive?.hive_uid).collection('Recent Updates').doc('set_1');
       final recentUpdatesDoc = recentUpdatesDocRef.get();
 
-      final hiveUsersDocRef = _firestore.collection('groups').doc(hive.hive_uid).collection('group_users').doc('user_data');
+      final hiveUsersDocRef = _firestore.collection('groups').doc(hive?.hive_uid).collection('group_users').doc('user_data');
       final hiveUsersDoc = hiveUsersDocRef.get();
 
-      final assignedTasksDocRef = _firestore.collection('groups').doc(hive.hive_uid).collection('tasks').doc('assigned_task_properties').collection('Assigned Tasks List').doc('tasks_set_1');
+      final assignedTasksDocRef = _firestore.collection('groups').doc(hive?.hive_uid).collection('tasks').doc('assigned_task_properties').collection('Assigned Tasks List').doc('tasks_set_1');
       final assignedTasksDoc = assignedTasksDocRef.get();
-      final completedTasksDocRef = _firestore.collection('groups').doc(hive.hive_uid).collection('tasks').doc('completed_task_properties').collection('Completed Tasks List').doc('completedTasks_set_1');
+      final completedTasksDocRef = _firestore.collection('groups').doc(hive?.hive_uid).collection('tasks').doc('completed_task_properties').collection('Completed Tasks List').doc('completedTasks_set_1');
 
       if(hive_name != null){
+        hive?.hive_name = hive_name;
         mainHiveElementsChanged = true;
       }
 
       if(hive_description != null){
+        hive?.hive_description = hive_description;
         mainHiveElementsChanged = true;
       }
 
       if(hive_subject != null){
+        hive?.hive_subject = hive_subject;
         mainHiveElementsChanged = true;
       }
 
       if(hive_code != null){
+        hive?.hive_code = hive_code;
         mainHiveElementsChanged = true;
       }
 
       if(points_description != null){
+        hive?.points_description = points_description;
         mainHiveElementsChanged = true;
       }
 
       if(icon_description != null){
+        hive?.icon_description = icon_description;
         mainHiveElementsChanged = true;
       }
 
       if(default_settings != null){
+        hive?.default_settings = default_settings;
         mainHiveElementsChanged = true;
       }
 
       if(teacher_led != null){
+        hive?.teacher_led = teacher_led;
         mainHiveElementsChanged = true;
       }
 
       if(ai_summary != null){
+        hive?.ai_summary = ai_summary;
         mainHiveElementsChanged = true;
       }
 
       if(theme_color != null){
+        hive?.theme_color = theme_color;
         mainHiveElementsChanged = true;
       }
 
       if(hiveImage != null){
+        hive?.hiveImage = hiveImage;
         mainHiveElementsChanged = true;
       }
 
-
-
-      if(mainDoc !=null){
-        
+      if(mainDoc !=null && mainHiveElementsChanged){
+        final updateData = <String, dynamic>{
+          if(hive_name != null) 'hive_name': hive_name,
+          if(hive_description != null) 'hive_description': hive_description,
+          if(hive_subject != null) 'hive_subject': hive_subject,
+          if(hive_code != null) 'hive_code': hive_code,
+          if(points_description != null) 'points_description': points_description,
+          if(icon_description != null) 'icon_description': icon_description,
+          if(default_settings != null) 'default_settings': default_settings,
+          if(teacher_led != null) 'teacher_led': teacher_led,
+          if(ai_summary != null) 'ai_summary': ai_summary,
+          if(theme_color != null) 'theme_color': theme_color,
+          if(hiveImage != null) 'hiveImage': hiveImage,
+        };
+        await mainHiveRef.update(updateData);
       }
+
+      if(recentUpdatesDoc != null && recent_updates != null){
+        await recentUpdatesDocRef.update({
+          'recent_updates': recent_updates,
+        });
+      }
+
+      if(hiveUsersDoc != null && hive_users != null){
+        await hiveUsersDocRef.update({
+          'hive_users': hive_users,
+        });
+      }
+
+      if(assignedTasksDoc != null && assigned_tasks != null){
+        await assignedTasksDocRef.update({
+          'assigned_tasks': assigned_tasks,
+        });
+      }
+
+      if(completedTasksDocRef != null && completed_tasks != null){
+        await completedTasksDocRef.update({
+          'completed_tasks': completed_tasks,
+        });
+      }
+      //These are placeholder update statements; each of these will require a 
+      //separate method to update, which needs to be coded later.
   }
 
   // Future<bool> hasCompletedHiveSetup() async {
