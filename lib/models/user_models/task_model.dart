@@ -30,6 +30,7 @@ class TaskModel {
   // Structure is Map<uid, role>, where "role" indicates if the user is "creator", "task/project leader", "contributor", or the rare role of "spectator"
   // This structure allows for role-based permissions and consistency across tasks and projects.
   String hive_ID;
+  String hive_name;
   String difficulty;
   bool help_flagged;
   String help_details;
@@ -48,6 +49,7 @@ class TaskModel {
     this.date_completed,
     required this.users_tasked,
     required this.hive_ID,
+    required this.hive_name,
     required this.difficulty,
     this.help_flagged = false,
     this.help_details = '',

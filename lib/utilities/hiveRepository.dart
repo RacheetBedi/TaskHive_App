@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_app/models/group_models/hive.dart';
 import 'package:flutter_app/models/user_models/app_user.dart';
 import 'package:flutter_app/providers/auth_provider.dart';
+import 'package:flutter_app/providers/hive_service_provider.dart';
+import 'package:flutter_app/providers/hive_service_provider.dart';
 import 'package:flutter_app/utilities/userRepository.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get_navigation/get_navigation.dart';
@@ -12,24 +14,29 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 class HiveRepository{
   final WidgetRef ref;
-  String uid; 
+  String? uid; 
   //This is the uid of the hive, automatically assigned by Firestore.
 
-  HiveRepository (this.ref, this.uid);
+  HiveRepository (this.ref);
 
-  //currentHive riverpod placerholder
+  Hive? get currentHive{
+    final hiveState = ref.read(hiveServiceProvider);
+    uid = hiveState.asData?.value?.hive_uid;
+    return hiveState.asData?.value;
+  }
 
-  DocumentReference<Map<String, dynamic>> get hiveDocuments => _firestore.collection('groups').doc(uid);
+  DocumentReference<Map<String, dynamic>> get hiveDocument => _firestore.collection('groups').doc(uid); //Add a way to properly get the uid, using riverpod, later.
 
   FirebaseFirestore get _firestore => FirebaseFirestore.instance;
 
-  Future<AppUser?> initializeHive() async{
+  Future<Hive?> initializeHive() async{
     try{
-    final hive = hiveDocuments;
-    if(hiveDocuments == null) return null;
-    Get.snackbar('Initializing the App User', 'Please help me');
+    final hive = hiveDocument;
+    if(hiveDocument == null) return null;
+    Get.snackbar('Initializing the Hive', 'Please help me');
 
-    final doc = await _firestore.collection('groups').doc(uid).get();
+    final doc = await _firestore.collection('groups').doc(uid).get(); //Fix the reading of the data (make it proper, distinguishing between a snippet and all of the data)
+    //In this case, we want to only read a snippet
     if(!doc.exists) return null;
     final data = doc.data();
 
@@ -99,14 +106,91 @@ class HiveRepository{
     }
   }
 
-  Future<void> updateHiveDocData(Hive hive) async {
+  Future<void> updateHiveDocData({
+    required Hive hive,
+    String? hive_name,
+    String? hive_description,
+    String? hive_subject,
+    String? hive_code,
+    String? points_description,
+    String? icon_description,
+    Map<String, bool>? default_settings, //This will be changed
+    bool? teacher_led,
+    bool? ai_summary,
+    String? theme_color,
+    String? hiveImage,
+    List<Map<String, dynamic>>? appreciation_snippet,
+    List<Map<dynamic, dynamic>>? task_snippet,
+    List<List<Map<String, String>>>? recent_updates,
+    List<Map<dynamic, dynamic>>? hive_users,
+    List<Map<String, dynamic>>? assigned_tasks,
+    List<Map<String, dynamic>>? completed_tasks,
+    }) async {
+
+      bool mainHiveElementsChanged = false;
 
       final mainHiveRef = _firestore.collection('groups').doc(hive.hive_uid); 
+      final mainDoc = mainHiveRef.get();
 
       final recentUpdatesDocRef = _firestore.collection('groups').doc(hive.hive_uid).collection('Recent Updates').doc('set_1');
+      final recentUpdatesDoc = recentUpdatesDocRef.get();
+
       final hiveUsersDocRef = _firestore.collection('groups').doc(hive.hive_uid).collection('group_users').doc('user_data');
+      final hiveUsersDoc = hiveUsersDocRef.get();
+
       final assignedTasksDocRef = _firestore.collection('groups').doc(hive.hive_uid).collection('tasks').doc('assigned_task_properties').collection('Assigned Tasks List').doc('tasks_set_1');
+      final assignedTasksDoc = assignedTasksDocRef.get();
       final completedTasksDocRef = _firestore.collection('groups').doc(hive.hive_uid).collection('tasks').doc('completed_task_properties').collection('Completed Tasks List').doc('completedTasks_set_1');
+
+      if(hive_name != null){
+        mainHiveElementsChanged = true;
+      }
+
+      if(hive_description != null){
+        mainHiveElementsChanged = true;
+      }
+
+      if(hive_subject != null){
+        mainHiveElementsChanged = true;
+      }
+
+      if(hive_code != null){
+        mainHiveElementsChanged = true;
+      }
+
+      if(points_description != null){
+        mainHiveElementsChanged = true;
+      }
+
+      if(icon_description != null){
+        mainHiveElementsChanged = true;
+      }
+
+      if(default_settings != null){
+        mainHiveElementsChanged = true;
+      }
+
+      if(teacher_led != null){
+        mainHiveElementsChanged = true;
+      }
+
+      if(ai_summary != null){
+        mainHiveElementsChanged = true;
+      }
+
+      if(theme_color != null){
+        mainHiveElementsChanged = true;
+      }
+
+      if(hiveImage != null){
+        mainHiveElementsChanged = true;
+      }
+
+
+
+      if(mainDoc !=null){
+        
+      }
   }
 
   // Future<bool> hasCompletedHiveSetup() async {

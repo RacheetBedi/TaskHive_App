@@ -21,7 +21,12 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:riverpod_annotation/experimental/json_persist.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-class HiveServiceProvider extends StateNotifier<AsyncValue<List<Hive>>>{
+final hiveServiceProvider =
+    StateNotifierProvider<HiveServiceProvider, AsyncValue<Hive?>>(
+  (ref) => HiveServiceProvider(ref),
+);
+
+class HiveServiceProvider extends StateNotifier<AsyncValue<Hive?>>{
   final Ref ref;
 
   HiveServiceProvider(this.ref) : super(const AsyncValue.loading()){
@@ -29,10 +34,14 @@ class HiveServiceProvider extends StateNotifier<AsyncValue<List<Hive>>>{
     //Must code _loadHives first; should this be listenToHiveChanges instead?
   }
 
+  void updateHive(Hive hive){
+    state = AsyncValue.data(hive);
+  }
+
   Future<void> addNewFirestoreHive(Hive hive) async{
     try{
-      final myCurrentHives = state.asData?.value ?? [];
-      state = AsyncValue.data([...myCurrentHives, hive]);
+      final myCurrentHive = state.asData?.value;
+      state = AsyncValue.data(hive);
 
       //await HiveRepository(ref).createHiveDocIfNeeded(hive); Hive will be created in the page classes; needs WidgetRef
 

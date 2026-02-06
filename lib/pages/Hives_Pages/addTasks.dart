@@ -1,16 +1,20 @@
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/enums/navigation_enum.dart';
 import 'package:flutter_app/models/group_models/hive.dart';
+import 'package:flutter_app/models/user_models/task_model.dart';
 import 'package:flutter_app/pages/Home_Pages/main_page.dart';
 import 'package:flutter_app/pages/Summaries_Pages/recent_changes.dart';
 import 'package:flutter_app/pages/Main_Settings_Pages/settings.dart';
 import 'package:flutter_app/pages/Summaries_Pages/summary.dart';
+import 'package:flutter_app/utilities/hiveRepository.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/get_navigation.dart';
 import 'package:choice/choice.dart';
 import 'package:dio/dio.dart';
 import 'package:async/async.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 class AddTasksBody extends ConsumerStatefulWidget {
   const AddTasksBody({super.key});
@@ -19,11 +23,20 @@ class AddTasksBody extends ConsumerStatefulWidget {
 }
 
 class _AddTasksBodyState extends ConsumerState<AddTasksBody> {
+
   GlobalKey<FormState> date = GlobalKey<FormState>();
   GlobalKey<FormState> time = GlobalKey<FormState>();
   TextEditingController taskname = TextEditingController();
   TextEditingController taskdescription = TextEditingController();
+
   bool _isGoogleTask = false;
+  bool _isTradeable = false;//Still need to incorporate this into the page itself
+
+  DateTime dueDate = DateTime.now();
+  TimeOfDay dueTime = const TimeOfDay(hour: 23, minute: 59);
+
+
+
   List<String> hives = [
     'Hive 1',
     'Hive 2',
@@ -33,7 +46,7 @@ class _AddTasksBodyState extends ConsumerState<AddTasksBody> {
     'Hive 6',
     'Hive 7',
     'Hive 8',
-  ];
+  ]; //Unnecessary, as this page goes through the hive itself
   String? hiveValue;
   void setHiveValue(String? value) {
     setState(() => hiveValue = value);
@@ -65,6 +78,35 @@ class _AddTasksBodyState extends ConsumerState<AddTasksBody> {
     } on DioException catch (e) {
       throw ErrorDescription(e.message ?? '');
     }
+  }
+
+  Future<void> addTasks() async{
+
+    final DateTime fullDateTimeAssigned = DateTime.now();
+
+    final DateTime fullDateTimeDue = DateTime(
+      dueDate.year,
+      dueDate.month,
+      dueDate.day,
+      dueTime.hour,
+      dueTime.minute,
+    );
+
+    Hive? curHive = HiveRepository(ref).currentHive;
+
+    final newTask = TaskModel(
+      task_name: taskname.text, 
+      tradeable: _isTradeable, 
+      date_assigned: fullDateTimeAssigned, 
+      date_due: fullDateTimeDue, 
+      taskType: 'Mathematics', //Placeholder, add a task Subject Type dropdown field on the page later
+      task_description: taskdescription.text, 
+      users_tasked: {}, //Placeholder, until user loading is actually coded in the backend
+      hive_ID: curHive?.hive_uid ??  'xxxxx', //Placeholder
+      hive_name: curHive?.hive_name ?? 'xxx', //Placeholder, 
+      difficulty: _difficulty ?? '', 
+      gc_task: _isGoogleTask,
+    );
   }
 
   @override
@@ -249,10 +291,19 @@ class _AddTasksBodyState extends ConsumerState<AddTasksBody> {
             ),
             const SizedBox(height: 15,),
             ElevatedButton(
-              onPressed: () {
-                showDialog(context: context, builder: (BuildContext context) {
+              onPressed: () async {
+                final DateTime? selectedDate = await showDialog<DateTime>(context: context, builder: (BuildContext context) {
                   return DatePickerDialog(firstDate: DateTime(2000), lastDate: DateTime(2100), initialDate: DateTime.now(), initialEntryMode: DatePickerEntryMode.input, key: date);
-                });
+                }) ?? DateTime.now();
+
+                if(selectedDate != null){
+                  setState(() {
+                    dueDate = selectedDate;
+                  });
+                }
+                else{
+                  Get.snackbar('Error', 'Failure in retreiving the due date');
+                }
               },
               child: const Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -265,10 +316,19 @@ class _AddTasksBodyState extends ConsumerState<AddTasksBody> {
             ),
             const SizedBox(height: 15,),
             ElevatedButton(
-              onPressed: () {
-                showDialog(context: context, builder: (BuildContext context) {
+              onPressed: () async {
+                final TimeOfDay? selectedTime = await showDialog<TimeOfDay>(context: context, builder: (BuildContext context) {
                   return TimePickerDialog(initialTime: TimeOfDay.now(), initialEntryMode: TimePickerEntryMode.input, key: time);
                 });
+
+                if(selectedTime != null){
+                  setState(() {
+                    dueTime = selectedTime;
+                  });
+                }
+                else{
+                  Get.snackbar('Error', 'Failure in retreiving the due time');
+                }
               },
               child: const Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -298,6 +358,7 @@ class _AddTasksBodyState extends ConsumerState<AddTasksBody> {
   );
   }
 }
+
 typedef TaskDifficulty = DropdownMenuEntry<TaskDifficultyLabel>;
 
 enum TaskDifficultyLabel {
