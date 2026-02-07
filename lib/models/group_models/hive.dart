@@ -49,6 +49,19 @@ class Hive {
   List<Map<String, dynamic>>? tasks_snippet; //Replace this with a list of taskModelObjects later when the model is actually coded
   //Replace this with a list of appreciationSnippetModelObjects later when the model is actually coded
 
+  //Each set of recent updates corresponds to 3 days of updates
+  //A maximum of ten sets are stored
+  List<List<Map<String, String>>>? recent_updates; //Max should be ten
+  List<Map<dynamic, dynamic>>? hive_users; //Document has a limit of ~2,800 users, which should be more then enough.
+
+  //Assigned tasks and completed tasks documents will be subcollections of the hive page, referenced by the tasks subcollection.
+  //Under assigned/completed tasks, there will be multiple subcollections; each one will reference sets of tasks, automatically sorted by creation. 
+  //Each subcollection references a document with a set of ~100 tasks, with earlier ones created before.
+  List<Map<String, dynamic>>? assigned_tasks; //Replace the data type with the task object later
+  List<Map<String, dynamic>>? completed_tasks; //Replace the data type with the task object later
+
+  //On initialization, only ~10 assigned, to the current user, and ~5 completed, will be loaded. For more, there will be a load more button.
+
   Hive({
     this.hive_uid,
     required this.hive_name,
@@ -63,5 +76,9 @@ class Hive {
     required this.theme_color,
     this.hiveImage,
     this.appreciation_snippet,
+    this.recent_updates,
+    this.hive_users,
+    this.assigned_tasks,
+    this.completed_tasks,
   });
 }
