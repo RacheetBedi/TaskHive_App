@@ -31,6 +31,36 @@ class _CreateHiveState extends ConsumerState<CreateHive> {
   TextEditingController hiveName = TextEditingController();
   TextEditingController hiveDesc = TextEditingController();
   String _subject = "Mathematics";
+  int _step = 0;
+  final AsyncMemoizer<List<ChoiceData<String>>> _choicesMemoizer =
+      AsyncMemoizer();
+  List<ChoiceData<String>> ownerValue = [];
+  Color _selectedColor = const Color(0xFFFFB743);
+  IconData _selectedIcon = Icons.group;
+  bool _isPrivate = false;
+  bool _allowInvites = true;
+  bool _nectarCenter = true;
+  bool _taskTrading = true;
+  bool _taskAddition = true;
+  bool _taskRemoval = true;
+  bool _aiSummary = false;
+  bool _hiveNotifications = true;
+  final List<Color> _colorOptions = [
+    Color(0xFFFFB743),
+    Color(0xFFFF7700),
+    Color(0xFFFFF600),
+    Color(0xFFFF00EE),
+    Colors.blue,
+    Colors.green,
+  ];
+  final List<IconData> _iconOptions = [
+    Icons.group,
+    Icons.bolt,
+    Icons.school,
+    Icons.auto_awesome,
+    Icons.sports_soccer,
+    Icons.music_note,
+  ];
   @override
   void initState() {
     super.initState();
@@ -38,246 +68,446 @@ class _CreateHiveState extends ConsumerState<CreateHive> {
 
   @override
   Widget build(BuildContext context) {
-    final choicesMemoizer = AsyncMemoizer<List<ChoiceData<String>>>();
-
-  Future<List<ChoiceData<String>>> getChoices() async {
-    try {
-      const url =
-          "https://randomuser.me/api/?inc=name,picture,email&results=25";
-      final res = await Dio().get(url);
-      final data = res.data['results'] as List;
-      return Future.value(data.asChoiceData(
-        value: (i, e) => e['email'],
-        title: (i, e) => e['name']['first'] + ' ' + e['name']['last'],
-        image: (i, e) => e['picture']['thumbnail'],
-      ));
-    } on DioException catch (e) {
-      throw ErrorDescription(e.message ?? '');
+    Future<List<ChoiceData<String>>> getChoices() async {
+      try {
+        const url =
+            "https://randomuser.me/api/?inc=name,picture,email&results=25";
+        final res = await Dio().get(url);
+        final data = res.data['results'] as List;
+        return Future.value(data.asChoiceData(
+          value: (i, e) => e['email'],
+          title: (i, e) => e['name']['first'] + ' ' + e['name']['last'],
+          image: (i, e) => e['picture']['thumbnail'],
+        ));
+      } on DioException catch (e) {
+        throw ErrorDescription(e.message ?? '');
+      }
     }
-  }
-  List<ChoiceData<String>> ownerValue = [];
-  void setOwnerValue(List<ChoiceData<String>> value) {
-    setState(() => ownerValue = value);
-  }
-    return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Container(
-          padding: const EdgeInsets.only(top: 10.0),
-          child: ListView(
+
+    void setOwnerValue(List<ChoiceData<String>> value) {
+      setState(() => ownerValue = value);
+    }
+
+    Widget _buildStepContent() {
+      switch (_step) {
+        case 0:
+          return ListView(
+            padding:
+                const EdgeInsets.symmetric(horizontal: 8.0, vertical: 10.0),
             children: [
-              Column(
+              TextField(
+                controller: hiveName,
+                decoration: const InputDecoration(
+                  hintText: 'Hive Name',
+                  constraints: BoxConstraints(
+                    maxWidth: 600,
+                    minWidth: 50,
+                    minHeight: 50,
+                    maxHeight: 50,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 10),
+              TextField(
+                controller: hiveDesc,
+                minLines: 3,
+                maxLines: 6,
+                decoration: const InputDecoration(
+                  hintText: 'Hive Description',
+                ),
+              ),
+              const SizedBox(height: 10),
+              Transform.scale(
+                scale: 1,
+                child: DropdownMenu<SubjectLabel>(
+                  initialSelection: SubjectLabel.mathematics,
+                  onSelected: (SubjectLabel? subject) {
+                    setState(() {
+                      _subject = subject?.label ?? "Mathematics";
+                    });
+                  },
+                  dropdownMenuEntries: SubjectLabel.entries,
+                ),
+              ),
+            ],
+          );
+        case 1:
+          return ListView(
+            padding:
+                const EdgeInsets.symmetric(horizontal: 8.0, vertical: 10.0),
+            children: [
+              const Text('Choose Hive Color', style: TextStyle(fontSize: 16)),
+              const SizedBox(height: 8),
+              Wrap(
+                spacing: 8,
+                children: _colorOptions.map((c) {
+                  final selected = c == _selectedColor;
+                  return GestureDetector(
+                    onTap: () => setState(() => _selectedColor = c),
+                    child: Container(
+                      width: 48,
+                      height: 48,
+                      decoration: BoxDecoration(
+                        color: c,
+                        shape: BoxShape.circle,
+                        border: selected
+                            ? Border.all(color: Colors.black, width: 3)
+                            : null,
+                      ),
+                    ),
+                  );
+                }).toList(),
+              ),
+              const SizedBox(height: 16),
+              const Text('Choose Hive Icon', style: TextStyle(fontSize: 16)),
+              const SizedBox(height: 8),
+              Wrap(
+                spacing: 8,
+                children: _iconOptions.map((ic) {
+                  final selected = ic == _selectedIcon;
+                  return GestureDetector(
+                    onTap: () => setState(() => _selectedIcon = ic),
+                    child: Container(
+                      width: 64,
+                      height: 64,
+                      decoration: BoxDecoration(
+                        color: selected
+                            ? _selectedColor.withAlpha(40)
+                            : Colors.transparent,
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(
+                          color:
+                              selected ? _selectedColor : Colors.grey.shade300,
+                        ),
+                      ),
+                      child: Icon(ic, size: 32, color: _selectedColor),
+                    ),
+                  );
+                }).toList(),
+              ),
+            ],
+          );
+        default:
+          return FutureBuilder<List<ChoiceData<String>>>(
+            initialData: const [],
+            future: _choicesMemoizer.runOnce(getChoices),
+            builder: (context, snapshot) {
+              return ListView(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 8.0, vertical: 10.0),
                 children: [
-                  TextField(
-                    controller: hiveName,
-                    decoration: const InputDecoration(
-                      hintText: 'Hive Name',
-                      constraints: BoxConstraints(
-                        maxWidth: 225,
-                        minWidth: 50,
-                        minHeight: 50,
-                        maxHeight: 50,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 10,),
-                  ElevatedButton(
-                    onPressed: () {
-                      // Popup for Choosing Icon
-                    },
-                    style: ElevatedButton.styleFrom(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(100000000),
-                        side: const BorderSide(
-                          color: Color(0xFFFF7700),
-                          width: 1,
+                  SizedBox(
+                    width: 600,
+                    child: Card(
+                      color: const Color(0xFFFFB743),
+                      child: Theme(
+                        data: Theme.of(context).copyWith(
+                          appBarTheme: Theme.of(context).appBarTheme.copyWith(
+                                iconTheme: const IconThemeData(
+                                    color: Color.fromARGB(255, 0, 0, 0)),
+                              ),
                         ),
-                      ),
-                    ),
-                    child: const Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(Icons.search, size: 30, color: Color(0xFFFF7700),),
-                        SizedBox(width: 10),
-                        Text(
-                          "Choose Hive Icon",
-                          style: TextStyle(
-                            fontFamily: 'Jomhuria',
-                            fontWeight: FontWeight.normal,
-                            fontSize: 40,
-                            color: Color(0xFFFF7700),
+                        child: PromptedChoice<ChoiceData<String>>.multiple(
+                          title: 'Hive Members',
+                          clearable: true,
+                          error: snapshot.hasError,
+                          errorBuilder: ChoiceListError.create(
+                            message: snapshot.error.toString(),
                           ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 10,),
-                  FutureBuilder<List<ChoiceData<String>>>(
-                    initialData: const [],
-                    future: choicesMemoizer.runOnce(getChoices),
-                    builder: (context, snapshot) {
-                      return SizedBox(
-                        width: 300,
-                        child: Card(
-                          color:const Color(0xFFFFB743),
-                          child: Theme(
-                            data: Theme.of(context).copyWith(
-                              appBarTheme: Theme.of(context).appBarTheme.copyWith(
-                                iconTheme: const IconThemeData(color: Color.fromARGB(255, 0, 0, 0)),
-                              ),
+                          loading: snapshot.connectionState ==
+                              ConnectionState.waiting,
+                          value: ownerValue,
+                          onChanged: setOwnerValue,
+                          itemCount: snapshot.data?.length ?? 0,
+                          itemBuilder: (state, i) {
+                            final choice = snapshot.data?.elementAt(i);
+                            return CheckboxListTile(
+                              value: state.selected(choice!),
+                              onChanged: state.onSelected(choice),
+                              title: Text(choice.title),
+                              subtitle: choice.subtitle != null
+                                  ? Text(
+                                      choice.subtitle!,
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                    )
+                                  : null,
+                              secondary: choice.image != null
+                                  ? CircleAvatar(
+                                      backgroundImage:
+                                          NetworkImage(choice.image!),
+                                    )
+                                  : null,
+                            );
+                          },
+                          modalHeaderBuilder: ChoiceModal.createHeader(
+                            title: const Text(
+                              'Select Hive Members',
+                              style: TextStyle(
+                                  fontSize: 50, fontWeight: FontWeight.normal),
                             ),
-                            child: PromptedChoice<ChoiceData<String>>.multiple(
-                              title: 'Hive Members',
-                              clearable: true,
-                              error: snapshot.hasError,
-                              errorBuilder: ChoiceListError.create(
-                                message: snapshot.error.toString(),
-                              ),
-                              loading: snapshot.connectionState == ConnectionState.waiting,
-                              value: ownerValue,
-                              onChanged: setOwnerValue,
-                              itemCount: snapshot.data?.length ?? 0,
-                              itemBuilder: (state, i) {
-                                final choice = snapshot.data?.elementAt(i);
-                                return CheckboxListTile(
-                                  value: state.selected(choice!),
-                                  onChanged: state.onSelected(choice),
-                                  title: Text(choice.title),
-                                  subtitle: choice.subtitle != null
-                                    ? Text(
-                                        choice.subtitle!,
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
-                                      )
-                                    : null,
-                                  secondary: choice.image != null
-                                    ? CircleAvatar(
-                                        backgroundImage: NetworkImage(choice.image!),
-                                      )
-                                    : null,
+                            actionsBuilder: [
+                              (state) {
+                                final values = snapshot.data!;
+                                return Checkbox(
+                                  value: state.selectedMany(values),
+                                  onChanged: state.onSelectedMany(values),
+                                  tristate: true,
                                 );
                               },
-                              modalHeaderBuilder: ChoiceModal.createHeader(
-                                title: const Text('Select Hive Members', style: TextStyle(fontSize: 50, fontWeight: FontWeight.normal),),
-                                actionsBuilder: [
-                                  (state) {
-                                    final values = snapshot.data!;
-                                    return Checkbox(
-                                      value: state.selectedMany(values),
-                                      onChanged: state.onSelectedMany(values),
-                                      tristate: true,
-                                    );
-                                  },
-                                  ChoiceModal.createSpacer(width: 25),
-                                ],
-                              ),
-                              promptDelegate: ChoicePrompt.delegateBottomSheet(),
-                              anchorBuilder: ChoiceAnchor.create(valueTruncate: 1),
-                            ),
+                              ChoiceModal.createSpacer(width: 25),
+                            ],
                           ),
-                        ),
-                      );
-                    },
-                  ),
-                  const SizedBox(height: 10,),
-                  TextField(
-                    controller: hiveDesc,
-                    expands: true,
-                    minLines: null,
-                    maxLines: null,
-                    textAlign: TextAlign.start,
-                    textAlignVertical: TextAlignVertical.top,
-                    decoration: const InputDecoration(
-                      hintText: 'description',
-                      constraints: BoxConstraints(
-                        maxWidth: 350,
-                        minWidth: 50,
-                        minHeight: 50,
-                        maxHeight: 200,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 10,),
-                  Transform.scale(
-                    scale: 1,
-                    child: DropdownMenu<SubjectLabel>(
-                      initialSelection: SubjectLabel.mathematics,
-                      onSelected: (SubjectLabel? subject) {
-                        setState(() {
-                          _subject = subject?.label ?? "Mathematics";
-                        });
-                      },
-                      dropdownMenuEntries: SubjectLabel.entries,
-                    ),
-                  ),
-                  const SizedBox(height: 10,),
-                  ElevatedButton(
-                    onPressed: () {
-                      widget.onNavigate(NavigationPage.hiveSettings);
-                    },
-                    style: ElevatedButton.styleFrom(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(100000000),
-                        side: const BorderSide(
-                          color: Color(0xFFFFF600),
-                          width: 1,
+                          promptDelegate: ChoicePrompt.delegateBottomSheet(),
+                          anchorBuilder: ChoiceAnchor.create(valueTruncate: 1),
                         ),
                       ),
                     ),
-                    child: const Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                  ),
+                  const SizedBox(height: 16),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(10, 10, 20, 10),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Icon(Icons.settings_outlined, size: 30, color: Color(0xFFFFF600),),
-                        SizedBox(width: 10),
-                        Text(
-                          "Hive Settings",
+                        const Text(
+                          'Nectar Center',
                           style: TextStyle(
-                            fontFamily: 'Jomhuria',
-                            fontWeight: FontWeight.normal,
-                            fontSize: 40,
-                            color: Color(0xFFFFF600),
+                              color: Colors.white,
+                              fontSize: 48,
+                              fontFamily: 'Jomhuria'),
+                        ),
+                        Transform.scale(
+                          scale: 1.5,
+                          child: Switch(
+                            value: _nectarCenter,
+                            onChanged: (val) =>
+                                setState(() => _nectarCenter = val),
                           ),
                         ),
                       ],
                     ),
                   ),
-                  const SizedBox(height: 10,),
-                  ElevatedButton(
-                    onPressed: () {
-                      // Creates the Hive
-                    },
-                    style: ElevatedButton.styleFrom(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(100000000),
-                        side: const BorderSide(
-                          color: Color(0xFFFF00EE),
-                          width: 1,
-                        ),
-                      ),
-                    ),
-                    child: const Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(10, 10, 20, 10),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Icon(Icons.group_add_outlined, size: 30, color: Color(0xFFFF00EE),),
-                        SizedBox(width: 10),
-                        Text(
-                          "Create Hive",
+                        const Text(
+                          'Task Trading',
                           style: TextStyle(
-                            fontFamily: 'Jomhuria',
-                            fontWeight: FontWeight.normal,
-                            fontSize: 40,
-                            color: Color(0xFFFF00EE),
+                              color: Colors.white,
+                              fontSize: 48,
+                              fontFamily: 'Jomhuria'),
+                        ),
+                        Transform.scale(
+                          scale: 1.5,
+                          child: Switch(
+                            value: _taskTrading,
+                            onChanged: (val) =>
+                                setState(() => _taskTrading = val),
                           ),
                         ),
                       ],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(10, 10, 20, 10),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(
+                          'Task Addition',
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 48,
+                              fontFamily: 'Jomhuria'),
+                        ),
+                        Transform.scale(
+                          scale: 1.5,
+                          child: Switch(
+                            value: _taskAddition,
+                            onChanged: (val) =>
+                                setState(() => _taskAddition = val),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(10, 10, 20, 10),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(
+                          'Task Removal',
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 48,
+                              fontFamily: 'Jomhuria'),
+                        ),
+                        Transform.scale(
+                          scale: 1.5,
+                          child: Switch(
+                            value: _taskRemoval,
+                            onChanged: (val) =>
+                                setState(() => _taskRemoval = val),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(10, 10, 20, 10),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(
+                          'AI Summary',
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 48,
+                              fontFamily: 'Jomhuria'),
+                        ),
+                        Transform.scale(
+                          scale: 1.5,
+                          child: Switch(
+                            value: _aiSummary,
+                            onChanged: (val) =>
+                                setState(() => _aiSummary = val),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(10, 10, 20, 10),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(
+                          'Hive Notifications',
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 48,
+                              fontFamily: 'Jomhuria'),
+                        ),
+                        Transform.scale(
+                          scale: 1.5,
+                          child: Switch(
+                            value: _hiveNotifications,
+                            onChanged: (val) =>
+                                setState(() => _hiveNotifications = val),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  ElevatedButton.icon(
+                    onPressed: () {
+                      final summary = {
+                        'name': hiveName.text,
+                        'description': hiveDesc.text,
+                        'subject': _subject,
+                        'color': _selectedColor,
+                        'icon': _selectedIcon.codePoint,
+                        'members': ownerValue.map((e) => e.value).toList(),
+                        'private': _isPrivate,
+                        'allowInvites': _allowInvites,
+                      };
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          content: Text('Creating hive: ${hiveName.text}')));
+                    },
+                    icon: const Icon(
+                      Icons.group_add_outlined,
+                      color: Colors.black,
+                    ),
+                    label: const Padding(
+                      padding: EdgeInsets.symmetric(vertical: 12.0),
+                      child: Text(
+                        'Create Hive',
+                        style: TextStyle(fontSize: 18, color: Colors.black),
+                      ),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: _selectedColor,
                     ),
                   ),
                 ],
-              )
-            ]
-          ),
+              );
+            },
+          );
+      }
+    }
+
+    void _next() {
+      if (_step < 2) {
+        setState(() => _step += 1);
+      } else {
+        // Final action: create hive
+        ScaffoldMessenger.of(context)
+            .showSnackBar(const SnackBar(content: Text('Create Hive action')));
+      }
+    }
+
+    void _back() {
+      if (_step > 0) setState(() => _step -= 1);
+    }
+
+    return Scaffold(
+      body: SafeArea(
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('Create Hive - Step ${_step + 1} of 3',
+                      style: const TextStyle(fontSize: 18)),
+                  TextButton(
+                    onPressed: () => widget.onNavigate(NavigationPage.hives),
+                    child: const Text('Cancel'),
+                  ),
+                ],
+              ),
+            ),
+            Expanded(child: _buildStepContent()),
+            Padding(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
+              child: Row(
+                children: [
+                  if (_step > 0)
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: _back,
+                        child: const Text('Back'),
+                      ),
+                    )
+                  else
+                    const SizedBox.shrink(),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    flex: 2,
+                    child: ElevatedButton(
+                      onPressed: _next,
+                      child: Text(_step < 2 ? 'Next' : 'Create'),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
         ),
-      )
+      ),
     );
   }
 }

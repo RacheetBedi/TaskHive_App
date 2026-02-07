@@ -65,26 +65,26 @@ class _MainPageState extends State<MainPage> {
     });
   }
 
- Widget _buildNonMainPageBody() {
-  switch (_currentPage) {
-    case NavigationPage.recentChanges:
-      return const RecentChangesBody();
-    case NavigationPage.summary:
-      return const SummaryBody();
-    case NavigationPage.settings:
-      return SettingsBody(onNavigate: _onNavigate);
-    case NavigationPage.profile:
-      return const ProfileBody();
-    case NavigationPage.addTasks:
-      return const AddTasksBody();
-    case NavigationPage.createHive:
-      return CreateHive(onNavigate: _onNavigate);
+  Widget _buildNonMainPageBody() {
+    switch (_currentPage) {
+      case NavigationPage.recentChanges:
+        return const RecentChangesBody();
+      case NavigationPage.summary:
+        return const SummaryBody();
+      case NavigationPage.settings:
+        return SettingsBody(onNavigate: _onNavigate);
+      case NavigationPage.profile:
+        return const ProfileBody();
+      case NavigationPage.addTasks:
+        return const AddTasksBody();
+      case NavigationPage.createHive:
+        return CreateHive(onNavigate: _onNavigate);
       case NavigationPage.hiveSettings:
-      return const HiveSettings();
-    default:
-      return const SizedBox.shrink();
+        return const HiveSettings();
+      default:
+        return const SizedBox.shrink();
+    }
   }
-}
 
   @override
   Widget build(BuildContext context) {
@@ -115,24 +115,29 @@ class _MainPageState extends State<MainPage> {
                         Container(
                           padding: const EdgeInsets.symmetric(horizontal: 3),
                           decoration: BoxDecoration(
-                            color:
-                                const Color.fromARGB(104, 255, 255, 255),
+                            color: const Color.fromARGB(104, 255, 255, 255),
                             borderRadius: BorderRadius.circular(25),
                           ),
                           child: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               IconButton(
-                                icon: const Icon(Icons.history_outlined, color: Colors.red),
-                                onPressed: () => _onNavigate(NavigationPage.recentChanges),
+                                icon: const Icon(Icons.history_outlined,
+                                    color: Colors.red),
+                                onPressed: () =>
+                                    _onNavigate(NavigationPage.recentChanges),
                               ),
                               IconButton(
-                                icon: const Icon(Icons.analytics_outlined, color: Colors.red),
-                                onPressed: () => _onNavigate(NavigationPage.summary),
+                                icon: const Icon(Icons.analytics_outlined,
+                                    color: Colors.red),
+                                onPressed: () =>
+                                    _onNavigate(NavigationPage.summary),
                               ),
                               IconButton(
-                                icon: const Icon(Icons.settings_outlined, color: Colors.red),
-                                onPressed: () => _onNavigate(NavigationPage.settings),
+                                icon: const Icon(Icons.settings_outlined,
+                                    color: Colors.red),
+                                onPressed: () =>
+                                    _onNavigate(NavigationPage.settings),
                               ),
                             ],
                           ),
@@ -169,29 +174,29 @@ class _MainPageState extends State<MainPage> {
         ),
       ),
       body: Stack(
-      children: [
-        Offstage(
-          offstage: !_currentPage.isMainPage,
-          child: PageView(
-            controller: _pageController,
-            physics: const NeverScrollableScrollPhysics(),
-            children: [
-              HomeBody(onNavigate: _onNavigate),
-              TrackingBody(onNavigate: _onNavigate),
-              HivesBody(onNavigate: _onNavigate),
-              GoogleClassroomBody(onNavigate: _onNavigate),
-              CalendarBody(onNavigate: _onNavigate),
-            ],
+        children: [
+          Offstage(
+            offstage: !_currentPage.isMainPage,
+            child: PageView(
+              controller: _pageController,
+              physics: const NeverScrollableScrollPhysics(),
+              children: [
+                HomeBody(onNavigate: _onNavigate),
+                TrackingBody(onNavigate: _onNavigate),
+                HivesBody(onNavigate: _onNavigate),
+                GoogleClassroomBody(onNavigate: _onNavigate),
+                CalendarBody(onNavigate: _onNavigate),
+              ],
+            ),
           ),
-        ),
-
-        if (!_currentPage.isMainPage)
-          Container(
-            color: const Color.fromARGB(0, 255, 255, 255), // hides the PageView behind it... this should stop the error from lacking a pageview i think
-            child: _buildNonMainPageBody(),
-          ),
-      ],
-    ),
+          if (!_currentPage.isMainPage)
+            Container(
+              color: const Color.fromARGB(0, 255, 255,
+                  255), // hides the PageView behind it... this should stop the error from lacking a pageview i think
+              child: _buildNonMainPageBody(),
+            ),
+        ],
+      ),
       bottomNavigationBar: _currentPage.isMainPage
           ? CurvedNavigationBar(
               key: _bottomNavigationKey,
@@ -204,8 +209,7 @@ class _MainPageState extends State<MainPage> {
                 Icon(Icons.calendar_month_outlined, size: 30),
               ],
               color: const Color.fromARGB(255, 243, 139, 21),
-              buttonBackgroundColor:
-                  const Color.fromARGB(255, 230, 123, 96),
+              buttonBackgroundColor: const Color.fromARGB(255, 230, 123, 96),
               backgroundColor: const Color(0xFFFFDD97),
               animationCurve: Curves.easeInOut,
               animationDuration: const Duration(milliseconds: 600),
