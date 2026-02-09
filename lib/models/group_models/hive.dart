@@ -1,8 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter_app/models/group_models/hive_default_settings_model.dart';
 import 'package:flutter_app/models/user_models/app_user.dart';
 import 'package:flutter_app/pages/Setup_Pages/login_page.dart';
 import 'package:flutter_app/providers/google_auth_service_provider.dart';
@@ -40,13 +42,13 @@ class Hive {
   String? points_description;
   String? icon_description;
   //Map of tasks can only be coded when the task model object is coded
-  Map<String, bool> default_settings; //Replace this with a list of defaultSettingModelObjects later when the model is actually coded
+  HiveDefaultSettingsModel? default_settings; //Replace this with a list of defaultSettingModelObjects later when the model is actually coded
   bool teacher_led;
   bool ai_summary;
   String theme_color;
   String? hiveImage;
   List<Map<String, dynamic>>? appreciation_snippet;
-  List<Map<String, dynamic>>? tasks_snippet; //Replace this with a list of taskModelObjects later when the model is actually coded
+  List<Task>? tasks_snippet; //Replace this with a list of taskModelObjects later when the model is actually coded
   //Replace this with a list of appreciationSnippetModelObjects later when the model is actually coded
 
   //Each set of recent updates corresponds to 3 days of updates
@@ -57,8 +59,8 @@ class Hive {
   //Assigned tasks and completed tasks documents will be subcollections of the hive page, referenced by the tasks subcollection.
   //Under assigned/completed tasks, there will be multiple subcollections; each one will reference sets of tasks, automatically sorted by creation. 
   //Each subcollection references a document with a set of ~100 tasks, with earlier ones created before.
-  List<Map<String, dynamic>>? assigned_tasks; //Replace the data type with the task object later
-  List<Map<String, dynamic>>? completed_tasks; //Replace the data type with the task object later
+  List<Task>? assigned_tasks; //Replace the data type with the task object later
+  List<Task>? completed_tasks; //Replace the data type with the task object later
 
   //On initialization, only ~10 assigned, to the current user, and ~5 completed, will be loaded. For more, there will be a load more button.
 
