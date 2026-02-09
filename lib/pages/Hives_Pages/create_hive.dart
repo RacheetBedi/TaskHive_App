@@ -38,6 +38,7 @@ class _CreateHiveState extends ConsumerState<CreateHive> {
   List<ChoiceData<String>> ownerValue = [];
   Color _selectedColor = const Color(0xFFFFB743);
   IconData _selectedIcon = Icons.group;
+  
   bool _isPrivate = false;
   bool _allowInvites = true;
   bool _nectarCenter = true;

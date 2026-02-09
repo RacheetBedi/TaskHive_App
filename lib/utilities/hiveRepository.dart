@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/models/group_models/hive.dart';
+import 'package:flutter_app/models/group_models/hive_default_settings_model.dart';
 import 'package:flutter_app/models/user_models/app_user.dart';
 import 'package:flutter_app/providers/auth_provider.dart';
 import 'package:flutter_app/providers/hive_service_provider.dart';
@@ -14,10 +15,15 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 class HiveRepository{
   final WidgetRef ref;
-  String? uid; 
+  String? uid = 'uninitialized';
+  bool hiveMade = false;
   //This is the uid of the hive, automatically assigned by Firestore.
 
-  HiveRepository (this.ref);
+  HiveRepository(this.ref, [this.uid]){
+    if(uid == 'uninitialized'){
+      hiveMade = false;
+    }
+  }
 
   Hive? get currentHive{
     final hiveState = ref.read(hiveServiceProvider);
@@ -25,20 +31,54 @@ class HiveRepository{
     return hiveState.asData?.value;
   }
 
-  DocumentReference<Map<String, dynamic>> get hiveDocument => _firestore.collection('groups').doc(uid); //Add a way to properly get the uid, using riverpod, later.
+  Future<DocumentReference<Map<String, dynamic>>> get hiveDocument async{
+    return _firestore.collection('groups').doc(uid);
+  }
 
   FirebaseFirestore get _firestore => FirebaseFirestore.instance;
 
-  Future<Hive?> initializeHive() async{
+  Future<Hive?> initializeCurrentHive() async{
     try{
-    final hive = hiveDocument;
-    if(hiveDocument == null) return null;
-    Get.snackbar('Initializing the Hive', 'Please help me');
+      final hiveDocRef;
+      if(hiveMade){
+        hiveDocRef = await hiveDocument;
+      }
+      else{
+        return null;
+      }
+      if(hiveDocRef == null) return null;
+      Get.snackbar('Initializing the Hive', 'Please help me');
 
-    final doc = await _firestore.collection('groups').doc(uid).get(); //Fix the reading of the data (make it proper, distinguishing between a snippet and all of the data)
-    //In this case, we want to only read a snippet
-    if(!doc.exists) return null;
-    final data = doc.data();
+      final hiveDoc = await hiveDocRef.get(); //Fix the reading of the data (make it proper, distinguishing between a snippet and all of the data)
+      //In this case, we want to only read a snippet
+      if(!hiveDoc.exists) return null;
+
+      final mainHiveData = hiveDoc.data();
+
+      final defaultSettings = HiveDefaultSettingsModel(
+        additionEnabled: mainHiveData?['default_settings']?['additionEnabled'] ?? false, 
+        appreciationEnabled: mainHiveData?['default_settings']?['appreciationEnabled'] ?? false, 
+        logEnabled: mainHiveData?['default_settings']?['logEnabled'] ?? false, 
+        taskRemovalEnabled: mainHiveData?['default_settings']?['taskRemovalEnabled'] ?? false, 
+        summaryEnabled: mainHiveData?['default_settings']?['summaryEnabled'] ?? false, 
+        tradingEnabled: mainHiveData?['default_settings']?['tradingEnabled'] ?? false); //Fix the firestore references.
+
+      final hive = Hive(
+        hive_uid: hiveDoc.id,
+        hive_name: mainHiveData?['hive_name'] ?? '',
+        hive_description: mainHiveData?['hive_description'] ?? '',
+        hive_subject: mainHiveData?['hive_subject'] ?? '',
+        hive_code: mainHiveData?['hive_code'] ?? '',
+        points_description: mainHiveData?['points_description'] ?? '',
+        icon_description: mainHiveData?['icon_description'] ?? '',
+        default_settings: defaultSettings,
+        teacher_led: mainHiveData?['teacher_led'] ?? false,
+        ai_summary: mainHiveData?['ai_summary'] ?? false,
+        theme_color: mainHiveData?['theme_color'] ?? 'blue',
+        hiveImage: mainHiveData?['hiveImage'],
+      );
+
+
 
     } catch (e){
       Get.snackbar("Error", "Failed to initialize in user repository: $e");
@@ -77,6 +117,7 @@ class HiveRepository{
       });
 
       hive.hive_uid = mainHiveRef.id;
+      hiveMade = true;
 
       final recentUpdatesDocRef = _firestore.collection('groups').doc(mainHiveRef.id).collection('Recent Updates').doc('set_1');
       //Change set_1 to set_# based on the number of days elapsed since the creation of the hive, divided by 3.
@@ -114,7 +155,7 @@ class HiveRepository{
     String? hive_code,
     String? points_description,
     String? icon_description,
-    Map<String, bool>? default_settings, //This will be changed
+    HiveDefaultSettingsModel? default_settings, //This will be changed
     bool? teacher_led,
     bool? ai_summary,
     String? theme_color,
@@ -252,5 +293,4 @@ class HiveRepository{
   // }
 
   //Implement later when hasCompletedSetup bugs have been resolved.
-
 }
