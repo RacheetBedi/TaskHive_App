@@ -19,6 +19,7 @@ import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/get_navigation.dart';
 import 'package:async/async.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 class CreateHive extends ConsumerStatefulWidget {
   final Function(NavigationPage) onNavigate;
@@ -95,39 +96,44 @@ class _CreateHiveState extends ConsumerState<CreateHive> {
             padding:
                 const EdgeInsets.symmetric(horizontal: 8.0, vertical: 10.0),
             children: [
-              TextField(
-                controller: hiveName,
-                decoration: const InputDecoration(
-                  hintText: 'Hive Name',
-                  constraints: BoxConstraints(
-                    maxWidth: 600,
-                    minWidth: 50,
-                    minHeight: 50,
-                    maxHeight: 50,
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  TextField(
+                    controller: hiveName,
+                    decoration: const InputDecoration(
+                      hintText: 'Hive Name',
+                      constraints: BoxConstraints(
+                        maxWidth: 600,
+                        minWidth: 50,
+                        minHeight: 50,
+                        maxHeight: 50,
+                      ),
+                    ),
                   ),
-                ),
-              ),
-              const SizedBox(height: 10),
-              TextField(
-                controller: hiveDesc,
-                minLines: 3,
-                maxLines: 6,
-                decoration: const InputDecoration(
-                  hintText: 'Hive Description',
-                ),
-              ),
-              const SizedBox(height: 10),
-              Transform.scale(
-                scale: 1,
-                child: DropdownMenu<SubjectLabel>(
-                  initialSelection: SubjectLabel.mathematics,
-                  onSelected: (SubjectLabel? subject) {
-                    setState(() {
-                      _subject = subject?.label ?? "Mathematics";
-                    });
-                  },
-                  dropdownMenuEntries: SubjectLabel.entries,
-                ),
+                  const SizedBox(height: 10),
+                  TextField(
+                    controller: hiveDesc,
+                    minLines: 3,
+                    maxLines: 6,
+                    decoration: const InputDecoration(
+                      hintText: 'Hive Description',
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  Transform.scale(
+                    scale: 1,
+                    child: DropdownMenu<SubjectLabel>(
+                      initialSelection: SubjectLabel.mathematics,
+                      onSelected: (SubjectLabel? subject) {
+                        setState(() {
+                          _subject = subject?.label ?? "Mathematics";
+                        });
+                      },
+                      dropdownMenuEntries: SubjectLabel.entries,
+                    ),
+                  ),
+                ]
               ),
             ],
           );
@@ -274,7 +280,7 @@ class _CreateHiveState extends ConsumerState<CreateHive> {
                         const Text(
                           'Nectar Center',
                           style: TextStyle(
-                              color: Colors.white,
+                              color: Colors.black,
                               fontSize: 48,
                               fontFamily: 'Jomhuria'),
                         ),
@@ -298,7 +304,7 @@ class _CreateHiveState extends ConsumerState<CreateHive> {
                         const Text(
                           'Task Trading',
                           style: TextStyle(
-                              color: Colors.white,
+                              color: Colors.black,
                               fontSize: 48,
                               fontFamily: 'Jomhuria'),
                         ),
@@ -322,7 +328,7 @@ class _CreateHiveState extends ConsumerState<CreateHive> {
                         const Text(
                           'Task Addition',
                           style: TextStyle(
-                              color: Colors.white,
+                              color: Colors.black,
                               fontSize: 48,
                               fontFamily: 'Jomhuria'),
                         ),
@@ -346,7 +352,7 @@ class _CreateHiveState extends ConsumerState<CreateHive> {
                         const Text(
                           'Task Removal',
                           style: TextStyle(
-                              color: Colors.white,
+                              color: Colors.black,
                               fontSize: 48,
                               fontFamily: 'Jomhuria'),
                         ),
@@ -370,7 +376,7 @@ class _CreateHiveState extends ConsumerState<CreateHive> {
                         const Text(
                           'AI Summary',
                           style: TextStyle(
-                              color: Colors.white,
+                              color: Colors.black,
                               fontSize: 48,
                               fontFamily: 'Jomhuria'),
                         ),
@@ -386,7 +392,7 @@ class _CreateHiveState extends ConsumerState<CreateHive> {
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.fromLTRB(10, 10, 20, 10),
+                    padding: const EdgeInsets.fromLTRB(10, 10, 20, 0),
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -394,7 +400,7 @@ class _CreateHiveState extends ConsumerState<CreateHive> {
                         const Text(
                           'Hive Notifications',
                           style: TextStyle(
-                              color: Colors.white,
+                              color: Colors.black,
                               fontSize: 48,
                               fontFamily: 'Jomhuria'),
                         ),
@@ -407,37 +413,6 @@ class _CreateHiveState extends ConsumerState<CreateHive> {
                           ),
                         ),
                       ],
-                    ),
-                  ),
-                  const SizedBox(height: 12),
-                  ElevatedButton.icon(
-                    onPressed: () {
-                      final summary = {
-                        'name': hiveName.text,
-                        'description': hiveDesc.text,
-                        'subject': _subject,
-                        'color': _selectedColor,
-                        'icon': _selectedIcon.codePoint,
-                        'members': ownerValue.map((e) => e.value).toList(),
-                        'private': _isPrivate,
-                        'allowInvites': _allowInvites,
-                      };
-                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                          content: Text('Creating hive: ${hiveName.text}')));
-                    },
-                    icon: const Icon(
-                      Icons.group_add_outlined,
-                      color: Colors.black,
-                    ),
-                    label: const Padding(
-                      padding: EdgeInsets.symmetric(vertical: 12.0),
-                      child: Text(
-                        'Create Hive',
-                        style: TextStyle(fontSize: 18, color: Colors.black),
-                      ),
-                    ),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: _selectedColor,
                     ),
                   ),
                 ],
@@ -470,11 +445,11 @@ class _CreateHiveState extends ConsumerState<CreateHive> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('Create Hive - Step ${_step + 1} of 3',
-                      style: const TextStyle(fontSize: 18)),
+                  Text('${_step + 1}/3',
+                      style: const TextStyle(fontSize: 18, color: Colors.green)),
                   TextButton(
                     onPressed: () => widget.onNavigate(NavigationPage.hives),
-                    child: const Text('Cancel'),
+                    child: const Text('Cancel', style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold)),
                   ),
                 ],
               ),
@@ -498,8 +473,32 @@ class _CreateHiveState extends ConsumerState<CreateHive> {
                   Expanded(
                     flex: 2,
                     child: ElevatedButton(
-                      onPressed: _next,
-                      child: Text(_step < 2 ? 'Next' : 'Create'),
+                      onPressed: _step < 2 ? _next : () {
+                        final summary = {
+                          'name': hiveName.text,
+                          'description': hiveDesc.text,
+                          'subject': _subject,
+                          'color': _selectedColor,
+                          'icon': _selectedIcon.codePoint,
+                          'members': ownerValue.map((e) => e.value).toList(),
+                          'private': _isPrivate,
+                          'allowInvites': _allowInvites,
+                        };
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: Text('Creating hive: ${hiveName.text}')));
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: _step < 2 ? const Color.fromARGB(255, 0, 0, 0) : _selectedColor,
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          _step < 2 ? const SizedBox.shrink() 
+                          : const Icon(Icons.group_add_outlined,color: Colors.black, size: 25,),
+                          _step < 2 ? const SizedBox.shrink() : const SizedBox(width: 8),
+                          Text(_step < 2 ? 'Next' : 'Create', style: _step < 2 ? const TextStyle(color: Colors.white) : const TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
+                        ],
+                      ),
                     ),
                   ),
                 ],
