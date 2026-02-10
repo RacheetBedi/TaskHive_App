@@ -3,6 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter_app/enums/achievements_enum.dart';
+import 'package:flutter_app/models/group_models/hive.dart';
 import 'package:flutter_app/models/user_models/app_user.dart';
 import 'package:flutter_app/pages/Setup_Pages/login_page.dart';
 import 'package:flutter_app/providers/google_auth_service_provider.dart';
@@ -17,6 +19,22 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:riverpod_annotation/experimental/json_persist.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-class AppreciationPointsUserModel{
-  
+class RecentUpdateUserModel{
+  DateTime? updateTime;
+  String? briefDescription;
+  Hive? hiveOccurred;
+  AppUser? userResponsible;
+  String? longerDescription;
+  Achievements? achievementUnlocked; //Null if no achievement was unlocked, otherwise contains the achievement that was unlocked
+  bool? helpedOthers;
+
+  RecentUpdateUserModel({
+    this.updateTime,
+    this.briefDescription,
+    this.hiveOccurred,
+    this.userResponsible,
+    this.longerDescription,
+    this.achievementUnlocked,
+    this.helpedOthers
+  });
 }

@@ -3,6 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter_app/enums/achievements_enum.dart';
+import 'package:flutter_app/models/group_models/hive.dart';
 import 'package:flutter_app/models/user_models/app_user.dart';
 import 'package:flutter_app/pages/Setup_Pages/login_page.dart';
 import 'package:flutter_app/providers/google_auth_service_provider.dart';
@@ -17,6 +19,19 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:riverpod_annotation/experimental/json_persist.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-class ActivityLogUserModel{
-  
+class NectarPointsUserModel{
+  int? numIconsEarned;
+  List<Achievements>? achievementsEarned; //List of the achievements earned, which can be used to display the achievements in the profile page
+  int? numPointsEarned;
+  //String is for the icon photoURL
+  Hive? popularHive; //Hive in which the user has earned the most appreciation points, which can be used to display the hive in the home page as a spotlight
+  AppUser? mostHelped; //User who has received the most appreciation points from the user, which can be used to display the user in the home page as a spotlight
+
+  NectarPointsUserModel({
+    this.numIconsEarned,
+    this.achievementsEarned,
+    this.numPointsEarned,
+    this.popularHive,
+    this.mostHelped
+  });
 }

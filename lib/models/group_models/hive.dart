@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_app/models/group_models/hive_default_settings_model.dart';
 import 'package:flutter_app/models/user_models/app_user.dart';
+import 'package:flutter_app/models/user_models/nectar_points_user_model.dart';
+import 'package:flutter_app/models/user_models/recent_update_user_model.dart';
 import 'package:flutter_app/pages/Setup_Pages/login_page.dart';
 import 'package:flutter_app/providers/google_auth_service_provider.dart';
 import 'package:flutter_app/utilities/theme.dart';
@@ -47,14 +49,15 @@ class Hive {
   bool ai_summary;
   String theme_color;
   String? hiveImage;
-  List<Map<String, dynamic>>? appreciation_snippet;
+  List<NectarPointsUserModel>? appreciation_snippet;
+  List<NectarPointsUserModel>? appreciation_points_total; //This is a separate snippet for teachers, which will be used in the teacher's pet achievement. It will be separate from the regular appreciation snippet, which is used for the extrovert achievement. This is because the teacher's pet achievement requires a certain number of points from teachers, so it makes sense to have a separate snippet for that.
   List<Task>? tasks_snippet; //Replace this with a list of taskModelObjects later when the model is actually coded
   //Replace this with a list of appreciationSnippetModelObjects later when the model is actually coded
 
   //Each set of recent updates corresponds to 3 days of updates
   //A maximum of ten sets are stored
-  List<List<Map<String, String>>>? recent_updates; //Max should be ten
-  List<Map<dynamic, dynamic>>? hive_users; //Document has a limit of ~2,800 users, which should be more then enough.
+  List<RecentUpdateUserModel>? recent_updates; //Max should be ten
+  List<AppUser>? hive_users; //Document has a limit of ~2,800 users, which should be more then enough.
 
   //Assigned tasks and completed tasks documents will be subcollections of the hive page, referenced by the tasks subcollection.
   //Under assigned/completed tasks, there will be multiple subcollections; each one will reference sets of tasks, automatically sorted by creation. 
@@ -78,6 +81,7 @@ class Hive {
     required this.theme_color,
     this.hiveImage,
     this.appreciation_snippet,
+    this.appreciation_points_total,
     this.recent_updates,
     this.hive_users,
     this.assigned_tasks,

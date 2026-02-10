@@ -1,9 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/models/group_models/hive.dart';
 import 'package:flutter_app/models/group_models/hive_default_settings_model.dart';
 import 'package:flutter_app/models/user_models/app_user.dart';
+import 'package:flutter_app/models/user_models/recent_update_user_model.dart';
 import 'package:flutter_app/providers/auth_provider.dart';
 import 'package:flutter_app/providers/hive_service_provider.dart';
 import 'package:flutter_app/providers/hive_service_provider.dart';
@@ -63,6 +65,8 @@ class HiveRepository{
         summaryEnabled: mainHiveData?['default_settings']?['summaryEnabled'] ?? false, 
         tradingEnabled: mainHiveData?['default_settings']?['tradingEnabled'] ?? false); //Fix the firestore references.
 
+      
+
       final hive = Hive(
         hive_uid: hiveDoc.id,
         hive_name: mainHiveData?['hive_name'] ?? '',
@@ -116,6 +120,11 @@ class HiveRepository{
           'hiveImage': hive.hiveImage,
       });
 
+      //Fix the default settings, appreciation snippet, recent updates, assigned tasks, and completed tasks based on the following criteria:
+      // 1. Firestore reads/writes minimization
+      // 2. Object separation (each element of the object is a separate Firestore field)
+      // 3. Ease of access (initialize snippets and the main Hive initially, but do appreciation points, assigned tasks, completed tasks, and recent updates on demand, with a load more button for the snippets)
+
       hive.hive_uid = mainHiveRef.id;
       hiveMade = true;
 
@@ -155,17 +164,17 @@ class HiveRepository{
     String? hive_code,
     String? points_description,
     String? icon_description,
-    HiveDefaultSettingsModel? default_settings, //This will be changed
+    HiveDefaultSettingsModel? default_settings,
     bool? teacher_led,
     bool? ai_summary,
     String? theme_color,
     String? hiveImage,
     //Snippets can't be changed, they are set directly through firestore. When a task or something
     //else hive related is added, the hive document is updated, and the appreciation/task snippets are automatically triggered to update as well.
-    List<List<Map<String, String>>>? recent_updates,
-    List<Map<dynamic, dynamic>>? hive_users,
-    List<Map<String, dynamic>>? assigned_tasks,
-    List<Map<String, dynamic>>? completed_tasks,
+    List<RecentUpdateUserModel>? recent_updates,
+    List<AppUser>? hive_users,
+    List<Task>? assigned_tasks,
+    List<Task>? completed_tasks,
     }) async {
 
       final hive = currentHive;
@@ -248,7 +257,7 @@ class HiveRepository{
           if(hive_code != null) 'hive_code': hive_code,
           if(points_description != null) 'points_description': points_description,
           if(icon_description != null) 'icon_description': icon_description,
-          if(default_settings != null) 'default_settings': default_settings,
+          if(default_settings != null) 'default_settings': default_settings, //Actually add the default settings parts
           if(teacher_led != null) 'teacher_led': teacher_led,
           if(ai_summary != null) 'ai_summary': ai_summary,
           if(theme_color != null) 'theme_color': theme_color,
