@@ -11,6 +11,7 @@ import 'package:flutter_app/providers/hive_service_provider.dart';
 import 'package:flutter_app/providers/hive_service_provider.dart';
 import 'package:flutter_app/utilities/userRepository.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:get/get_instance/get_instance.dart';
 import 'package:get/get_navigation/get_navigation.dart';
 import 'package:get/utils.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -184,7 +185,9 @@ class HiveRepository{
       final mainHiveRef = _firestore.collection('groups').doc(hive?.hive_uid); 
       final mainDoc = mainHiveRef.get();
 
-      final recentUpdatesDocRef = _firestore.collection('groups').doc(hive?.hive_uid).collection('Recent Updates').doc('set_1');
+      //Figure out a way so that recent updates are uploaded every day, into sets of 3 days' worth.
+      final recentUpdatesDocRef = _firestore.collection('groups').doc(hive?.hive_uid).collection('Recent Updates').doc('set_1'); 
+      //The set will be dependent on the number of days elapsed since the creation of the hive, divided by 3. We will automatically start deleting sets of recent updates when reaching around 50 sets (150 days).
       final recentUpdatesDoc = recentUpdatesDocRef.get();
 
       final hiveUsersDocRef = _firestore.collection('groups').doc(hive?.hive_uid).collection('group_users').doc('user_data');
@@ -257,7 +260,12 @@ class HiveRepository{
           if(hive_code != null) 'hive_code': hive_code,
           if(points_description != null) 'points_description': points_description,
           if(icon_description != null) 'icon_description': icon_description,
-          if(default_settings != null) 'default_settings': default_settings, //Actually add the default settings parts
+          if(default_settings?.additionEnabled != null) 'default_settings.addition_enabled' : default_settings?.additionEnabled,
+          if (default_settings?.appreciationEnabled != null) 'default_settings.appreciation_enabled' : default_settings?.additionEnabled,
+          if (default_settings?.logEnabled != null) 'default_settings.log_enabled' : default_settings?.logEnabled,
+          if (default_settings?.taskRemovalEnabled != null) 'default_settings.removal_enabled' : default_settings?.taskRemovalEnabled,
+          if (default_settings?.summaryEnabled != null) 'default_settings.summary_enabled' : default_settings?.summaryEnabled,
+          if (default_settings?.tradingEnabled != null) 'default_settings.trading_enabled' : default_settings?.tradingEnabled,
           if(teacher_led != null) 'teacher_led': teacher_led,
           if(ai_summary != null) 'ai_summary': ai_summary,
           if(theme_color != null) 'theme_color': theme_color,
@@ -266,9 +274,11 @@ class HiveRepository{
         await mainHiveRef.update(updateData);
       }
 
+
       if(recentUpdatesDoc != null && recent_updates != null){
+        final List<Map<String, dynamic>> recentUpdatesMap = recent_updates.map((update) => update.toMap()).toList();
         await recentUpdatesDocRef.update({
-          'recent_updates': recent_updates,
+          'recent_updates': FieldValue.arrayUnion(recentUpdatesMap),
         });
       }
 
@@ -303,3 +313,19 @@ class HiveRepository{
 
   //Implement later when hasCompletedSetup bugs have been resolved.
 }
+
+/* Recent updates buffer:
+Recommended architecture (best for many users):
+Client: buffer locally and upload a single per-user-per-day doc at groups/{hive}/user_daily_updates/{YYYY-MM-DD}_{uid}.
+Server aggregator (Cloud Function / Cloud Run scheduled job): nightly/periodic job reads all user_daily_updates for a hive/day, aggregates into the hive-level document(s) (or pre-computed summaries), then deletes or archives the per-user docs.
+Lifecycle: delete or move per-user docs after aggregation, or use Firestore TTL to auto-delete older docs.
+Why this scales: avoids hot-document contention (clients don't all write the same doc), lets you batch/merge writes server-side with BulkWriter, and controls retention to bound storage growth.
+If you must avoid server-side jobs: clients can upload to per-user docs and the UI can merge at read-time — still avoids contention but increases read costs and read-time complexity.
+If payloads are large: store details in Cloud Storage and keep a small Firestore metadata doc referencing the file.
+Operational tips:
+Use Firestore TTL to auto-delete old user_daily_updates docs.
+Use BulkWriter or batched writes in your aggregator for throughput.
+Secure writes so users can only write their own {date}_{uid} docs.
+Keep per-doc size under 1MB; compress or chunk if needed.
+Monitor costs and set retention (e.g., keep raw per-user docs 7 days after aggregation).
+*/

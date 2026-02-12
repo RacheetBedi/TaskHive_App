@@ -101,7 +101,7 @@ class _AddTasksBodyState extends ConsumerState<AddTasksBody> {
       date_due: fullDateTimeDue, 
       taskType: 'Mathematics', //Placeholder, add a task Subject Type dropdown field on the page later
       task_description: taskdescription.text, 
-      users_tasked: {}, //Placeholder, until user loading is actually coded in the backend
+      users_tasked: [], //Placeholder, until user loading is actually coded in the backend
       hive_ID: curHive?.hive_uid ??  'xxxxx', //Placeholder
       hive_name: curHive?.hive_name ?? 'xxx', //Placeholder, 
       difficulty: _difficulty ?? '', 

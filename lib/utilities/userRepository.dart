@@ -220,6 +220,7 @@ class UserRepository {
     }
     
     if(appreciation_points != null){
+      
       await appreciationPointsDocRef.update({
         'appreciation_points': appreciation_points,
       });

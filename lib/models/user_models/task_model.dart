@@ -26,7 +26,7 @@ class TaskModel {
   String taskType;
   String task_description;
   DateTime? date_completed;
-  Map<String, String> users_tasked; //Instead of the first string, something indicating the users should be included; uid is a good option.
+  List<AppUser> users_tasked; //Instead of the first string, something indicating the users should be included; uid is a good option.
   // Structure is Map<uid, role>, where "role" indicates if the user is "creator", "task/project leader", "contributor", or the rare role of "spectator"
   // This structure allows for role-based permissions and consistency across tasks and projects.
   String hive_ID;
@@ -91,12 +91,12 @@ class TaskModel {
     date_completed = completionDate;
   }
 
-  void addUsersTasked (String uid, String role){
-    users_tasked[uid] = role;
+  void addUsersTasked (AppUser user){
+    users_tasked.add(user);
   }
 
-  void removeUsersTasked (String uid){
-    users_tasked.remove(uid);
+  void removeUsersTasked (AppUser user){
+    users_tasked.remove(user);
   }
 
   void setDifficulty (String newDifficulty){

@@ -37,4 +37,22 @@ class RecentUpdateUserModel{
     this.achievementUnlocked,
     this.helpedOthers
   });
+
+  Map<String, dynamic> toMap() {
+    return {
+      'updateTime': updateTime != null ? Timestamp.fromDate(updateTime!) : Timestamp.fromDate(DateTime.now()),
+      'briefDescription': briefDescription ?? '',
+      'longerDescription': longerDescription ?? '',
+      'helpedOthers': helpedOthers ?? false,
+      'achievementUnlocked': achievementUnlocked?.name ?? 'none',
+      'user' : {
+        'uid': userResponsible?.uid ?? '',
+        'name': '${userResponsible?.displayFirstName ?? ''} ${userResponsible?.displayLastName ?? ''}',
+      },
+      'hive': {
+        'hive_uid': hiveOccurred?.hive_uid ?? '',
+        'hive_name': hiveOccurred?.hive_name ?? '',
+      },
+    };
+  }
 }
