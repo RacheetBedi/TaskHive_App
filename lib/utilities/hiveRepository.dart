@@ -4,7 +4,9 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/models/group_models/hive.dart';
 import 'package:flutter_app/models/group_models/hive_default_settings_model.dart';
+import 'package:flutter_app/models/group_models/nectar_points_default_settings_model.dart';
 import 'package:flutter_app/models/user_models/app_user.dart';
+import 'package:flutter_app/models/user_models/nectar_points_user_model.dart';
 import 'package:flutter_app/models/user_models/recent_update_user_model.dart';
 import 'package:flutter_app/providers/auth_provider.dart';
 import 'package:flutter_app/providers/hive_service_provider.dart';
@@ -42,6 +44,7 @@ class HiveRepository{
 
   Future<Hive?> initializeCurrentHive() async{
     try{
+      final currentUser = UserRepository(ref).currentAppUser;
       final hiveDocRef;
       if(hiveMade){
         hiveDocRef = await hiveDocument;
@@ -66,6 +69,18 @@ class HiveRepository{
         summaryEnabled: mainHiveData?['default_settings']?['summaryEnabled'] ?? false, 
         tradingEnabled: mainHiveData?['default_settings']?['tradingEnabled'] ?? false); //Fix the firestore references.
 
+      // final hiveUserDataDocRef = _firestore.collection('groups').doc(uid).collection('group_users').doc('user_data');
+      // final hiveUserDataDoc = await hiveUserDataDocRef.get();
+      // final hiveUserRoleData = hiveUserDataDoc.data();
+
+      String curUserRole = '';
+      final userHives = currentUser?.hives_joined;
+
+      for(int i = 0; i<userHives!.length; i++){
+        if(userHives[i].hive_uid == uid){
+          curUserRole = userHives[i].user_role;
+        }
+      }
       
 
       final hive = Hive(
@@ -78,9 +93,10 @@ class HiveRepository{
         icon_description: mainHiveData?['icon_description'] ?? '',
         default_settings: defaultSettings,
         teacher_led: mainHiveData?['teacher_led'] ?? false,
-        ai_summary: mainHiveData?['ai_summary'] ?? false,
         theme_color: mainHiveData?['theme_color'] ?? 'blue',
         hiveImage: mainHiveData?['hiveImage'],
+        hive_creator: mainHiveData['hiveCreatorUID'] ?? '',
+        user_role: curUserRole,
       );
 
 
@@ -117,7 +133,6 @@ class HiveRepository{
           'hive_tasks_snippet': hive.tasks_snippet,//this will change
           'teacher_led': hive.teacher_led,
           'theme_color': hive.theme_color,
-          'ai_summary': hive.ai_summary,
           'hiveImage': hive.hiveImage,
       });
 
@@ -168,17 +183,22 @@ class HiveRepository{
     HiveDefaultSettingsModel? default_settings,
     bool? teacher_led,
     bool? ai_summary,
-    String? theme_color,
+    Color? theme_color,
     String? hiveImage,
     //Snippets can't be changed, they are set directly through firestore. When a task or something
     //else hive related is added, the hive document is updated, and the appreciation/task snippets are automatically triggered to update as well.
     List<RecentUpdateUserModel>? recent_updates,
+    NectarPointsDefaultSettingsModel? nectar_default_settings,
+    NectarPointsUserModel? nectar_points,
     List<AppUser>? hive_users,
     List<Task>? assigned_tasks,
     List<Task>? completed_tasks,
     }) async {
 
       final hive = currentHive;
+
+      final curUser = UserRepository(ref).currentAppUser;
+      if(curUser == null) return;
 
       bool mainHiveElementsChanged = false;
 
@@ -196,6 +216,11 @@ class HiveRepository{
       final assignedTasksDocRef = _firestore.collection('groups').doc(hive?.hive_uid).collection('tasks').doc('assigned_task_properties').collection('Assigned Tasks List').doc('tasks_set_1');
       final assignedTasksDoc = assignedTasksDocRef.get();
       final completedTasksDocRef = _firestore.collection('groups').doc(hive?.hive_uid).collection('tasks').doc('completed_task_properties').collection('Completed Tasks List').doc('completedTasks_set_1');
+
+      final nectarPointsSettingsDocRef = _firestore.collection('groups').doc(hive?.hive_uid).collection('appreciation_points').doc('appreciation_properties');
+      final nectarPointsPeopleDocRef = _firestore.collection('groups').doc(hive?.hive_uid).collection('appreciation_points').doc('appreciation_people_status');
+      final nectarPointsSettingsDoc = nectarPointsSettingsDocRef.get();
+      final nectarPointsPeopleDoc = nectarPointsPeopleDocRef.get();
 
       if(hive_name != null){
         hive?.hive_name = hive_name;
@@ -234,11 +259,6 @@ class HiveRepository{
 
       if(teacher_led != null){
         hive?.teacher_led = teacher_led;
-        mainHiveElementsChanged = true;
-      }
-
-      if(ai_summary != null){
-        hive?.ai_summary = ai_summary;
         mainHiveElementsChanged = true;
       }
 
@@ -299,6 +319,26 @@ class HiveRepository{
           'completed_tasks': completed_tasks,
         });
       }
+
+      if(nectarPointsSettingsDocRef != null && nectar_default_settings != null){
+        await nectarPointsSettingsDocRef.update({
+          if(nectar_default_settings.icons_tradeable != null) 'icons_tradeable' : nectar_default_settings.icons_tradeable,
+          if(nectar_default_settings.leaderboard_enabled != null) 'leaderboard_enabled' : nectar_default_settings.leaderboard_enabled,
+          if(nectar_default_settings.points_tradeable != null) 'points_tradeable' : nectar_default_settings.points_tradeable,
+        });
+      }
+
+      if(nectarPointsPeopleDoc != null && nectar_points != null){
+        await nectarPointsPeopleDocRef.update({
+          if(nectar_points.achievementsEarned != null ) '${curUser.uid}.achievements_earned' : 'placeholder', //Convert the enums into one map and replace the placeholder with that map
+          if(nectar_points.mostHelped != null) '${curUser.uid}.mostHelpedMember' : nectar_points.mostHelped?.uid,
+          if(nectar_points.numIconsEarned != null) '${curUser.uid}.numAchievementsEarned' : nectar_points.numIconsEarned, //Each achievement corresponds to an icon, so the numbers should be the same for both
+          if(nectar_points.numPointsEarned != null) '${curUser.uid}.numPointsEarned' : nectar_points.numPointsEarned,
+          if(nectar_points.popularHive != null) '${curUser.uid}.mostPopularHive' : nectar_points.popularHive?.hive_uid,
+        });
+      } 
+
+
       //These are placeholder update statements; each of these will require a 
       //separate method to update, which needs to be coded later.
   }

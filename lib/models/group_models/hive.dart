@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_app/models/group_models/hive_default_settings_model.dart';
+import 'package:flutter_app/models/group_models/nectar_points_default_settings_model.dart';
 import 'package:flutter_app/models/user_models/app_user.dart';
 import 'package:flutter_app/models/user_models/nectar_points_user_model.dart';
 import 'package:flutter_app/models/user_models/recent_update_user_model.dart';
@@ -37,6 +38,8 @@ is riverpod useful for hives (which are my 'groups', similar to canvas classes).
 
 class Hive {
   String? hive_uid;
+  AppUser? hive_creator;
+  String user_role;
   String hive_name;
   String hive_description;
   String hive_subject;
@@ -46,9 +49,9 @@ class Hive {
   //Map of tasks can only be coded when the task model object is coded
   HiveDefaultSettingsModel? default_settings; //Replace this with a list of defaultSettingModelObjects later when the model is actually coded
   bool teacher_led;
-  bool ai_summary;
-  String theme_color;
+  Color theme_color;
   String? hiveImage;
+  NectarPointsDefaultSettingsModel? nectar_points_settings;
   List<NectarPointsUserModel>? appreciation_snippet;
   List<NectarPointsUserModel>? appreciation_points_total; //This is a separate snippet for teachers, which will be used in the teacher's pet achievement. It will be separate from the regular appreciation snippet, which is used for the extrovert achievement. This is because the teacher's pet achievement requires a certain number of points from teachers, so it makes sense to have a separate snippet for that.
   List<Task>? tasks_snippet; //Replace this with a list of taskModelObjects later when the model is actually coded
@@ -69,6 +72,8 @@ class Hive {
 
   Hive({
     this.hive_uid,
+    this.hive_creator,
+    required this.user_role,
     required this.hive_name,
     required this.hive_description,
     required this.hive_subject,
@@ -77,9 +82,9 @@ class Hive {
     this.icon_description,
     required this.default_settings,
     required this.teacher_led,
-    required this.ai_summary,
     required this.theme_color,
     this.hiveImage,
+    this.nectar_points_settings,
     this.appreciation_snippet,
     this.appreciation_points_total,
     this.recent_updates,

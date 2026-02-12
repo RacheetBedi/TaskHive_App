@@ -1,6 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/models/group_models/hive.dart';
+import 'package:flutter_app/models/user_models/nectar_points_personal_model.dart';
+import 'package:flutter_app/models/user_models/nectar_points_user_model.dart';
+import 'package:flutter_app/models/user_models/recent_update_user_model.dart';
 
 class AppUser{
   String uid;
@@ -20,8 +23,8 @@ class AppUser{
   bool hasCompletedSetup;
   String? description;
   String? school;
-  List<Map<String, dynamic>>? activity_log;
-  List<Map<int, String>>? appreciation_points;
+  List<RecentUpdateUserModel>? activity_log;
+  NectarPointsPersonalModel? appreciation_points; //Replace the last three with a possessions object later
   List<Hive>? hives_joined;
 
 
@@ -61,8 +64,8 @@ class AppUser{
     String firstName = "",
     String lastName = "",
     String school = "",
-    List<Map<String, dynamic>>? activity_log,
-    List<Map<int, String>>? appreciation_points,
+    List<RecentUpdateUserModel>? activity_log,
+    NectarPointsPersonalModel? appreciation_points,
     List<Hive>? hives_joined,
     }){
     return AppUser(
@@ -96,8 +99,8 @@ class AppUser{
     bool? isNewUser,
     String? description,
     String? school,
-    List<Map<String, dynamic>>? activity_log,
-    List<Map<int, String>>? appreciation_points,
+    List<RecentUpdateUserModel>? activity_log,
+    NectarPointsPersonalModel? appreciation_points,
     List<Hive>? hives_joined,
     //ADD OTHER PROPERTIES LATER HERE!
   }) {

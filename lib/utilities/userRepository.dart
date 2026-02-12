@@ -3,6 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/models/group_models/hive.dart';
 import 'package:flutter_app/models/user_models/app_user.dart';
+import 'package:flutter_app/models/user_models/nectar_points_personal_model.dart';
+import 'package:flutter_app/models/user_models/recent_update_user_model.dart';
 import 'package:flutter_app/providers/auth_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get_navigation/get_navigation.dart';
@@ -58,8 +60,8 @@ class UserRepository {
       school: mainUserData?['school'] ?? " ",
       uid: user.uid,
       userName: mainUserData?['username'] ?? '',
-      activity_log: List<Map<String, dynamic>>.from(activityLogData?.values ?? []),
-      appreciation_points: List<Map<int, String>>.from(appreciationPointsData?.values ?? []),
+      activity_log: [], //Placeholder, convert the data read into recent updates objects...
+      appreciation_points: null, //Same as above
       hives_joined: List<Hive>.from(hivesJoinedData?.values ?? []),
     );
 
@@ -91,8 +93,8 @@ class UserRepository {
     String? userName,
     String? password,
     String? school,
-    List<Map<String, dynamic>>? activity_log,
-    List<Map<int, String>>? appreciation_points,
+    List<RecentUpdateUserModel>? activity_log,
+    NectarPointsPersonalModel? appreciation_points,
     List<Hive>? hives_joined,
     }) async{
 

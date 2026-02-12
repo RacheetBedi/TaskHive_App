@@ -1,7 +1,11 @@
+import 'dart:math';
+
 import 'package:choice/choice.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/enums/navigation_enum.dart';
+import 'package:flutter_app/models/group_models/hive.dart';
+import 'package:flutter_app/models/group_models/hive_default_settings_model.dart';
 import 'package:flutter_app/pages/Setup_Pages/login_page.dart';
 import 'package:flutter_app/pages/Home_Pages/main_page.dart';
 import 'package:flutter_app/pages/Summaries_Pages/recent_changes.dart';
@@ -11,6 +15,8 @@ import 'package:flutter_app/pages/Setup_Pages/signupTeacher.dart';
 import 'package:flutter_app/pages/Hives_Pages/specificHive.dart';
 import 'package:flutter_app/pages/Summaries_Pages/summary.dart';
 import 'package:flutter_app/providers/auth_provider.dart';
+import 'package:flutter_app/providers/hive_service_provider.dart';
+import 'package:flutter_app/utilities/hiveRepository.dart';
 import 'package:flutter_app/utilities/userRepository.dart';
 import 'package:flutter_app/widgets/hive_widget.dart';
 import 'package:flutter_app/widgets/nectar_center_points_widget.dart';
@@ -474,7 +480,7 @@ class _CreateHiveState extends ConsumerState<CreateHive> {
                   Expanded(
                     flex: 2,
                     child: ElevatedButton(
-                      onPressed: _step < 2 ? _next : () {
+                      onPressed: _step < 2 ? _next : () async {
                         final summary = {
                           'name': hiveName.text,
                           'description': hiveDesc.text,
@@ -485,6 +491,37 @@ class _CreateHiveState extends ConsumerState<CreateHive> {
                           'private': _isPrivate,
                           'allowInvites': _allowInvites,
                         };
+                        final defaultSettingsDetails = HiveDefaultSettingsModel(
+                          additionEnabled: _taskAddition, 
+                          appreciationEnabled: _nectarCenter, 
+                          logEnabled: _hiveNotifications, 
+                          taskRemovalEnabled: _taskRemoval, 
+                          summaryEnabled: _aiSummary, 
+                          tradingEnabled: _taskTrading);
+                        final hive = Hive(
+                          user_role: '', //Jeevanth needs to add this to the UI itself 
+                          hive_name: hiveName.text, 
+                          hive_description: hiveDesc.text, 
+                          hive_subject: _subject, 
+                          default_settings: defaultSettingsDetails,
+                          teacher_led: false, //Change this later to make it robust and correct when the teacher flow is added
+                          theme_color: _selectedColor
+                        );
+
+                        await HiveRepository(ref).createHiveDoc(hive);
+                        final hiveProvider = ref.watch(hiveServiceProvider.notifier);
+                        hiveProvider.updateHive(hive);
+
+                        String generateJoinCode([int length = 6]) {
+                          const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+                          final rnd = Random.secure();
+                          return List.generate(length, (_) => chars[rnd.nextInt(chars.length)]).join();
+                        }
+                        hive.hive_code = generateJoinCode(); //Checking to ensure that the code does not exist in other hives will happen
+                        //once the rest of the flow is coded; it is redundant to do that now, as I don't know the exact firestore structure
+                        //within which the codes will rest yet.
+
+
                         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                             content: Text('Creating hive: ${hiveName.text}')));
                       },

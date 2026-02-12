@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_app/enums/navigation_enum.dart';
 import 'package:flutter_app/models/user_models/app_user.dart';
@@ -30,6 +32,11 @@ class _HomeBodyState extends ConsumerState<HomeBody> {
 
   Future<AppUser?> initializeUser() async {
     try {
+        String generateJoinCode([int length = 6]) {
+          const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+          final rnd = Random.secure();
+          return List.generate(length, (_) => chars[rnd.nextInt(chars.length)]).join();
+        }
       if (await checkLoggedIn() == true) {
         Get.snackbar("Note", "Initializing User Data...");
         final user = await UserRepository(ref).initializeAppUserObject();
