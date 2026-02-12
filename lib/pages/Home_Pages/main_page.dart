@@ -26,7 +26,7 @@ class _MainPageState extends State<MainPage> {
   late NavigationPage _currentPage;
   late PageController _pageController;
   late GlobalKey<CurvedNavigationBarState> _bottomNavigationKey;
-  NavigationPage _lastTab = NavigationPage.home;
+  List<NavigationPage> _lastTabs = [NavigationPage.home];
   final mainPages = [
     NavigationPage.home,
     NavigationPage.tracking,
@@ -44,7 +44,11 @@ class _MainPageState extends State<MainPage> {
       initialPage: _currentPage.isMainPage ? _currentPage.mainTabIndex : 0,
     );
     if (_currentPage.isMainPage) {
-      _lastTab = mainPages[_currentPage.mainTabIndex];
+      _lastTabs.clear();
+      _lastTabs.add(mainPages[_currentPage.mainTabIndex]);
+      if(_lastTabs.length > 3) {
+        _lastTabs.removeAt(0);
+      }
     }
   }
 
@@ -54,14 +58,28 @@ class _MainPageState extends State<MainPage> {
   }
 
   void _onNavigate(NavigationPage page) {
-    _lastTab = _currentPage;
+    _lastTabs.add(_currentPage);
     setState(() {
       _currentPage = page;
       if (page.isMainPage) {
-        _lastTab = mainPages[page.mainTabIndex];
+        _lastTabs.clear();
+        _lastTabs.add(mainPages[page.mainTabIndex]);
         _pageController.jumpToPage(page.mainTabIndex);
       }
     });
+  }
+
+  void _onBack() {
+    if (_lastTabs.isNotEmpty) {
+      setState(() {
+        _currentPage = _lastTabs.removeLast();
+        if (_currentPage.isMainPage) {
+          _pageController.jumpToPage(_currentPage.mainTabIndex);
+        }
+      });
+    } else {
+      _onNavigate(NavigationPage.home);
+    }
   }
 
   Widget _buildNonMainPageBody() {
@@ -215,7 +233,7 @@ class _MainPageState extends State<MainPage> {
               },
             )
           : SecondaryNavBar(
-              onBack: () => _onNavigate(_lastTab),
+              onBack: _onBack,
               onHome: () => _onNavigate(NavigationPage.home),
               onHives: () => _onNavigate(NavigationPage.hives),
             ),

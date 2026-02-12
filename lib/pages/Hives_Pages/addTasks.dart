@@ -1,12 +1,6 @@
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_app/enums/navigation_enum.dart';
 import 'package:flutter_app/models/group_models/hive.dart';
 import 'package:flutter_app/models/user_models/task_model.dart';
-import 'package:flutter_app/pages/Home_Pages/main_page.dart';
-import 'package:flutter_app/pages/Summaries_Pages/recent_changes.dart';
-import 'package:flutter_app/pages/Main_Settings_Pages/settings.dart';
-import 'package:flutter_app/pages/Summaries_Pages/summary.dart';
 import 'package:flutter_app/utilities/hiveRepository.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get_core/src/get_main.dart';
@@ -14,7 +8,6 @@ import 'package:get/get_navigation/get_navigation.dart';
 import 'package:choice/choice.dart';
 import 'package:dio/dio.dart';
 import 'package:async/async.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 class AddTasksBody extends ConsumerStatefulWidget {
   const AddTasksBody({super.key});
@@ -23,14 +16,14 @@ class AddTasksBody extends ConsumerStatefulWidget {
 }
 
 class _AddTasksBodyState extends ConsumerState<AddTasksBody> {
-
+  int _step = 0;
   GlobalKey<FormState> date = GlobalKey<FormState>();
   GlobalKey<FormState> time = GlobalKey<FormState>();
   TextEditingController taskname = TextEditingController();
   TextEditingController taskdescription = TextEditingController();
 
   bool _isGoogleTask = false;
-  bool _isTradeable = false;//Still need to incorporate this into the page itself
+  bool _isTradeable = false;
 
   DateTime dueDate = DateTime.now();
   TimeOfDay dueTime = const TimeOfDay(hour: 23, minute: 59);
@@ -46,7 +39,7 @@ class _AddTasksBodyState extends ConsumerState<AddTasksBody> {
     'Hive 6',
     'Hive 7',
     'Hive 8',
-  ]; //Unnecessary, as this page goes through the hive itself
+  ];
   String? hiveValue;
   void setHiveValue(String? value) {
     setState(() => hiveValue = value);
@@ -80,8 +73,20 @@ class _AddTasksBodyState extends ConsumerState<AddTasksBody> {
     }
   }
 
-  Future<void> addTasks() async{
+  void _next() {
+    if (_step < 2) {
+      setState(() => _step += 1);
+    } else {
+      // Final action: create task
+      _submitTask();
+    }
+  }
 
+  void _back() {
+    if (_step > 0) setState(() => _step -= 1);
+  }
+
+  Future<void> _submitTask() async {
     final DateTime fullDateTimeAssigned = DateTime.now();
 
     final DateTime fullDateTimeDue = DateTime(
@@ -94,12 +99,12 @@ class _AddTasksBodyState extends ConsumerState<AddTasksBody> {
 
     Hive? curHive = HiveRepository(ref).currentHive;
 
-    final newTask = TaskModel(
+    TaskModel newTask = TaskModel(
       task_name: taskname.text, 
       tradeable: _isTradeable, 
       date_assigned: fullDateTimeAssigned, 
       date_due: fullDateTimeDue, 
-      taskType: 'Mathematics', //Placeholder, add a task Subject Type dropdown field on the page later
+      taskType: 'Mathematics',
       task_description: taskdescription.text, 
       users_tasked: [], //Placeholder, until user loading is actually coded in the backend
       hive_ID: curHive?.hive_uid ??  'xxxxx', //Placeholder
@@ -107,255 +112,336 @@ class _AddTasksBodyState extends ConsumerState<AddTasksBody> {
       difficulty: _difficulty ?? '', 
       gc_task: _isGoogleTask,
     );
+    
+    // TODO: Save the task to the database using newTask
+    print('Task created: ${newTask.task_name}');
+    Get.snackbar('Success', 'Task created: ${taskname.text}');
+  }
+
+  Widget _buildStepContent() {
+    switch (_step) {
+      case 0:
+        return ListView(
+          padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 10.0),
+          children: [
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                TextField(
+                  controller: taskname,
+                  decoration: const InputDecoration(
+                    hintText: 'Task Name',
+                    constraints: BoxConstraints(
+                      maxWidth: 600,
+                      minWidth: 50,
+                      minHeight: 50,
+                      maxHeight: 50,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 10),
+                TextField(
+                  controller: taskdescription,
+                  minLines: 3,
+                  maxLines: 6,
+                  decoration: const InputDecoration(
+                    hintText: 'Task Description',
+                  ),
+                ),
+                const SizedBox(height: 10),
+                Transform.scale(
+                  scale: 1,
+                  child: DropdownMenu<TaskDifficultyLabel>(
+                    initialSelection: TaskDifficultyLabel.easy,
+                    onSelected: (TaskDifficultyLabel? difficulty) {
+                      setState(() {
+                        _difficulty = difficulty?.label ?? "Easy Task";
+                      });
+                    },
+                    dropdownMenuEntries: TaskDifficultyLabel.entries,
+                  ),
+                ),
+              ]
+            ),
+          ],
+        );
+      case 1:
+        return ListView(
+          padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 10.0),
+          children: [
+            Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                ElevatedButton(
+                  onPressed: () async {
+                    final DateTime? selectedDate = await showDialog<DateTime>(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return DatePickerDialog(
+                          firstDate: DateTime(2000),
+                          lastDate: DateTime(2100),
+                          initialDate: DateTime.now(),
+                          initialEntryMode: DatePickerEntryMode.input,
+                          key: date,
+                        );
+                      },
+                    ) ?? DateTime.now();
+
+                    if (selectedDate != null) {
+                      setState(() {
+                        dueDate = selectedDate;
+                      });
+                    } else {
+                      Get.snackbar('Error', 'Failure in retrieving the due date');
+                    }
+                  },
+                  child: const Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.date_range),
+                      SizedBox(width: 5),
+                      Text("Select Date"),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 20),
+                Text(
+                  'Selected: ${dueDate.year}-${dueDate.month.toString().padLeft(2, '0')}-${dueDate.day.toString().padLeft(2, '0')}',
+                  style: const TextStyle(fontSize: 16),
+                ),
+                const SizedBox(height: 20),
+                ElevatedButton(
+                  onPressed: () async {
+                    final TimeOfDay? selectedTime = await showDialog<TimeOfDay>(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return TimePickerDialog(
+                          initialTime: TimeOfDay.now(),
+                          initialEntryMode: TimePickerEntryMode.input,
+                          key: time,
+                        );
+                      },
+                    );
+
+                    if (selectedTime != null) {
+                      setState(() {
+                        dueTime = selectedTime;
+                      });
+                    } else {
+                      Get.snackbar('Error', 'Failure in retrieving the due time');
+                    }
+                  },
+                  child: const Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.av_timer),
+                      SizedBox(width: 5),
+                      Text("Select Time"),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 20),
+                Text(
+                  'Selected: ${dueTime.hour.toString().padLeft(2, '0')}:${dueTime.minute.toString().padLeft(2, '0')}',
+                  style: const TextStyle(fontSize: 16),
+                ),
+              ],
+            ),
+          ],
+        );
+      case 2:
+        return ListView(
+          padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 10.0),
+          children: [
+            Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                FutureBuilder<List<ChoiceData<String>>>(
+                  initialData: const [],
+                  future: choicesMemoizer.runOnce(getChoices),
+                  builder: (context, snapshot) {
+                    return SizedBox(
+                      width: 300,
+                      child: Card(
+                        color: const Color(0xFFFFDD97),
+                        child: Theme(
+                          data: Theme.of(context).copyWith(
+                            appBarTheme: Theme.of(context).appBarTheme.copyWith(
+                              iconTheme: const IconThemeData(color: Color.fromARGB(255, 0, 0, 0)),
+                            ),
+                          ),
+                          child: PromptedChoice<ChoiceData<String>>.multiple(
+                            title: 'Users',
+                            clearable: true,
+                            error: snapshot.hasError,
+                            errorBuilder: ChoiceListError.create(
+                              message: snapshot.error.toString(),
+                            ),
+                            loading: snapshot.connectionState == ConnectionState.waiting,
+                            value: ownerValue,
+                            onChanged: setOwnerValue,
+                            itemCount: snapshot.data?.length ?? 0,
+                            itemBuilder: (state, i) {
+                              final choice = snapshot.data?.elementAt(i);
+                              return CheckboxListTile(
+                                value: state.selected(choice!),
+                                onChanged: state.onSelected(choice),
+                                title: Text(choice.title),
+                                subtitle: choice.subtitle != null
+                                  ? Text(
+                                      choice.subtitle!,
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                    )
+                                  : null,
+                                secondary: choice.image != null
+                                  ? CircleAvatar(
+                                      backgroundImage: NetworkImage(choice.image!),
+                                    )
+                                  : null,
+                              );
+                            },
+                            modalHeaderBuilder: ChoiceModal.createHeader(
+                              title: const Text('Select Users', style: TextStyle(fontSize: 50, fontWeight: FontWeight.normal),),
+                              actionsBuilder: [
+                                (state) {
+                                  final values = snapshot.data!;
+                                  return Checkbox(
+                                    value: state.selectedMany(values),
+                                    onChanged: state.onSelectedMany(values),
+                                    tristate: true,
+                                  );
+                                },
+                                ChoiceModal.createSpacer(width: 25),
+                              ],
+                            ),
+                            promptDelegate: ChoicePrompt.delegateBottomSheet(),
+                            anchorBuilder: ChoiceAnchor.create(valueTruncate: 1),
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                ),
+                const SizedBox(height: 20),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(10, 10, 20, 10),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text(
+                        'Google Task?',
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 24,
+                        ),
+                      ),
+                      const SizedBox(width: 20),
+                      Transform.scale(
+                        scale: 1.5,
+                        child: Switch(
+                          value: _isGoogleTask,
+                          onChanged: (val) => setState(() => _isGoogleTask = val),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(10, 10, 20, 10),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text(
+                        'Tradeable?',
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 24,
+                        ),
+                      ),
+                      const SizedBox(width: 20),
+                      Transform.scale(
+                        scale: 1.5,
+                        child: Switch(
+                          value: _isTradeable,
+                          onChanged: (val) => setState(() => _isTradeable = val),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ],
+        );
+      default:
+        return const SizedBox.shrink();
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: ListView(
-        padding: const EdgeInsets.only(top: 10.0),
-        shrinkWrap: true,
-        children: [
-        Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
+    return Scaffold(
+      body: SafeArea(
+        child: Column(
           children: [
-            Container(
-              width: double.infinity,
-              decoration: const BoxDecoration(
-                color:Color.fromARGB(0, 0, 0, 0),
-                border: Border(
-                  left: BorderSide(color: Colors.black, width: 2),
-                  right: BorderSide(color: Colors.black, width: 2),
-                  top: BorderSide(color: Colors.black, width: 2),
-                  bottom: BorderSide(color: Colors.black, width: 2),
-                ),
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text("Choose Hive"),
-                  Choice<String>.inline(
-                    clearable: true,
-                    value: ChoiceSingle.value(hiveValue),
-                    onChanged: ChoiceSingle.onChanged(setHiveValue),
-                    itemCount: hives.length,
-                    itemBuilder: (state, i) {
-                      return ChoiceChip(
-                        selected: state.selected(hives[i]),
-                        onSelected: state.onSelected(hives[i]),
-                        label: Text(hives[i]),
-                      );
-                    },
-                    listBuilder: ChoiceList.createScrollable(
-                      spacing: 10,
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 20,
-                        vertical: 25,
+                  Text('${_step + 1}/3',
+                      style: const TextStyle(fontSize: 18, color: Colors.green)),
+                  TextButton(
+                    onPressed: () {}, // Navigate back from AddTasks
+                    child: const Text('Cancel', style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold)),
+                  ),
+                ],
+              ),
+            ),
+            Expanded(child: _buildStepContent()),
+            Padding(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
+              child: Row(
+                children: [
+                  if (_step > 0)
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: _back,
+                        child: const Text('Back'),
+                      ),
+                    )
+                  else
+                    const SizedBox.shrink(),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    flex: 2,
+                    child: ElevatedButton(
+                      onPressed: _next,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: _step < 2 ? const Color.fromARGB(255, 0, 0, 0) : const Color(0xFFF3A31A),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          _step < 2 ? const SizedBox.shrink() 
+                          : const Icon(Icons.add_task, color: Colors.black, size: 25,),
+                          _step < 2 ? const SizedBox.shrink() : const SizedBox(width: 8),
+                          Text(_step < 2 ? 'Next' : 'Create', style: _step < 2 ? const TextStyle(color: Colors.white) : const TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
+                        ],
                       ),
                     ),
                   ),
                 ],
               ),
-            ), 
-            Container(
-              width: double.infinity,
-              decoration: const BoxDecoration(
-                color:Color.fromARGB(0, 0, 0, 0),
-                border: Border(
-                  left: BorderSide(color: Colors.black, width: 2),
-                  right: BorderSide(color: Colors.black, width: 2),
-                  bottom: BorderSide(color: Colors.black, width: 2),
-                ),
-              ),
-              child: Transform.scale(
-                scale: 1,
-                child: DropdownMenu<TaskDifficultyLabel>(
-                  initialSelection: TaskDifficultyLabel.easy,
-                  onSelected: (TaskDifficultyLabel? difficulty) {
-                    setState(() {
-                      _difficulty = difficulty?.label ?? "Easy Task";
-                    });
-                  },
-                  dropdownMenuEntries: TaskDifficultyLabel.entries,
-                ),
-              ),
-            ),
-            Container(
-              width: double.infinity,
-              decoration: const BoxDecoration(
-                color:Color.fromARGB(0, 0, 0, 0),
-                border: Border(
-                  left: BorderSide(color: Colors.black, width: 2),
-                  right: BorderSide(color: Colors.black, width: 2),
-                  bottom: BorderSide(color: Colors.black, width: 2),
-                ),
-              ),
-              child: FutureBuilder<List<ChoiceData<String>>>(
-                initialData: const [],
-                future: choicesMemoizer.runOnce(getChoices),
-                builder: (context, snapshot) {
-                  return SizedBox(
-                    width: 300,
-                    child: Card(
-                      color:const Color(0xFFFFDD97),
-                      child: Theme(
-                        data: Theme.of(context).copyWith(
-                          appBarTheme: Theme.of(context).appBarTheme.copyWith(
-                            iconTheme: const IconThemeData(color: Color.fromARGB(255, 0, 0, 0)),
-                          ),
-                        ),
-                        child: PromptedChoice<ChoiceData<String>>.multiple(
-                          title: 'Users',
-                          clearable: true,
-                          error: snapshot.hasError,
-                          errorBuilder: ChoiceListError.create(
-                            message: snapshot.error.toString(),
-                          ),
-                          loading: snapshot.connectionState == ConnectionState.waiting,
-                          value: ownerValue,
-                          onChanged: setOwnerValue,
-                          itemCount: snapshot.data?.length ?? 0,
-                          itemBuilder: (state, i) {
-                            final choice = snapshot.data?.elementAt(i);
-                            return CheckboxListTile(
-                              value: state.selected(choice!),
-                              onChanged: state.onSelected(choice),
-                              title: Text(choice.title),
-                              subtitle: choice.subtitle != null
-                                ? Text(
-                                    choice.subtitle!,
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                  )
-                                : null,
-                              secondary: choice.image != null
-                                ? CircleAvatar(
-                                    backgroundImage: NetworkImage(choice.image!),
-                                  )
-                                : null,
-                            );
-                          },
-                          modalHeaderBuilder: ChoiceModal.createHeader(
-                            title: const Text('Select Users', style: TextStyle(fontSize: 50, fontWeight: FontWeight.normal),),
-                            actionsBuilder: [
-                              (state) {
-                                final values = snapshot.data!;
-                                return Checkbox(
-                                  value: state.selectedMany(values),
-                                  onChanged: state.onSelectedMany(values),
-                                  tristate: true,
-                                );
-                              },
-                              ChoiceModal.createSpacer(width: 25),
-                            ],
-                          ),
-                          promptDelegate: ChoicePrompt.delegateBottomSheet(),
-                          anchorBuilder: ChoiceAnchor.create(valueTruncate: 1),
-                        ),
-                      ),
-                    ),
-                  );
-                },
-              ),
-            ),
-            const SizedBox(height: 15,),
-            TextField(
-              controller: taskname,
-              decoration: const InputDecoration(hintText: 'Task Name'),
-            ),
-            const SizedBox(height: 15,),
-            TextField(
-              minLines: null,
-              maxLines: null,
-              expands: true,
-              controller: taskdescription,
-              decoration: const InputDecoration(hintText: 'Task Summary'),
-            ),
-            const SizedBox(height: 15,),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Text("Google Task?"),
-                const SizedBox(width: 5,),
-                Checkbox(
-                  value: _isGoogleTask,
-                  onChanged: (bool? newValue) {
-                    setState(() {
-                      _isGoogleTask = newValue!;
-                    });
-                  },
-                ),
-              ],
-            ),
-            const SizedBox(height: 15,),
-            ElevatedButton(
-              onPressed: () async {
-                final DateTime? selectedDate = await showDialog<DateTime>(context: context, builder: (BuildContext context) {
-                  return DatePickerDialog(firstDate: DateTime(2000), lastDate: DateTime(2100), initialDate: DateTime.now(), initialEntryMode: DatePickerEntryMode.input, key: date);
-                }) ?? DateTime.now();
-
-                if(selectedDate != null){
-                  setState(() {
-                    dueDate = selectedDate;
-                  });
-                }
-                else{
-                  Get.snackbar('Error', 'Failure in retreiving the due date');
-                }
-              },
-              child: const Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.date_range),
-                  SizedBox(width: 5,),
-                  Text("Select Date"),
-                ],
-              )
-            ),
-            const SizedBox(height: 15,),
-            ElevatedButton(
-              onPressed: () async {
-                final TimeOfDay? selectedTime = await showDialog<TimeOfDay>(context: context, builder: (BuildContext context) {
-                  return TimePickerDialog(initialTime: TimeOfDay.now(), initialEntryMode: TimePickerEntryMode.input, key: time);
-                });
-
-                if(selectedTime != null){
-                  setState(() {
-                    dueTime = selectedTime;
-                  });
-                }
-                else{
-                  Get.snackbar('Error', 'Failure in retreiving the due time');
-                }
-              },
-              child: const Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.av_timer),
-                  SizedBox(width: 5,),
-                  Text("Select Time"),
-                ],
-              )
-            ),
-            const SizedBox(height: 15,),
-            ElevatedButton(
-              onPressed: () {}, //Need to Add Adding Functionality
-              child: const Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.add),
-                  SizedBox(width: 5,),
-                  Text("Add Task"),
-                ],
-              )
             ),
           ],
         ),
-              ],
-    ),
-  );
+      ),
+    );
   }
 }
 
