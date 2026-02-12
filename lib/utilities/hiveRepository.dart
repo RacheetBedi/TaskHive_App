@@ -7,7 +7,7 @@ import 'package:flutter_app/models/group_models/hive_default_settings_model.dart
 import 'package:flutter_app/models/group_models/nectar_points_default_settings_model.dart';
 import 'package:flutter_app/models/user_models/app_user.dart';
 import 'package:flutter_app/models/user_models/nectar_points_user_model.dart';
-import 'package:flutter_app/models/user_models/recent_update_user_model.dart';
+import 'package:flutter_app/models/user_models/notifications_user_model.dart';
 import 'package:flutter_app/providers/auth_provider.dart';
 import 'package:flutter_app/providers/hive_service_provider.dart';
 import 'package:flutter_app/providers/hive_service_provider.dart';
@@ -74,7 +74,7 @@ class HiveRepository{
       // final hiveUserRoleData = hiveUserDataDoc.data();
 
       String curUserRole = '';
-      final userHives = currentUser?.hives_joined;
+      final userHives = currentUser?.possessions?.hivesJoined;
 
       for(int i = 0; i<userHives!.length; i++){
         if(userHives[i].hive_uid == uid){
@@ -113,7 +113,7 @@ class HiveRepository{
       final curUser = UserRepository(ref).currentAppUser;
       if(curUser == null) throw Exception("No current user found");
 
-      curUser.hives_joined?.add(hive);
+      curUser.possessions?.hivesJoined?.add(hive);
 
       final mainHiveRef = _firestore.collection('groups').doc(); 
       
@@ -187,7 +187,7 @@ class HiveRepository{
     String? hiveImage,
     //Snippets can't be changed, they are set directly through firestore. When a task or something
     //else hive related is added, the hive document is updated, and the appreciation/task snippets are automatically triggered to update as well.
-    List<RecentUpdateUserModel>? recent_updates,
+    List<NotificationsUserModel>? recent_updates,
     NectarPointsDefaultSettingsModel? nectar_default_settings,
     NectarPointsUserModel? nectar_points,
     List<AppUser>? hive_users,
@@ -336,7 +336,7 @@ class HiveRepository{
           if(nectar_points.numPointsEarned != null) '${curUser.uid}.numPointsEarned' : nectar_points.numPointsEarned,
           if(nectar_points.popularHive != null) '${curUser.uid}.mostPopularHive' : nectar_points.popularHive?.hive_uid,
         });
-      } 
+      }
 
 
       //These are placeholder update statements; each of these will require a 

@@ -4,7 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_app/models/group_models/hive.dart';
 import 'package:flutter_app/models/user_models/app_user.dart';
 import 'package:flutter_app/models/user_models/nectar_points_personal_model.dart';
-import 'package:flutter_app/models/user_models/recent_update_user_model.dart';
+import 'package:flutter_app/models/user_models/possessions.dart';
+import 'package:flutter_app/models/user_models/notifications_user_model.dart';
 import 'package:flutter_app/providers/auth_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get_navigation/get_navigation.dart';
@@ -59,13 +60,8 @@ class UserRepository {
       photoURL: mainUserData?['public profile']?['photo_URL'] ?? '',
       school: mainUserData?['school'] ?? " ",
       uid: user.uid,
-      userName: mainUserData?['username'] ?? '',
-      activity_log: [], //Placeholder, convert the data read into recent updates objects...
-      appreciation_points: null, //Same as above
-      hives_joined: List<Hive>.from(hivesJoinedData?.values ?? []),
+      userName: mainUserData?['username'] ?? '', //Updating possessions occurrs separately; trigger a separate method here.
     );
-
-    //Get.snackbar('The following is the user data in the doc:', '${updatedUser.displayFirstName}, ${updatedUser.displayLastName}, ${updatedUser.email}, ${updatedUser.uid}');
 
     return updatedUser;
     } catch (e){
@@ -93,9 +89,7 @@ class UserRepository {
     String? userName,
     String? password,
     String? school,
-    List<RecentUpdateUserModel>? activity_log,
-    NectarPointsPersonalModel? appreciation_points,
-    List<Hive>? hives_joined,
+    Possessions? possessions,
     }) async{
 
     final user = currentAppUser;
@@ -179,16 +173,16 @@ class UserRepository {
       user.school = school;
       mainUserDocUpdated = true;
     }
-    if(activity_log != null){
-      user.activity_log = activity_log;
+    if(possessions?.userNotificationLog != null){
+      user.possessions?.userNotificationLog = possessions?.userNotificationLog;
       mainUserDocUpdated = true;
     }
-    if(appreciation_points != null){
-      user.appreciation_points = appreciation_points;
+    if(possessions?.nectarPoints!= null){
+      user.possessions?.nectarPoints = possessions?.nectarPoints;
       mainUserDocUpdated = true;
     }
-    if(hives_joined != null){
-      user.hives_joined = hives_joined;
+    if(possessions?.hivesJoined != null){
+      user.possessions?.hivesJoined = possessions?.hivesJoined;
       mainUserDocUpdated = true;
     }
 
@@ -214,23 +208,41 @@ class UserRepository {
       };
       await mainDocRef.update(updateData);
     }
-    
-    if(activity_log != null){
-      await activityLogDocRef.update({
-        'activity_log': activity_log,
-      });
+
+    if(possessions?.userNotificationLog != null){
+      // final activityLogData = {
+      //   'log': possessions?.userNotificationLog?.map((e) => e.toMap()).toList() ?? [],
+      // };
+      // if(activityLogDoc.exists){
+      //   await activityLogDocRef.update(activityLogData);
+      // } else {
+      //   await activityLogDocRef.set(activityLogData);
+      // }
     }
-    
-    if(appreciation_points != null){
-      
-      await appreciationPointsDocRef.update({
-        'appreciation_points': appreciation_points,
-      });
+
+    if(possessions?.nectarPoints != null){
+      // final appreciationPointsData = possessions?.nectarPoints != null ? {
+      //   'total_points': possessions?.nectarPoints?.totalPoints ?? 0,
+      //   'points_history': possessions?.nectarPoints?.pointsHistory.map((e) => e.toMap()).toList() ?? [],
+      // } : null;
+      // if(appreciationPointsData != null){
+      //   if(appreciationPointsDoc.exists){
+      //     await appreciationPointsDocRef.update(appreciationPointsData);
+      //   } else {
+      //     await appreciationPointsDocRef.set(appreciationPointsData);
+      //   }
+      // }
     }
-    if(hives_joined != null){
-      await hivesJoinedDocRef.update({
-        'hives_joined': hives_joined,
-      });
+
+    if(possessions?.hivesJoined != null){
+      // final hivesJoinedData = {
+      //   'hives': possessions?.hivesJoined?.map((e) => e.toMap()).toList() ?? [],
+      // };
+      // if(hivesJoinedDoc.exists){
+      //   await hivesJoinedDocRef.update(hivesJoinedData);
+      // } else {
+      //   await hivesJoinedDocRef.set(hivesJoinedData);
+      // }
     }
   }
 
@@ -258,6 +270,14 @@ class UserRepository {
     final docRef = _firestore.collection('users').doc(user?.uid);
     final doc = await docRef.get();
 
+    final activityLogDocRef = _firestore.collection('users').doc(user?.uid).collection('possessions').doc('activity_log');
+    final nectarPointsDocRef = _firestore.collection('users').doc(user?.uid).collection('possessions').doc('appreciation_points');
+    final hivesJoinedDocRef = _firestore.collection('users').doc(user?.uid).collection('possessions').doc('hives_joined');
+
+    final activityLogDoc = await activityLogDocRef.get();
+    final nectarPointsDoc = await nectarPointsDocRef.get();
+    final hivesJoinedDoc = await hivesJoinedDocRef.get();
+
     if (!doc.exists) {
       await docRef.set({
         "dark_mode": user.dark_mode ?? false,
@@ -283,6 +303,12 @@ class UserRepository {
         'school': user.school ?? '',
       });
     }
+
+    // if(!activityLogDoc.exists) {
+    //   await activityLogDocRef.set({
+
+    //   });
+    // }
     } catch(err, st){
         Get.snackbar(
           "Error",
