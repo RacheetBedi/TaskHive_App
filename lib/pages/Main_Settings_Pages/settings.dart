@@ -454,12 +454,16 @@ class _SettingsBodyState extends ConsumerState<SettingsBody> {
               ),
             ),
             const SizedBox(height: 10.0),
-            ElevatedButton(
-              onPressed: () {
-                widget.onNavigate!(NavigationPage.addTasks);
-              },
-              child: const Text("Temp: To Add Tasks"),
-            ),
+
+
+            //Navigation to addTasks page has been made, so we don't need this for now.
+
+            // ElevatedButton(
+            //   onPressed: () {
+            //     widget.onNavigate!(NavigationPage.addTasks);
+            //   },
+            //   child: const Text("Temp: To Add Tasks"),
+            // ),
           ],
         ),
     );

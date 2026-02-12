@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/enums/navigation_enum.dart';
 import 'package:flutter_app/pages/Home_Pages/main_page.dart';
-import 'package:flutter_app/pages/Summaries_Pages/recent_changes.dart';
+import 'package:flutter_app/pages/Summaries_Pages/notifications.dart';
 import 'package:get/get.dart';
 import 'package:flutter_app/pages/Nectar_Center_Pages/nectar_center.dart';
 
@@ -31,7 +31,7 @@ class _RecentUpdatesWidgetState extends State<RecentUpdatesWidget> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Get.to(() => MainPage(initialPage: NavigationPage.recentChanges));
+        Get.to(() => const MainPage(initialPage: NavigationPage.notifications));
       },
       child: Container(
         width: 300.0,

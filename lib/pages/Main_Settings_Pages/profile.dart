@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_app/enums/navigation_enum.dart';
 import 'package:flutter_app/pages/Setup_Pages/login_page.dart';
 import 'package:flutter_app/pages/Home_Pages/main_page.dart';
-import 'package:flutter_app/pages/Summaries_Pages/recent_changes.dart';
+import 'package:flutter_app/pages/Summaries_Pages/notifications.dart';
 import 'package:flutter_app/pages/Main_Settings_Pages/settings.dart';
 import 'package:flutter_app/pages/Setup_Pages/signupStudent.dart';
 import 'package:flutter_app/pages/Setup_Pages/signupTeacher.dart';

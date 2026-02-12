@@ -6,8 +6,9 @@ import 'package:flutter_app/pages/Google_Classrom_Pages/google_classroom_body.da
 import 'package:flutter_app/pages/Hives_Pages/addTasks.dart';
 import 'package:flutter_app/pages/Hives_Pages/create_hive.dart';
 import 'package:flutter_app/pages/Hives_Pages/hives_body.dart';
+import 'package:flutter_app/pages/Hives_Pages/specific_hive.dart';
 import 'package:flutter_app/pages/Home_Pages/home_body.dart';
-import 'package:flutter_app/pages/Summaries_Pages/recent_changes.dart';
+import 'package:flutter_app/pages/Summaries_Pages/notifications.dart';
 import 'package:flutter_app/pages/Main_Settings_Pages/settings.dart';
 import 'package:flutter_app/pages/Summaries_Pages/summary.dart';
 import 'package:flutter_app/pages/Summaries_Pages/tracking_body.dart';
@@ -84,8 +85,8 @@ class _MainPageState extends State<MainPage> {
 
   Widget _buildNonMainPageBody() {
     switch (_currentPage) {
-      case NavigationPage.recentChanges:
-        return const RecentChangesBody();
+      case NavigationPage.notifications:
+        return const NotificationsBody();
       case NavigationPage.summary:
         return const SummaryBody();
       case NavigationPage.settings:
@@ -96,6 +97,8 @@ class _MainPageState extends State<MainPage> {
         return const AddTasksBody();
       case NavigationPage.createHive:
         return CreateHive(onNavigate: _onNavigate);
+      case NavigationPage.specificHive:
+        return SpecificHive(hiveColor: Colors.blue, hiveIcon: const Icon(Icons.travel_explore), hiveName: "Hive 1", onNavigate: _onNavigate); //THIS SHOULD CHANGE BASED ON USER INPUT
       default:
         return const SizedBox.shrink();
     }
@@ -137,10 +140,10 @@ class _MainPageState extends State<MainPage> {
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               IconButton(
-                                icon: const Icon(Icons.history_outlined,
+                                icon: const Icon(Icons.notifications_outlined,
                                     color: Colors.red),
                                 onPressed: () =>
-                                    _onNavigate(NavigationPage.recentChanges),
+                                    _onNavigate(NavigationPage.notifications),
                               ),
                               IconButton(
                                 icon: const Icon(Icons.analytics_outlined,

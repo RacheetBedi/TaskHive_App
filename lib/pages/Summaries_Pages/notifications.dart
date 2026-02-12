@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class RecentChangesBody extends ConsumerStatefulWidget {
-  const RecentChangesBody({super.key});
+class NotificationsBody extends ConsumerStatefulWidget {
+  const NotificationsBody({super.key});
   @override
-  ConsumerState<RecentChangesBody> createState() => _RecentChangesBodyState();
+  ConsumerState<NotificationsBody> createState() => _NotificationsBodyState();
 }
 
-class _RecentChangesBodyState extends ConsumerState<RecentChangesBody> {
+class _NotificationsBodyState extends ConsumerState<NotificationsBody> {
 
   @override
   void initState() {
