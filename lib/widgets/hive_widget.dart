@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/pages/Hives_Pages/specificHive.dart';
+import 'package:flutter_app/pages/Hives_Pages/specific_hive.dart';
 import 'package:get/get.dart';
 import 'package:flutter_app/pages/Nectar_Center_Pages/nectar_center.dart';
 
@@ -8,7 +8,8 @@ class HiveWidget extends StatefulWidget {
   final Icon hiveIcon;
   final String hiveName;
   final SpecificHive hivePage;
-  const HiveWidget({required this.hiveColor, required this.hiveIcon, required this.hiveName, required this.hivePage, super.key});
+  final VoidCallback? onTap;
+  const HiveWidget({required this.hiveColor, required this.hiveIcon, required this.hiveName, required this.hivePage, this.onTap, super.key});
 
   @override
   State<HiveWidget> createState() => _HiveWidgetState();
@@ -19,7 +20,11 @@ class _HiveWidgetState extends State<HiveWidget> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Get.to(() => widget.hivePage);
+        if (widget.onTap != null) {
+          widget.onTap!();
+        } else {
+          Get.to(() => widget.hivePage);
+        }
       },
       child: Container(
         width: 250.0,

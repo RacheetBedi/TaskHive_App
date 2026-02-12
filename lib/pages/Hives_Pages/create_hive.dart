@@ -6,26 +6,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_app/enums/navigation_enum.dart';
 import 'package:flutter_app/models/group_models/hive.dart';
 import 'package:flutter_app/models/group_models/hive_default_settings_model.dart';
-import 'package:flutter_app/pages/Setup_Pages/login_page.dart';
-import 'package:flutter_app/pages/Home_Pages/main_page.dart';
-import 'package:flutter_app/pages/Summaries_Pages/recent_changes.dart';
-import 'package:flutter_app/pages/Main_Settings_Pages/settings.dart';
-import 'package:flutter_app/pages/Setup_Pages/signupStudent.dart';
-import 'package:flutter_app/pages/Setup_Pages/signupTeacher.dart';
-import 'package:flutter_app/pages/Hives_Pages/specificHive.dart';
-import 'package:flutter_app/pages/Summaries_Pages/summary.dart';
-import 'package:flutter_app/providers/auth_provider.dart';
 import 'package:flutter_app/providers/hive_service_provider.dart';
 import 'package:flutter_app/utilities/hiveRepository.dart';
-import 'package:flutter_app/utilities/userRepository.dart';
-import 'package:flutter_app/widgets/hive_widget.dart';
-import 'package:flutter_app/widgets/nectar_center_points_widget.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:get/get_connect/http/src/utils/utils.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_navigation/get_navigation.dart';
 import 'package:async/async.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 class CreateHive extends ConsumerStatefulWidget {
   final Function(NavigationPage) onNavigate;
