@@ -19,7 +19,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:riverpod_annotation/experimental/json_persist.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-class RecentUpdateUserModel{
+class NotificationsUserModel{
   DateTime? updateTime;
   String? briefDescription;
   Hive? hiveOccurred;
@@ -28,7 +28,7 @@ class RecentUpdateUserModel{
   Achievements? achievementUnlocked; //Null if no achievement was unlocked, otherwise contains the achievement that was unlocked
   bool? helpedOthers;
 
-  RecentUpdateUserModel({
+  NotificationsUserModel({
     this.updateTime,
     this.briefDescription,
     this.hiveOccurred,

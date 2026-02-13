@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_app/models/group_models/hive.dart';
 import 'package:flutter_app/models/user_models/nectar_points_personal_model.dart';
 import 'package:flutter_app/models/user_models/nectar_points_user_model.dart';
-import 'package:flutter_app/models/user_models/recent_update_user_model.dart';
+import 'package:flutter_app/models/user_models/possessions.dart';
+import 'package:flutter_app/models/user_models/notifications_user_model.dart';
 
 class AppUser{
   String uid;
@@ -23,9 +24,10 @@ class AppUser{
   bool hasCompletedSetup;
   String? description;
   String? school;
-  List<RecentUpdateUserModel>? activity_log;
-  NectarPointsPersonalModel? appreciation_points; //Replace the last three with a possessions object later
-  List<Hive>? hives_joined;
+  Possessions? possessions;
+  // List<RecentUpdateUserModel>? activity_log;
+  // NectarPointsPersonalModel? appreciation_points;
+  // List<Hive>? hives_joined;
 
 
   AppUser({
@@ -46,9 +48,7 @@ class AppUser{
     this.country_code,
     this.userName,
     this.school,
-    this.activity_log,
-    this.appreciation_points,
-    this.hives_joined
+    this.possessions,
   });
 
   factory AppUser.fromFirebaseUser(User user,{
@@ -64,9 +64,7 @@ class AppUser{
     String firstName = "",
     String lastName = "",
     String school = "",
-    List<RecentUpdateUserModel>? activity_log,
-    NectarPointsPersonalModel? appreciation_points,
-    List<Hive>? hives_joined,
+    Possessions? possessions,
     }){
     return AppUser(
       uid: user.uid,
@@ -85,9 +83,7 @@ class AppUser{
       userName: userName,
       description: description,
       school: school,
-      activity_log: activity_log,
-      appreciation_points: appreciation_points,
-      hives_joined: hives_joined,
+      possessions: possessions,
     );
   }
 
@@ -99,9 +95,7 @@ class AppUser{
     bool? isNewUser,
     String? description,
     String? school,
-    List<RecentUpdateUserModel>? activity_log,
-    NectarPointsPersonalModel? appreciation_points,
-    List<Hive>? hives_joined,
+    Possessions? possessions,
     //ADD OTHER PROPERTIES LATER HERE!
   }) {
     return AppUser(
@@ -115,9 +109,7 @@ class AppUser{
       hasCompletedSetup: isNewUser ?? this.hasCompletedSetup,
       description: description ?? this.description,
       school: school ?? this.school,
-      activity_log: activity_log ?? this.activity_log,
-      appreciation_points: appreciation_points ?? this.appreciation_points,
-      hives_joined: hives_joined ?? this.hives_joined,
+      possessions: possessions ?? this.possessions,
     );
   }
 }

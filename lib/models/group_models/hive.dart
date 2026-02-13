@@ -8,8 +8,7 @@ import 'package:flutter_app/models/group_models/hive_default_settings_model.dart
 import 'package:flutter_app/models/group_models/nectar_points_default_settings_model.dart';
 import 'package:flutter_app/models/user_models/app_user.dart';
 import 'package:flutter_app/models/user_models/nectar_points_user_model.dart';
-import 'package:flutter_app/models/user_models/recent_update_user_model.dart';
-import 'package:flutter_app/models/user_models/task_model.dart';
+import 'package:flutter_app/models/user_models/notifications_user_model.dart';
 import 'package:flutter_app/pages/Setup_Pages/login_page.dart';
 import 'package:flutter_app/providers/google_auth_service_provider.dart';
 import 'package:flutter_app/utilities/theme.dart';
@@ -60,7 +59,7 @@ class Hive {
 
   //Each set of recent updates corresponds to 3 days of updates
   //A maximum of ten sets are stored
-  List<RecentUpdateUserModel>? recent_updates; //Max should be ten
+  List<NotificationsUserModel>? recent_updates; //Max should be ten
   List<AppUser>? hive_users; //Document has a limit of ~2,800 users, which should be more then enough.
 
   //Assigned tasks and completed tasks documents will be subcollections of the hive page, referenced by the tasks subcollection.

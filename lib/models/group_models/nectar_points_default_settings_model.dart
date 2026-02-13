@@ -6,7 +6,7 @@ import 'package:flutter_app/models/group_models/hive.dart';
 import 'package:flutter_app/models/group_models/hive_default_settings_model.dart';
 import 'package:flutter_app/models/user_models/app_user.dart';
 import 'package:flutter_app/models/user_models/nectar_points_user_model.dart';
-import 'package:flutter_app/models/user_models/recent_update_user_model.dart';
+import 'package:flutter_app/models/user_models/notifications_user_model.dart';
 import 'package:flutter_app/providers/auth_provider.dart';
 import 'package:flutter_app/providers/hive_service_provider.dart';
 import 'package:flutter_app/providers/hive_service_provider.dart';
