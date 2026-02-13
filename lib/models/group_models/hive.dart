@@ -9,6 +9,7 @@ import 'package:flutter_app/models/group_models/nectar_points_default_settings_m
 import 'package:flutter_app/models/user_models/app_user.dart';
 import 'package:flutter_app/models/user_models/nectar_points_user_model.dart';
 import 'package:flutter_app/models/user_models/recent_update_user_model.dart';
+import 'package:flutter_app/models/user_models/task_model.dart';
 import 'package:flutter_app/pages/Setup_Pages/login_page.dart';
 import 'package:flutter_app/providers/google_auth_service_provider.dart';
 import 'package:flutter_app/utilities/theme.dart';
